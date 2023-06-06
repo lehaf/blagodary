@@ -37,93 +37,31 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             </button>
         </div>
         <div class="aside__item aside__item-category">
-            <ul class="category-list">
-                <li class="category-list__item active"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
-                        </svg>
-                        Все категории</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-2"></use>
-                        </svg>
-                        Бытовая техника</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-3"></use>
-                        </svg>
-                        Компьютерная техника</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-4"></use>
-                        </svg>
-                        Телефоны и планшеты</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-5"></use>
-                        </svg>
-                        Электроника</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-6"></use>
-                        </svg>
-                        Женский гардероб</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-7"></use>
-                        </svg>
-                        Мужской гардероб</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-8"></use>
-                        </svg>
-                        Красота и здоровье</a></li>
-                <li class="category-list__item no-fill"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-9"></use>
-                        </svg>
-                        Все для детей и мам</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-10"></use>
-                        </svg>
-                        Мебель</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-11"></use>
-                        </svg>
-                        Все для дома</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-12"></use>
-                        </svg>
-                        Ремонт и стройка</a></li>
-                <li class="category-list__item no-fill"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-13"></use>
-                        </svg>
-                        Сад и огород</a></li>
-                <li class="category-list__item no-fill"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-14"></use>
-                        </svg>
-                        Хобби, спорт и туризм</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-15"></use>
-                        </svg>
-                        Свадьба и праздники</a></li>
-                <li class="category-list__item no-fill"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-16"></use>
-                        </svg>
-                        Животные</a></li>
-                <li class="category-list__item"><a href="#">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-17"></use>
-                        </svg>
-                        Прочее</a></li>
-            </ul>
+            <?php
+            global $arSectFilter;
+            $arSectFilter = Array("!UF_MAIN_CATEGORY" => false);
+            $APPLICATION->IncludeComponent(
+                "bitrix:catalog.section.list",
+                "main-category",
+                Array(
+                    "VIEW_MODE" => "TEXT",
+                    "SHOW_PARENT_NAME" => "Y",
+                    "IBLOCK_TYPE" => "products",
+                    "IBLOCK_ID" => ADS_IBLOCK_ID,
+                    "SECTION_URL" => "",
+                    "COUNT_ELEMENTS" => "Y",
+                    "TOP_DEPTH" => "1",
+                    "SECTION_FIELDS" => "",
+                    "SECTION_USER_FIELDS" => "",
+                    "ADD_SECTIONS_CHAIN" => "Y",
+                    "CACHE_TYPE" => "A",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_NOTES" => "Y",
+                    "CACHE_GROUPS" => "Y",
+                    "CACHE_FILTER" => "Y",
+                    "FILTER_NAME" => "arSectFilter"
+                )
+            );?>
         </div>
         <div class="aside__item aside__item-form">
             <div class="aside-form">
