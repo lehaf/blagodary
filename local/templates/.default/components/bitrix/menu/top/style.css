@@ -1,0 +1,11 @@
+.top-nav .active span{
+    font-weight: bold;
+}
+
+.top-nav__link span {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #858585;
+}
