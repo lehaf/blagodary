@@ -1,0 +1,4 @@
+.text-page__link:hover {
+    color: #059ea3;
+    transition: all 500ms ease;
+}

@@ -4,13 +4,14 @@ use Bitrix\Main\Page\Asset;
 
 /** @global $APPLICATION */
 $isMainPage = $APPLICATION->GetCurDir() === '/';
-
+$pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
 ?>
 <html>
 <head>
     <?$APPLICATION->ShowHead();?>
     <?
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/style.css");
+    Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/linksstyle.css");
     ?>
     <title><?$APPLICATION->ShowTitle()?></title>
 </head>
@@ -74,17 +75,17 @@ $isMainPage = $APPLICATION->GetCurDir() === '/';
         </div>
     </div>
 </header>
+<?if (!$isMainPage):?>
+    <? $APPLICATION->IncludeComponent(
+        "bitrix:breadcrumb",
+        "",
+            Array(
+            "START_FROM" => "0",
+            "PATH" => "",
+            "SITE_ID" => "s1"
+        )
+    );?>
+<?endif;?>
 
-    <div class="bread-crumbs">
-        <div class="wrapper">
-            <ul class="bread-crumbs-list">
-                <li class="bread-crumbs-list__item"><a href="#">Главная</a></li>
-                <li class="bread-crumbs-list__item"><a href="#">Раздел</a></li>
-                <li class="bread-crumbs-list__item"><a href="#">Страница выбранного товара</a></li>
-                <li class="bread-crumbs-list__item mobile"><a href="#">Выбранный раздел товаров</a></li>
-            </ul>
-        </div>
-    </div>
-
-<div class="page">
+<div class="page <?=!empty($pageSpecialClass) ? $pageSpecialClass : ''?>">
     <div class="wrapper">

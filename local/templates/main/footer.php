@@ -28,15 +28,13 @@ IncludeTemplateLangFile(__FILE__);
     <div class="footer-content">
         <div class="wrapper">
             <div class="footer-text">
-                <?$APPLICATION->IncludeComponent(
-                    "bitrix:main.include",
-                    "",
+                <? $APPLICATION->IncludeFile(
+                '/include/footer-descr.php',
+                    Array(),
                     Array(
-                        "AREA_FILE_SHOW" => "file",
-                        "EDIT_TEMPLATE" => "",
-                        'PATH' => 'include/footer-descr.php'
-                    )
-                );?>
+                    "MODE"      => "text",
+                    "NAME"      => "Описание сервиса",
+                ));?>
             </div>
             <ul class="social-media">
                 <li class="social-media__item">

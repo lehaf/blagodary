@@ -1,7 +1,7 @@
-<?
+<?php
 $sSectionName = "О сервисе";
 $arDirProperties = Array(
-   "title" => "О сервисе",
-   "keywords_inner" => "О серисе"
+    "title" => "О сервисе",
+    "keywords" => "О серисе",
+    'pageSpecialClass' => 'page--question'
 );
-?>
