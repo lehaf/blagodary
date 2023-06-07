@@ -95,7 +95,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"NUM_DAYS" => "30",
 		"NUM_NEWS" => "20",
 		"PAGER_BASE_LINK" => "",
-		"PAGER_BASE_LINK_ENABLE" => "Y",
+		"PAGER_BASE_LINK_ENABLE" => "N",
 		"PAGER_DESC_NUMBERING" => "N",
 		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
 		"PAGER_PARAMS_NAME" => "arrPager",
@@ -153,8 +153,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 			"section" => "#SECTION_CODE_PATH#/",
 			"detail" => "#ELEMENT_CODE#/",
 			"search" => "search/",
-			"rss" => "",
-			"rss_section" => "",
+
 		)
 	),
 	false

@@ -6,7 +6,6 @@
 $this->setFrameMode(true);
 $this->addExternalCss(SITE_TEMPLATE_PATH . "/assets/components-template/pagination/style.css");
 
-
 if(!$arResult["NavShowAlways"])
 {
     if ($arResult["NavRecordCount"] == 0 || ($arResult["NavPageCount"] == 1 && $arResult["NavShowAll"] == false)) return;
@@ -97,6 +96,7 @@ if(!$arResult["NavShowAlways"])
                             <?=$NavRecordGroupPrint?>
                         </a>
                     </li>
+
                 <?
                 endif;
 
