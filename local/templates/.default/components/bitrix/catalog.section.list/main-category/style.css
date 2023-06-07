@@ -1,3 +1,18 @@
 .category-list a img {
 	margin-right: 5px;
 }
+
+.all-category {
+	display: flex;
+	align-items: center;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 16px;
+	letter-spacing: -0.01em;
+	color: #2a3548;
+	transition: .3s;
+}
+
+.category-list__item.active span {
+	font-weight: 700;
+}

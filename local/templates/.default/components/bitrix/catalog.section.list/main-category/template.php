@@ -15,12 +15,12 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
 ?>
 <?if (!empty($arResult['SECTIONS'])):?>
     <ul class="category-list">
-        <li class="category-list__item">
-            <a href="<?=$arParams['ALL_CATEGORIES_LINK']?>">
+        <li class="category-list__item active">
+            <span class="all-category" href="<?=$arParams['ALL_CATEGORIES_LINK']?>">
                 <svg>
                     <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
                 </svg>
-                Все категории</a>
+                Все категории</span>
         </li>
         <?foreach ($arResult['SECTIONS'] as $arSect):?>
             <li class="category-list__item" id="<?=$this->GetEditAreaID($arSect['ID'])?>">

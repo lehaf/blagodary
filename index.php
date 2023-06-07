@@ -59,7 +59,8 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                     "CACHE_NOTES" => "Y",
                     "CACHE_GROUPS" => "Y",
                     "CACHE_FILTER" => "Y",
-                    "FILTER_NAME" => "arSectFilter"
+                    "FILTER_NAME" => "arSectFilter",
+                    "ALL_CATEGORIES_LINK" => "/ads/"
                 )
             );?>
         </div>
@@ -423,9 +424,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         );?>
         <div class="announcements">
             <div class="announcements-header">
-                <h2 class="title-section">
-                    Все объявления
-                </h2>
+                <h2 class="title-section">Все объявления</h2>
                 <div class="announcements-switch">
                     <div class="announcements-switch__item switch-list active">
                         <svg width="22" height="18" viewBox="0 0 22 18" fill="none"
@@ -462,217 +461,77 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                     </div>
                 </div>
             </div>
-            <div class="announcements-content">
-                <div class="announcements-content__item announcements-content__item--list active">
-                    <a href="#" class="announcements-list__item">
-                        <div class="announcements-img">
-                            <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/announcements-list/item-1.jpg" alt="img">
-                        </div>
-                        <div class="announcements-description">
-                            <div class="announcements-description__head">
-                                <h3>ШИНЫ, ДИСКИ на Мерседес оригинал R16 подходят Sprinter, Vito, и другие Ме.
-                                    Колпаки, R16, б/у</h3>
-                                <span class="favorite-card"></span>
-                            </div>
-                            <div class="announcements-description__location">
-                                <div class="location">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                    </svg>
-                                    Минск, Партизанский район
-                                </div>
-                                <div class="announcements-data">
-                                    26.09.2022 в 12:02
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="announcements-list__item">
-                        <div class="announcements-img">
-                            <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/announcements-list/item-2.jpg" alt="img">
-                        </div>
-                        <div class="announcements-description">
-                            <div class="announcements-description__head">
-                                <h3>Свитер желтый из нейлона (размер S)</h3>
-                                <span class="favorite-card"></span>
-                            </div>
-                            <div class="announcements-description__location">
-                                <div class="location">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                    </svg>
-                                    Минск, Партизанский район
-                                </div>
-                                <div class="announcements-data">
-                                    26.09.2022 в 12:02
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+            <?#TODO разобратся с постраничкой
 
-                </div>
-                <div class="announcements-content__item announcements-content__item--card">
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-3.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">Зеркало с люминесцентной подсветкой (120х75 см).</span>
-
-                                <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-4.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">ШИНЫ, ДИСКИ на Мерседес оригинал R16 подходят Sprinter, Vito, и другие Ме.
-Колпаки, R16, б/у )</span>
-                                 <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">Свитер желтый из нейлона (размер S)</span>
-                         <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">Свитер желтый из нейлона (размер S)</span>
-                         <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">Свитер желтый из нейлона (размер S)</span>
-                         <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-3.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">Зеркало с люминесцентной подсветкой (120х75 см).</span>
-                         <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item w-1700">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-4.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">ШИНЫ, ДИСКИ на Мерседес оригинал R16 подходят Sprinter, Vito, и другие Ме.
-Колпаки, R16, б/у )</span>
-                         <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                    <a href="#" class="announcements-card__item w-1700">
-                    <span class="announcements-card__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-4.jpg" alt="alt">
-                    </span>
-                        <span class="viewed-slider__item-description">
-                              <span class="announcements-card__item--title">ШИНЫ, ДИСКИ на Мерседес оригинал R16 подходят Sprinter, Vito, и другие Ме.
-Колпаки, R16, б/у )</span>
-                        <div class="location">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                        </svg>
-                                        Минск, Партизанский район
-                                    </div>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                        <span class="favorite-card">
-                        </span>
-                    </a>
-                </div>
-                <div class="pagination">
-                    <div class="pagination-arrow-left">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
-                        </svg>
-                    </div>
-                    <ul class="pagination-list">
-                        <li class="pagination-list__item"><a href="#">1</a></li>
-                        <li class="pagination-list__item active"><a href="#">2</a></li>
-                        <li class="pagination-list__item"><a href="#">3</a></li>
-                        <li class="pagination-list__item pagination-list__item--more"><a href="#">...</a></li>
-                        <li class="pagination-list__item"><a href="#">32</a></li>
-                    </ul>
-                    <div class="pagination-arrow-right active">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            $APPLICATION->IncludeComponent(
+	"bitrix:news.list", 
+	"ads", 
+                array(
+                    "DISPLAY_DATE" => "Y",
+                    "DISPLAY_NAME" => "Y",
+                    "DISPLAY_PICTURE" => "Y",
+                    "DISPLAY_PREVIEW_TEXT" => "Y",
+                    "AJAX_MODE" => "N",
+                    "IBLOCK_TYPE" => "products",
+                    "IBLOCK_ID" => ADS_IBLOCK_ID,
+                    "NEWS_COUNT" => "2",
+                    "SORT_BY1" => "ACTIVE_FROM",
+                    "SORT_ORDER1" => "DESC",
+                    "SORT_BY2" => "SORT",
+                    "SORT_ORDER2" => "ASC",
+                    "FILTER_NAME" => "",
+                    "FIELD_CODE" => array(
+                        0 => "ID",
+                        1 => "DETAIL_PICTURE",
+                        2 => "",
+                    ),
+                    "PROPERTY_CODE" => array(
+                        0 => "",
+                        1 => "COUNTER",
+                        2 => "",
+                    ),
+                    "CHECK_DATES" => "Y",
+                    "DETAIL_URL" => "",
+                    "PREVIEW_TRUNCATE_LEN" => "",
+                    "ACTIVE_DATE_FORMAT" => "d.m.Y",
+                    "SET_TITLE" => "Y",
+                    "SET_BROWSER_TITLE" => "Y",
+                    "SET_META_KEYWORDS" => "Y",
+                    "SET_META_DESCRIPTION" => "Y",
+                    "SET_LAST_MODIFIED" => "Y",
+                    "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
+                    "ADD_SECTIONS_CHAIN" => "Y",
+                    "HIDE_LINK_WHEN_NO_DETAIL" => "Y",
+                    "PARENT_SECTION" => "",
+                    "PARENT_SECTION_CODE" => "",
+                    "INCLUDE_SUBSECTIONS" => "Y",
+                    "CACHE_TYPE" => "A",
+                    "CACHE_TIME" => "360000",
+                    "CACHE_FILTER" => "Y",
+                    "CACHE_GROUPS" => "Y",
+                    "DISPLAY_TOP_PAGER" => "N",
+                    "DISPLAY_BOTTOM_PAGER" => "Y",
+                    "PAGER_TITLE" => "Объявления",
+                    "PAGER_SHOW_ALWAYS" => "N",
+                    "PAGER_TEMPLATE" => "ads",
+                    "PAGER_DESC_NUMBERING" => "Y",
+                    "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                    "PAGER_SHOW_ALL" => "Y",
+                    "PAGER_BASE_LINK_ENABLE" => "Y",
+                    "SET_STATUS_404" => "Y",
+                    "SHOW_404" => "N",
+                    "MESSAGE_404" => "",
+                    "PAGER_BASE_LINK" => "",
+                    "PAGER_PARAMS_NAME" => "arrPager",
+                    "AJAX_OPTION_JUMP" => "N",
+                    "AJAX_OPTION_STYLE" => "N",
+                    "AJAX_OPTION_HISTORY" => "N",
+                    "AJAX_OPTION_ADDITIONAL" => "",
+                    "COMPONENT_TEMPLATE" => "ads",
+                    "STRICT_SECTION_CHECK" => "N"
+                ),
+                false
+            );?>
         </div>
     </div>
 </div>

@@ -12,11 +12,6 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 $arItem = $arResult['ITEMS'][0];
-$arVariants = [
-    'вещь',
-    'вещи',
-    'вещей',
-];
 ?>
 <?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['SRC']) && !empty($arItem['PROPERTIES']['COUNTER'])):?>
     <?
@@ -34,7 +29,7 @@ $arVariants = [
         </div>
         <div class="banner-mini-cnt">
             <?=$arItem['PROPERTIES']['COUNTER']['VALUE']?>
-            <span><?=sklonen((int)$arItem['PROPERTIES']['COUNTER']['VALUE'],$arVariants)?></span>
+            <span><?=$arItem['PROPERTIES']['COUNTER']['SKLONEN']?></span>
         </div>
     </div>
 <?php endif;?>
