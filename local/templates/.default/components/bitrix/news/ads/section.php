@@ -15,6 +15,7 @@ use WebCompany\YouWatchBefore;
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
+$isNotFirstPage = strpos(implode('',array_keys($_GET)),'PAGEN');
 if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
     $arActiveSection = getSectionData($arResult["VARIABLES"]['SECTION_ID'],ADS_IBLOCK_ID); // Выбранный текущий раздел
     $APPLICATION->SetTitle($arActiveSection['NAME']);
@@ -24,6 +25,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
 }
 
 ?>
+
 <div class="page-container">
     <aside class="aside">
         <div class="aside__item aside__item-btn">
@@ -213,20 +215,20 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             <? global $arFilterAds;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
-                'SECTION_ID' => $arActiveSection['ID']
             ];
 
             $APPLICATION->IncludeComponent(
-                "bitrix:news.list",
+                "bitrix:catalog.section",
                 "ads",
-                [
+                array(
+                    'SECTION_ID' => $arActiveSection['ID'],
                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                     "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                    "NEWS_COUNT" => $arParams["NEWS_COUNT"],
-                    "SORT_BY1" => $arParams["SORT_BY1"],
-                    "SORT_ORDER1" => $arParams["SORT_ORDER1"],
-                    "SORT_BY2" => $arParams["SORT_BY2"],
-                    "SORT_ORDER2" => $arParams["SORT_ORDER2"],
+                    "PAGE_ELEMENT_COUNT" => $arParams["NEWS_COUNT"],
+                    "ELEMENT_SORT_FIELD" => $arParams["SORT_BY1"],
+                    "ELEMENT_SORT_ORDER" => $arParams["SORT_BY1"],
+                    "ELEMENT_SORT_FIELD2" => $arParams["SORT_BY2"],
+                    "ELEMENT_SORT_ORDER2" => $arParams["SORT_ORDER2"],
                     "FIELD_CODE" => $arParams["LIST_FIELD_CODE"],
                     "PROPERTY_CODE" => $arParams["LIST_PROPERTY_CODE"],
                     "DETAIL_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["detail"],
@@ -265,12 +267,12 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                     "FILTER_NAME" => 'arFilterAds',
                     "HIDE_LINK_WHEN_NO_DETAIL" => $arParams["HIDE_LINK_WHEN_NO_DETAIL"],
                     "CHECK_DATES" => $arParams["CHECK_DATES"],
-                ],
-                $component,
-                ['HIDE_ICONS' => 'Y']
-            );?>
+                ),
+                false
+            );
+            ?>
         </div>
-        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE'])):?>
+        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false):?>
             <div class="text-block">
                 <h2 class="title-section"><?=$arActiveSection['UF_SEO_TITLE']?></h2>
                 <p class="text"><?=$arActiveSection['DESCRIPTION']?></p>

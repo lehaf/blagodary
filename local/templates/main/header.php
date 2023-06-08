@@ -45,12 +45,33 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                 <?if (!$isMainPage):?><a href="/" class="header-logo"><?else:?><div><?endif;?>
                     <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/header-logo.svg" alt="logo">
                 <?if (!$isMainPage):?></a><?else:?></div><?endif;?>
-                <div class="header-search" style="position:absolute; left: 377.5px">
-                    <label for="header-search">
-                        <input type="text" class="header-search__el" id="header-search" name="header-search" placeholder="Искать товары">
-                    </label>
-                    <button class="btn-bg btn-search">Поиск</button>
-                </div>
+                <?$APPLICATION->IncludeComponent(
+                    "bitrix:search.title",
+                    "search-header",
+                    array(
+                        "CATEGORY_0" => array(
+                            0 => "iblock_products",
+                        ),
+                        "CATEGORY_0_TITLE" => "Поиск",
+                        "CHECK_DATES" => "N",
+                        "CONTAINER_ID" => "title-search",
+                        "INPUT_ID" => "title-search-input",
+                        "NUM_CATEGORIES" => "1",
+                        "ORDER" => "date",
+                        "PAGE" => "/ads/search/",
+                        "SHOW_INPUT" => "Y",
+                        "SHOW_OTHERS" => "N",
+                        "TOP_COUNT" => "5",
+                        "USE_LANGUAGE_GUESS" => "Y",
+                        "COMPONENT_TEMPLATE" => "search-header",
+                        "CATEGORY_0_iblock_products" => array(
+                            0 => "2",
+                        ),
+                        "BUTTON_NAME" => "Поиск",
+                        "PLACEHOLDER" => "Искать товары"
+                    ),
+                    false
+                );?>
                 <div class="header-account">
                     <button class="btn submit-an-ad">
                         <svg>
