@@ -14,8 +14,9 @@
 $this->setFrameMode(true);
 
 if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
-    $activeSectionId = $arResult["VARIABLES"]['SECTION_ID']; // Выбранный текущий раздел
-    $arSectionTree = getSectionTree($activeSectionId); // Получаем дерево разделов
+    $arActiveSection = getSectionData($arResult["VARIABLES"]['SECTION_ID'],ADS_IBLOCK_ID); // Выбранный текущий раздел
+    $APPLICATION->SetTitle($arActiveSection['NAME']);
+    $arSectionTree = getSectionTree($arActiveSection['ID']); // Получаем дерево разделов
     $rootSectionId = $arSectionTree[0]['ID'] ?? $arSectionTree['ID']; // Получаем id корневого раздела
     $arRootSection = getSectionData($rootSectionId,ADS_IBLOCK_ID); // Получаем данные по корневому разделу
 }
@@ -43,7 +44,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             </button>
         </div>
         <div class="aside__item aside__item-category ">
-            <?php
+            <?php #TODO Поправить хлебные крошки
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
                 "main-category-tree",
@@ -58,7 +59,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                     "TOP_DEPTH" => "3",
                     "SECTION_FIELDS" => "",
                     "SECTION_USER_FIELDS" => "",
-                    "ADD_SECTIONS_CHAIN" => "Y",
+                    "ADD_SECTIONS_CHAIN" => $arParams['ADD_SECTIONS_CHAIN'],
                     "CACHE_TYPE" => "A",
                     "CACHE_TIME" => "36000000",
                     "CACHE_NOTES" => "Y",
@@ -67,7 +68,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                     "FILTER_NAME" => "arSectFilter",
                     "ALL_CATEGORIES_LINK" => "/",
                     "ROOT_SECTION" => $arRootSection,
-                    "ACTIVE_SECTION_ID" => $activeSectionId,
+                    "ACTIVE_SECTION_ID" => $arActiveSection['ID'],
                 )
             );?>
         </div>
@@ -266,14 +267,12 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 ['HIDE_ICONS' => 'Y']
             );?>
         </div>
-        <div class="text-block">
-            <h2 class="title-section">
-                SEO текст
-            </h2>
-            <p class="text">
-                Для современного мира базовый вектор развития требует определения и уточнения анализа существующих паттернов поведения. Банальные, но неопровержимые выводы, а также представители современных социальных резервов, вне зависимости от их уровня, должны быть преданы социально-демократической анафеме. В целом, конечно, дальнейшее развитие различных форм деятельности представляет собой интересный эксперимент проверки анализа существующих паттернов поведения.
-            </p>
-        </div>
+        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE'])):?>
+            <div class="text-block">
+                <h2 class="title-section"><?=$arActiveSection['UF_SEO_TITLE']?></h2>
+                <p class="text"><?=$arActiveSection['DESCRIPTION']?></p>
+            </div>
+        <?endif;?>
         <div class="viewed">
             <h2 class="title-section">Ранее вы смотрели</h2>
             <div class="viewed-slider">
@@ -428,3 +427,9 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         </div>
     </div>
 </div>
+<?php
+if (!empty($arSectionTree)) {
+    array_shift($arSectionTree); // Удаляем рут раздел (т.к. он уже есть в крошках)
+    setBreadcrumb($arSectionTree); // Доставляем недостающие крошки
+}
+?>

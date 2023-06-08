@@ -27,21 +27,17 @@ if(!$arResult["NavShowAlways"])
                         <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"></a>
                     </li>
 
-                <?
-                else:
-                    if ($arResult["NavPageCount"] == ($arResult["NavPageNomer"]+1) ):
-                        ?>
+                <?else:?>
+                    <?if ($arResult["NavPageCount"] == ($arResult["NavPageNomer"]+1) ):?>
                         <li class="pagination-list__item"><a href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>"></a></li>
-                    <?
-                    else:
-                        ?>
-                        <li class="pagination-list__item">
-                            <a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"></a>
-                        </li>
-
-                    <?
-                    endif;
-                endif;
+                    <?else:?>
+                        <a class="pagination-arrow-left" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
+                            </svg>
+                        </a>
+                    <?endif;?>
+                <?endif;
 
                 if ($arResult["nStartPage"] < $arResult["NavPageCount"]):
                     $bFirst = false;
@@ -96,7 +92,6 @@ if(!$arResult["NavShowAlways"])
                             <?=$NavRecordGroupPrint?>
                         </a>
                     </li>
-
                 <?
                 endif;
 
@@ -106,40 +101,31 @@ if(!$arResult["NavShowAlways"])
 
             if ($arResult["NavPageNomer"] > 1):
                 if ($arResult["nEndPage"] > 1):
-                    if ($arResult["nEndPage"] > 2):
-                        /*?>
-                                <span class="modern-page-dots">...</span>
-                        <?*/
-                        ?>
+                    if ($arResult["nEndPage"] > 2):?>
 
                         <li class="pagination-list__item paginations__total">
                             <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=round($arResult["nEndPage"] / 2)?>">...</a>
                         </li>
 
-                    <?
-                    endif;
-                    ?>
-                    <li class="pagination-list__item">
-                        <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=1"><?=$arResult["NavPageCount"]?></a>
-                    </li>
+                    <?endif; ?>
+                    <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>">
+                        <svg>
+                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
+                        </svg>
+                    </a>
 
-                <?
-                endif;
-
-                ?>
+                <?endif; ?>
                 <li class="pagination-list__item">
                     <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>"><svg class="icon pagination__link-icon" style="width:14px;height:14px;"><use xlink:href="<?=SITE_TEMPLATE_PATH;?>/assets/images/sprite.svg#i-arrow-small"/></svg></a>
                 </li>
 
-            <?
-            endif;
+            <?endif;?>
 
-        else:
-            $bFirst = true;
+        <?else:?>
+            <?$bFirst = true;
 
             if ($arResult["NavPageNomer"] > 1):
-                if($arResult["bSavePage"]):
-                    ?>
+                if($arResult["bSavePage"]):?>
                     <li class="pagination-list__item">
                         <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>"></a>
                     </li>
@@ -157,9 +143,11 @@ if(!$arResult["NavShowAlways"])
                     <?
                     else:
                         ?>
-                        <li class="pagination-list__item">
-                            <a  href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>"></a>
-                        </li>
+                        <a class="pagination-arrow-left" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
+                            </svg>
+                        </a>
 
                     <?
                     endif;

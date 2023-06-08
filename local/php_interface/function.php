@@ -2,6 +2,8 @@
 
 use \Bitrix\Main\Data\Cache;
 
+/** @global object $APPLICATION */
+
 function pr($o, $show = false, $die = false, $fullBackTrace = false)
 {
     global $USER;
@@ -53,8 +55,7 @@ function getSectionTree(int $sectionId) : ?array
     $cache = Cache::createInstance();
     if ($cache->initCache(360000, "section_tree_".$sectionId)) {
         $arSectionTree = $cache->getVars();
-    }
-    elseif ($cache->startDataCache()) {
+    } elseif ($cache->startDataCache()) {
         $arSectionTree = CIBlockSection::GetNavChain(false,$sectionId, array(), true);
         if (!empty($arSectionTree)) {
             foreach ($arSectionTree as &$arSection) {
@@ -73,35 +74,44 @@ function getSectionData(int $sectionId, int $iblockId) : ?array
     $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
     $cacheId = "section_tree_".$sectionId;
     if ($cache->read(360000, $cacheId)) {
-        $arRootSection = $cache->get($cacheId);
+        $arSection = $cache->get($cacheId);
     } else {
-        $arRootSection = \Bitrix\Iblock\SectionTable::getList(array(
-            'select' => array('*','SECTION_PAGE_URL' => 'IBLOCK.SECTION_PAGE_URL'),
-            'filter' => array('IBLOCK_ID' => $iblockId, 'ID' => $sectionId),
-            'cache' => array(
-                'ttl' => 3600000,
-                'cache_joins' => true
-            ),
-        ))->fetch();
-        $arRootSection['SECTION_PAGE_URL'] = CIBlock::ReplaceDetailUrl($arRootSection['SECTION_PAGE_URL'], $arRootSection, true, 'S');
-        // Добавляем ссылки для эрмитажа
-        $arButtons = CIBlock::GetPanelButtons(
-            $iblockId,
-            $sectionId,
-            0,
-            array("SECTION_BUTTONS"=>false, "SESSID"=>false)
-        );
+        $sectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock($iblockId);
+        if (!empty($sectionEntity)) {
+            $arSection = $sectionEntity::getList(array(
+                "filter" => array("ID" => $sectionId, "ACTIVE" => "Y",),
+                "select" => ["*", 'SECTION_PAGE_URL' => 'IBLOCK.SECTION_PAGE_URL', "UF_*"]
+            ))->fetch();
+            $arSection['SECTION_PAGE_URL'] = CIBlock::ReplaceDetailUrl($arSection['SECTION_PAGE_URL'], $arSection, true, 'S');
+            // Добавляем ссылки для эрмитажа
+            $arButtons = CIBlock::GetPanelButtons(
+                $iblockId,
+                $sectionId,
+                0,
+                array("SECTION_BUTTONS"=>false, "SESSID"=>false)
+            );
 
-        $arRootSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
-        $arRootSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+            $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+            $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
 
-        $arRootSection["EDIT_LINK_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
-        $arRootSection["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
+            $arSection["EDIT_LINK_TEXT"] = $arButtons["edit"]["edit_element"]["TEXT"];
+            $arSection["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
 
-        $cache->set($cacheId,$arRootSection);
+            $cache->set($cacheId,$arSection);
+        }
     }
 
-    return $arRootSection ?? NULL;
+    return $arSection ?? NULL;
+}
+
+function setBreadcrumb(array $arSectionTree) : void
+{
+    global $APPLICATION;
+    if (!empty($arSectionTree)) {
+        foreach ($arSectionTree as $arSection) {
+            $APPLICATION->AddChainItem($arSection['NAME'], $arSection['SECTION_PAGE_URL']);
+        }
+    }
 }
 
 function sklonen(int $number, array $arVariants) : string

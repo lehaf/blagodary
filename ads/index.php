@@ -3,7 +3,6 @@
 /** @global object $APPLICATION */
 /** @const string SITE_TEMPLATE_PATH */
 
-
 use Bitrix\Main\Page\Asset;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
@@ -27,7 +26,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"AJAX_OPTION_STYLE" => "N",
 		"BROWSER_TITLE" => "-",
 		"CACHE_FILTER" => "Y",
-		"CACHE_GROUPS" => "Y",
+		"CACHE_GROUPS" => "N",
 		"CACHE_TIME" => "360000",
 		"CACHE_TYPE" => "A",
 		"CATEGORY_CODE" => "CATEGORY",
@@ -70,7 +69,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		),
 		"FORUM_ID" => "",
 		"GROUP_PERMISSIONS" => array(
-			0 => "1",
+			0 => "2",
 		),
 		"HIDE_LINK_WHEN_NO_DETAIL" => "Y",
 		"IBLOCK_ID" => ADS_IBLOCK_ID,
@@ -91,7 +90,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"MESSAGE_404" => "",
 		"META_DESCRIPTION" => "-",
 		"META_KEYWORDS" => "-",
-		"NEWS_COUNT" => "2",
+		"NEWS_COUNT" => "12",
 		"NUM_DAYS" => "30",
 		"NUM_NEWS" => "20",
 		"PAGER_BASE_LINK" => "",
@@ -102,7 +101,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"PAGER_SHOW_ALL" => "Y",
 		"PAGER_SHOW_ALWAYS" => "N",
 		"PAGER_TEMPLATE" => "ads",
-		"PAGER_TITLE" => "Новости",
+		"PAGER_TITLE" => "Объявления",
 		"PATH_TO_SMILE" => "/bitrix/images/forum/smile/",
 		"POST_FIRST_MESSAGE" => "Y",
 		"PREVIEW_TRUNCATE_LEN" => "",
@@ -111,7 +110,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"SEF_MODE" => "Y",
 		"SET_LAST_MODIFIED" => "Y",
 		"SET_STATUS_404" => "Y",
-		"SET_TITLE" => "Y",
+		"SET_TITLE" => "N",
 		"SHARE_HANDLERS" => array(
 			0 => "delicious",
 			1 => "lj",

@@ -461,7 +461,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                     </div>
                 </div>
             </div>
-            <?#TODO разобратся с постраничкой
+            <?
             $APPLICATION->IncludeComponent(
 	"bitrix:news.list", 
 	"ads", 
