@@ -1,5 +1,7 @@
 <?php
 
+use WebCompany\YouWatchBefore;
+
 if (!empty($arResult)) {
     // Ресайзим картинки если их нет - тавим заглушку
     if (!empty($arResult['PROPERTIES']['IMAGES']['VALUE'])) {
@@ -43,5 +45,10 @@ if (!empty($arResult)) {
     $arResult["DELETE_LINK_TEXT"] = $arButtons["edit"]["delete_element"]["TEXT"];
 
     $this->AddEditAction($arResult['ID'], $arResult['EDIT_LINK'], $arResult["EDIT_LINK_TEXT"]);
-    $this->AddDeleteAction($arResult['ID'], $arResult['DELETE_LINK'], $arResult["DELETE_LINK_TEXT"], array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+    $this->AddDeleteAction($arResult['ID'], $arResult['DELETE_LINK'], $arResult["DELETE_LINK_TEXT"],
+        array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
+    );
+
+    $obViewedGoods = new YouWatchBefore();
+    $obViewedGoods->setCookie($arResult['ID']);
 }
