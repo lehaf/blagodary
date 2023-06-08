@@ -18,7 +18,11 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
         <h2 class="title-section">Ранее вы смотрели</h2>
         <div class="viewed-slider">
             <?foreach ($arResult['ITEMS'] as $arItem):?>
-                <a href="<?=$arItem['DETAIL_PAGE_URL']?>" class="viewed-slider__item">
+                <?
+                $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
+                $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"], array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+                ?>
+                <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="viewed-slider__item">
                     <span class="viewed-slider__item-img">
                         <img src="<?=$arItem['IMG']['src']?>"
                              title="<?=$arItem['NAME']?>"

@@ -2,7 +2,7 @@
 
 /** @global object $APPLICATION */
 /** @const string  SITE_TEMPLATE_PATH */
-
+use WebCompany\YouWatchBefore;
 use Bitrix\Main\Page\Asset;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
@@ -209,158 +209,84 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                 </form>
             </div>
         </main>
-        <div class="viewed">
-            <h2 class="title-section">Ранее вы смотрели</h2>
-            <div class="viewed-slider">
-                <a href="https://www.google.com/search?q=dog+img&tbm=isch&ved=2ahUKEwj_j7To9aH8AhWDwgIHHSh6Bn0Q2-cCegQIABAA&oq=dog+img&gs_lcp=CgNpbWcQAzIECCMQJzIECAAQHjIECAAQHjIGCAAQBRAeMgkIABCABBAKEBg6BAgAEEM6BQgAEIAEUIsGWKgNYMcPaABwAHgAgAFeiAGjA5IBATWYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&sclient=img&ei=AyevY7-CHoOFi-gPqPSZ6Ac&bih=1306&biw=2560#imgrc=u61zC0xCLTOo1M"
-                   class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="https://images.unsplash.com/photo-1615751072497-5f5169febe17?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y3V0ZSUyMGRvZ3xlbnwwfHwwfHw%3D&w=1000&q=80"
-                             alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-                <a href="#" class="viewed-slider__item">
-                    <span class="viewed-slider__item-img">
-                        <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                    </span>
-                    <span class="viewed-slider__item-description">
-                              <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                        <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                        </span>
-                    <span class="favorite-card">
-                        </span>
-                </a>
-            </div>
-            <div class="viewed-slider-arrows slider-arrows-container">
-                <div class="viewed-slider-prev slider-arrow-prev">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev">
-                        </use>
-                    </svg>
-                </div>
-                <div class="viewed-slider-next slider-arrow-next">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
-                    </svg>
-                </div>
-            </div>
-        </div>
+        <?
+        $obViewedGoods = new YouWatchBefore();
+        $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
+        if (!empty($arViewedGoodsId)) {
+            global $arViewedGoodsFilter;
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId];
+            $APPLICATION->IncludeComponent(
+                "bitrix:catalog.section",
+                "you-watch-before",
+                array(
+                    "ACTION_VARIABLE" => "",
+                    "ADD_PICT_PROP" => "MORE_PHOTO",
+                    "ADD_PROPERTIES_TO_BASKET" => "N",
+                    "ADD_SECTIONS_CHAIN" => "N",
+                    "CACHE_FILTER" => "Y",
+                    "CACHE_GROUPS" => "Y",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "A",
+                    "COMPATIBLE_MODE" => "N",
+                    "CONVERT_CURRENCY" => "Y",
+                    "CURRENCY_ID" => "RUB",
+                    "CUSTOM_FILTER" => "",
+                    "DATA_LAYER_NAME" => "dataLayer",
+                    "DETAIL_URL" => "",
+                    "DISABLE_INIT_JS_IN_COMPONENT" => "N",
+                    "DISPLAY_BOTTOM_PAGER" => "Y",
+                    "DISPLAY_TOP_PAGER" => "N",
+                    "ELEMENT_SORT_FIELD" => "id",
+                    "ELEMENT_SORT_FIELD2" => "sort",
+                    "ELEMENT_SORT_ORDER" => $arViewedGoodsId,
+                    "ELEMENT_SORT_ORDER2" => "asc",
+                    "ENLARGE_PRODUCT" => "PROP",
+                    "ENLARGE_PROP" => "NEWPRODUCT",
+                    "FILTER_NAME" => "arViewedGoodsFilter",
+                    "HIDE_NOT_AVAILABLE" => "N",
+                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                    "IBLOCK_ID" => ADS_IBLOCK_ID,
+                    "IBLOCK_TYPE" => "products",
+                    "PAGER_BASE_LINK_ENABLE" => "N",
+                    "PAGER_DESC_NUMBERING" => "N",
+                    "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                    "PAGER_SHOW_ALL" => "N",
+                    "PAGER_SHOW_ALWAYS" => "N",
+                    "PAGER_TEMPLATE" => "ads",
+                    "PAGER_TITLE" => "Ранее смотрели",
+                    "PAGE_ELEMENT_COUNT" => "10",
+                    "RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
+                    "RCM_TYPE" => "personal",
+                    "SEF_MODE" => "N",
+                    "SET_BROWSER_TITLE" => "N",
+                    "SET_LAST_MODIFIED" => "N",
+                    "SET_META_DESCRIPTION" => "N",
+                    "SET_META_KEYWORDS" => "N",
+                    "SET_STATUS_404" => "N",
+                    "SET_TITLE" => "N",
+                    "SHOW_404" => "N",
+                    "SHOW_ALL_WO_SECTION" => "N",
+                    "SHOW_CLOSE_POPUP" => "N",
+                    "SHOW_DISCOUNT_PERCENT" => "Y",
+                    "SHOW_FROM_SECTION" => "N",
+                    "SHOW_MAX_QUANTITY" => "N",
+                    "SHOW_OLD_PRICE" => "N",
+                    "SHOW_PRICE_COUNT" => "1",
+                    "SHOW_SLIDER" => "Y",
+                    "SLIDER_INTERVAL" => "3000",
+                    "SLIDER_PROGRESS" => "N",
+                    "TEMPLATE_THEME" => "blue",
+                    "USE_ENHANCED_ECOMMERCE" => "Y",
+                    "USE_MAIN_ELEMENT_SECTION" => "N",
+                    "USE_PRICE_COUNT" => "N",
+                    "USE_PRODUCT_QUANTITY" => "N",
+                    "COMPONENT_TEMPLATE" => "you-watch-before",
+                    "DISPLAY_COMPARE" => "N"
+                ),
+                false
+            );
+        }
+        ?>
         <?$APPLICATION->IncludeComponent("bitrix:news.list", "banner-with-counter", Array(
             "DISPLAY_DATE" => "Y",	// Выводить дату элемента
                 "DISPLAY_NAME" => "Y",	// Выводить название элемента
@@ -463,74 +389,74 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             </div>
             <?
             $APPLICATION->IncludeComponent(
-	"bitrix:news.list", 
-	"ads", 
-	array(
-		"DISPLAY_DATE" => "Y",
-		"DISPLAY_NAME" => "Y",
-		"DISPLAY_PICTURE" => "Y",
-		"DISPLAY_PREVIEW_TEXT" => "Y",
-		"AJAX_MODE" => "N",
-		"IBLOCK_TYPE" => "products",
-		"IBLOCK_ID" => ADS_IBLOCK_ID,
-		"NEWS_COUNT" => "2",
-		"SORT_BY1" => "ACTIVE_FROM",
-		"SORT_ORDER1" => "DESC",
-		"SORT_BY2" => "SORT",
-		"SORT_ORDER2" => "ASC",
-		"FILTER_NAME" => "",
-		"FIELD_CODE" => array(
-			0 => "ID",
-			1 => "DETAIL_PICTURE",
-			2 => "",
-		),
-		"PROPERTY_CODE" => array(
-			0 => "",
-			1 => "COUNTER",
-			2 => "",
-		),
-		"CHECK_DATES" => "Y",
-		"DETAIL_URL" => "",
-		"PREVIEW_TRUNCATE_LEN" => "",
-		"ACTIVE_DATE_FORMAT" => "d.m.Y",
-		"SET_TITLE" => "Y",
-		"SET_BROWSER_TITLE" => "Y",
-		"SET_META_KEYWORDS" => "Y",
-		"SET_META_DESCRIPTION" => "Y",
-		"SET_LAST_MODIFIED" => "Y",
-		"INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
-		"ADD_SECTIONS_CHAIN" => "Y",
-		"HIDE_LINK_WHEN_NO_DETAIL" => "Y",
-		"PARENT_SECTION" => "",
-		"PARENT_SECTION_CODE" => "",
-		"INCLUDE_SUBSECTIONS" => "Y",
-		"CACHE_TYPE" => "A",
-		"CACHE_TIME" => "360000",
-		"CACHE_FILTER" => "Y",
-		"CACHE_GROUPS" => "Y",
-		"DISPLAY_TOP_PAGER" => "N",
-		"DISPLAY_BOTTOM_PAGER" => "Y",
-		"PAGER_TITLE" => "Объявления",
-		"PAGER_SHOW_ALWAYS" => "N",
-		"PAGER_TEMPLATE" => "ads",
-		"PAGER_DESC_NUMBERING" => "Y",
-		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-		"PAGER_SHOW_ALL" => "Y",
-		"PAGER_BASE_LINK_ENABLE" => "Y",
-		"SET_STATUS_404" => "Y",
-		"SHOW_404" => "N",
-		"MESSAGE_404" => "",
-		"PAGER_BASE_LINK" => "/",
-		"PAGER_PARAMS_NAME" => "arrPager",
-		"AJAX_OPTION_JUMP" => "N",
-		"AJAX_OPTION_STYLE" => "N",
-		"AJAX_OPTION_HISTORY" => "N",
-		"AJAX_OPTION_ADDITIONAL" => "",
-		"COMPONENT_TEMPLATE" => "ads",
-		"STRICT_SECTION_CHECK" => "N"
-	),
-	false
-);?>
+"bitrix:news.list",
+"ads",
+            array(
+                "DISPLAY_DATE" => "Y",
+                "DISPLAY_NAME" => "Y",
+                "DISPLAY_PICTURE" => "Y",
+                "DISPLAY_PREVIEW_TEXT" => "Y",
+                "AJAX_MODE" => "N",
+                "IBLOCK_TYPE" => "products",
+                "IBLOCK_ID" => ADS_IBLOCK_ID,
+                "NEWS_COUNT" => "2",
+                "SORT_BY1" => "ACTIVE_FROM",
+                "SORT_ORDER1" => "DESC",
+                "SORT_BY2" => "SORT",
+                "SORT_ORDER2" => "ASC",
+                "FILTER_NAME" => "",
+                "FIELD_CODE" => array(
+                    0 => "ID",
+                    1 => "DETAIL_PICTURE",
+                    2 => "",
+                ),
+                "PROPERTY_CODE" => array(
+                    0 => "",
+                    1 => "COUNTER",
+                    2 => "",
+                ),
+                "CHECK_DATES" => "Y",
+                "DETAIL_URL" => "",
+                "PREVIEW_TRUNCATE_LEN" => "",
+                "ACTIVE_DATE_FORMAT" => "d.m.Y",
+                "SET_TITLE" => "Y",
+                "SET_BROWSER_TITLE" => "Y",
+                "SET_META_KEYWORDS" => "Y",
+                "SET_META_DESCRIPTION" => "Y",
+                "SET_LAST_MODIFIED" => "Y",
+                "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
+                "ADD_SECTIONS_CHAIN" => "Y",
+                "HIDE_LINK_WHEN_NO_DETAIL" => "Y",
+                "PARENT_SECTION" => "",
+                "PARENT_SECTION_CODE" => "",
+                "INCLUDE_SUBSECTIONS" => "Y",
+                "CACHE_TYPE" => "A",
+                "CACHE_TIME" => "360000",
+                "CACHE_FILTER" => "Y",
+                "CACHE_GROUPS" => "Y",
+                "DISPLAY_TOP_PAGER" => "N",
+                "DISPLAY_BOTTOM_PAGER" => "Y",
+                "PAGER_TITLE" => "Объявления",
+                "PAGER_SHOW_ALWAYS" => "N",
+                "PAGER_TEMPLATE" => "ads",
+                "PAGER_DESC_NUMBERING" => "Y",
+                "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                "PAGER_SHOW_ALL" => "Y",
+                "PAGER_BASE_LINK_ENABLE" => "Y",
+                "SET_STATUS_404" => "Y",
+                "SHOW_404" => "N",
+                "MESSAGE_404" => "",
+                "PAGER_BASE_LINK" => "/",
+                "PAGER_PARAMS_NAME" => "arrPager",
+                "AJAX_OPTION_JUMP" => "N",
+                "AJAX_OPTION_STYLE" => "N",
+                "AJAX_OPTION_HISTORY" => "N",
+                "AJAX_OPTION_ADDITIONAL" => "",
+                "COMPONENT_TEMPLATE" => "ads",
+                "STRICT_SECTION_CHECK" => "N"
+            ),
+            false
+            );?>
         </div>
     </div>
 </div>
