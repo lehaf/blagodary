@@ -1,7 +1,6 @@
 <?php
 
 use \Bitrix\Main\Data\Cache;
-
 /** @global object $APPLICATION */
 
 function pr($o, $show = false, $die = false, $fullBackTrace = false)
@@ -103,6 +102,7 @@ function getSectionData(int $sectionId, int $iblockId) : ?array
 
     return $arSection ?? NULL;
 }
+
 
 function setBreadcrumb(array $arSectionTree) : void
 {

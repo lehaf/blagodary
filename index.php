@@ -165,50 +165,69 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         </div>
     </aside>
     <div class="page-content">
-        <main class="main" style="background: url(<?=SITE_TEMPLATE_PATH?>/html/assets/img/bg-main.jpg) no-repeat center/cover">
-            <div class="main-wrapper-text">
-                <h1 class="main__title">Прими или отдай
-                    <span>в дар</span>
-                </h1>
-                <p class="main__description">
-                    Возможно, кому-то ваша вещь очень нужна
-                </p>
-            </div>
-            <div class="main-search">
-                <form action="#" class="main-search-form">
-                    <div class="form-group-search">
-                        <label for="form-search">Поиск по товарам</label>
-                        <input type="text" placeholder="Искать товары" name="form-search"
-                               class="form-search-input" id="form-search">
-                    </div>
-                    <div class="form-group-search form-group-search--select">
-                        <label for="selectBanner">Область</label>
-                        <select name="country" class="custom-select custom-old" id="selectBanner">
-                            <option value="minsk" selected>Минск</option>
-                            <option value="brest">Минская область</option>
-                            <option value="grodno">Гродненская область</option>
-                            <option value="gomel">Гомельская область</option>
-                            <option value="mogilev">Могилевская область</option>
-                            <option value="vit">Витебская область</option>
-                        </select>
-                    </div>
-                    <div class="form-group-search form-group-search--select-new">
-                        <label for="selectBannerNew">Город / Район</label>
-                        <select name="city" class="custom-select new-select" data-select="new-list"
-                                id="selectBannerNew">
-                        </select>
-                    </div>
-                    <div class="form-group-search">
-                        <button class="btn-bg btn--main-search">
-                            Найти
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#search-white"></use>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </main>
+        <?$APPLICATION->IncludeComponent(
+            "bitrix:news.list",
+            "upper-banner",
+            Array(
+                "DISPLAY_DATE" => "Y",	// Выводить дату элемента
+                "DISPLAY_NAME" => "Y",	// Выводить название элемента
+                "DISPLAY_PICTURE" => "Y",	// Выводить изображение для анонса
+                "DISPLAY_PREVIEW_TEXT" => "Y",	// Выводить текст анонса
+                "AJAX_MODE" => "Y",	// Включить режим AJAX
+                "IBLOCK_TYPE" => "main",	// Тип информационного блока (используется только для проверки)
+                "IBLOCK_ID" => UPPER_BANNER_IBLOCK_ID,	// Код информационного блока
+                "NEWS_COUNT" => "1",	// Количество новостей на странице
+                "SORT_BY1" => "SORT",	// Поле для первой сортировки новостей
+                "SORT_ORDER1" => "ASC",	// Направление для первой сортировки новостей
+                "SORT_BY2" => "ID",	// Поле для второй сортировки новостей
+                "SORT_ORDER2" => "DESC",	// Направление для второй сортировки новостей
+                "FILTER_NAME" => "",	// Фильтр
+                "FIELD_CODE" => array(	// Поля
+                    0 => "ID",
+                    1 => "DETAIL_PICTURE",
+                    2 => "DETAIL_TEXT",
+                ),
+                "PROPERTY_CODE" => array(),
+                "CHECK_DATES" => "Y",	// Показывать только активные на данный момент элементы
+                "DETAIL_URL" => "",	// URL страницы детального просмотра (по умолчанию - из настроек инфоблока)
+                "PREVIEW_TRUNCATE_LEN" => "",	// Максимальная длина анонса для вывода (только для типа текст)
+                "ACTIVE_DATE_FORMAT" => "d.m.Y",	// Формат показа даты
+                "SET_TITLE" => "Y",	// Устанавливать заголовок страницы
+                "SET_BROWSER_TITLE" => "Y",	// Устанавливать заголовок окна браузера
+                "SET_META_KEYWORDS" => "Y",	// Устанавливать ключевые слова страницы
+                "SET_META_DESCRIPTION" => "Y",	// Устанавливать описание страницы
+                "SET_LAST_MODIFIED" => "Y",	// Устанавливать в заголовках ответа время модификации страницы
+                "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",	// Включать инфоблок в цепочку навигации
+                "ADD_SECTIONS_CHAIN" => "Y",	// Включать раздел в цепочку навигации
+                "HIDE_LINK_WHEN_NO_DETAIL" => "Y",	// Скрывать ссылку, если нет детального описания
+                "PARENT_SECTION" => "",	// ID раздела
+                "PARENT_SECTION_CODE" => "",	// Код раздела
+                "INCLUDE_SUBSECTIONS" => "Y",	// Показывать элементы подразделов раздела
+                "CACHE_TYPE" => "A",	// Тип кеширования
+                "CACHE_TIME" => "360000",	// Время кеширования (сек.)
+                "CACHE_FILTER" => "Y",	// Кешировать при установленном фильтре
+                "CACHE_GROUPS" => "Y",	// Учитывать права доступа
+                "DISPLAY_TOP_PAGER" => "N",	// Выводить над списком
+                "DISPLAY_BOTTOM_PAGER" => "N",	// Выводить под списком
+                "PAGER_TITLE" => "Новости",	// Название категорий
+                "PAGER_SHOW_ALWAYS" => "N",	// Выводить всегда
+                "PAGER_TEMPLATE" => "",	// Шаблон постраничной навигации
+                "PAGER_DESC_NUMBERING" => "Y",	// Использовать обратную навигацию
+                "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",	// Время кеширования страниц для обратной навигации
+                "PAGER_SHOW_ALL" => "Y",	// Показывать ссылку "Все"
+                "PAGER_BASE_LINK_ENABLE" => "N",	// Включить обработку ссылок
+                "SET_STATUS_404" => "Y",	// Устанавливать статус 404
+                "SHOW_404" => "N",	// Показ специальной страницы
+                "MESSAGE_404" => "",
+                "PAGER_BASE_LINK" => "/",	// Url для построения ссылок (по умолчанию - автоматически)
+                "PAGER_PARAMS_NAME" => "arrPager",	// Имя массива с переменными для построения ссылок
+                "AJAX_OPTION_JUMP" => "N",
+                "AJAX_OPTION_STYLE" => "Y",
+                "AJAX_OPTION_HISTORY" => "N",
+                "AJAX_OPTION_ADDITIONAL" => "",
+            ),
+            false
+        );?>
         <?
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
@@ -287,7 +306,10 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             );
         }
         ?>
-        <?$APPLICATION->IncludeComponent("bitrix:news.list", "banner-with-counter", Array(
+        <?$APPLICATION->IncludeComponent(
+        "bitrix:news.list",
+        "banner-with-counter",
+                Array(
             "DISPLAY_DATE" => "Y",	// Выводить дату элемента
                 "DISPLAY_NAME" => "Y",	// Выводить название элемента
                 "DISPLAY_PICTURE" => "Y",	// Выводить изображение для анонса
