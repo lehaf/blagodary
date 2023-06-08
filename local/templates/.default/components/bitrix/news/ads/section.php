@@ -22,6 +22,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
     $rootSectionId = $arSectionTree[0]['ID'] ?? $arSectionTree['ID']; // Получаем id корневого раздела
     $arRootSection = getSectionData($rootSectionId,ADS_IBLOCK_ID); // Получаем данные по корневому разделу
 }
+
 ?>
 <div class="page-container">
     <aside class="aside">
@@ -212,7 +213,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             <? global $arFilterAds;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
-                'SECTION_ID' => $activeSectionId
+                'SECTION_ID' => $arActiveSection['ID']
             ];
 
             $APPLICATION->IncludeComponent(
@@ -278,80 +279,81 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         <?
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
-        global $arViewedGoodsFilter;
-        $arViewedGoodsFilter = [
-            'ID' => $arViewedGoodsId
-        ];
-      $APPLICATION->IncludeComponent(
-	"bitrix:catalog.section", 
-	"you-watch-before",
-	array(
-		"ACTION_VARIABLE" => "",
-		"ADD_PICT_PROP" => "MORE_PHOTO",
-		"ADD_PROPERTIES_TO_BASKET" => "N",
-		"ADD_SECTIONS_CHAIN" => "N",
-		"CACHE_FILTER" => "Y",
-		"CACHE_GROUPS" => "Y",
-		"CACHE_TIME" => "36000000",
-		"CACHE_TYPE" => "A",
-		"COMPATIBLE_MODE" => "N",
-		"CONVERT_CURRENCY" => "Y",
-		"CURRENCY_ID" => "RUB",
-		"CUSTOM_FILTER" => "",
-		"DATA_LAYER_NAME" => "dataLayer",
-		"DETAIL_URL" => "",
-		"DISABLE_INIT_JS_IN_COMPONENT" => "N",
-		"DISPLAY_BOTTOM_PAGER" => "Y",
-		"DISPLAY_TOP_PAGER" => "N",
-		"ELEMENT_SORT_FIELD" => "id",
-		"ELEMENT_SORT_FIELD2" => "sort",
-		"ELEMENT_SORT_ORDER" => $arViewedGoodsId,
-		"ELEMENT_SORT_ORDER2" => "asc",
-		"ENLARGE_PRODUCT" => "PROP",
-		"ENLARGE_PROP" => "NEWPRODUCT",
-		"FILTER_NAME" => "arViewedGoodsFilter",
-		"HIDE_NOT_AVAILABLE" => "N",
-		"HIDE_NOT_AVAILABLE_OFFERS" => "N",
-		"IBLOCK_ID" => ADS_IBLOCK_ID,
-		"IBLOCK_TYPE" => "products",
-		"PAGER_BASE_LINK_ENABLE" => "N",
-		"PAGER_DESC_NUMBERING" => "N",
-		"PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-		"PAGER_SHOW_ALL" => "N",
-		"PAGER_SHOW_ALWAYS" => "N",
-		"PAGER_TEMPLATE" => "ads",
-		"PAGER_TITLE" => "Ранее смотрели",
-		"PAGE_ELEMENT_COUNT" => "10",
-		"RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
-		"RCM_TYPE" => "personal",
-		"SEF_MODE" => "N",
-		"SET_BROWSER_TITLE" => "N",
-		"SET_LAST_MODIFIED" => "N",
-		"SET_META_DESCRIPTION" => "N",
-		"SET_META_KEYWORDS" => "N",
-		"SET_STATUS_404" => "N",
-		"SET_TITLE" => "N",
-		"SHOW_404" => "N",
-		"SHOW_ALL_WO_SECTION" => "N",
-		"SHOW_CLOSE_POPUP" => "N",
-		"SHOW_DISCOUNT_PERCENT" => "Y",
-		"SHOW_FROM_SECTION" => "N",
-		"SHOW_MAX_QUANTITY" => "N",
-		"SHOW_OLD_PRICE" => "N",
-		"SHOW_PRICE_COUNT" => "1",
-		"SHOW_SLIDER" => "Y",
-		"SLIDER_INTERVAL" => "3000",
-		"SLIDER_PROGRESS" => "N",
-		"TEMPLATE_THEME" => "blue",
-		"USE_ENHANCED_ECOMMERCE" => "Y",
-		"USE_MAIN_ELEMENT_SECTION" => "N",
-		"USE_PRICE_COUNT" => "N",
-		"USE_PRODUCT_QUANTITY" => "N",
-		"COMPONENT_TEMPLATE" => "you-watch-before",
-		"DISPLAY_COMPARE" => "N"
-	),
-	false
-);?>
+        if (!empty($arViewedGoodsId)) {
+            global $arViewedGoodsFilter;
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId];
+            $APPLICATION->IncludeComponent(
+                "bitrix:catalog.section",
+                "you-watch-before",
+                array(
+                    "ACTION_VARIABLE" => "",
+                    "ADD_PICT_PROP" => "MORE_PHOTO",
+                    "ADD_PROPERTIES_TO_BASKET" => "N",
+                    "ADD_SECTIONS_CHAIN" => "N",
+                    "CACHE_FILTER" => "Y",
+                    "CACHE_GROUPS" => "Y",
+                    "CACHE_TIME" => "36000000",
+                    "CACHE_TYPE" => "A",
+                    "COMPATIBLE_MODE" => "N",
+                    "CONVERT_CURRENCY" => "Y",
+                    "CURRENCY_ID" => "RUB",
+                    "CUSTOM_FILTER" => "",
+                    "DATA_LAYER_NAME" => "dataLayer",
+                    "DETAIL_URL" => "",
+                    "DISABLE_INIT_JS_IN_COMPONENT" => "N",
+                    "DISPLAY_BOTTOM_PAGER" => "Y",
+                    "DISPLAY_TOP_PAGER" => "N",
+                    "ELEMENT_SORT_FIELD" => "id",
+                    "ELEMENT_SORT_FIELD2" => "sort",
+                    "ELEMENT_SORT_ORDER" => $arViewedGoodsId,
+                    "ELEMENT_SORT_ORDER2" => "asc",
+                    "ENLARGE_PRODUCT" => "PROP",
+                    "ENLARGE_PROP" => "NEWPRODUCT",
+                    "FILTER_NAME" => "arViewedGoodsFilter",
+                    "HIDE_NOT_AVAILABLE" => "N",
+                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                    "IBLOCK_ID" => ADS_IBLOCK_ID,
+                    "IBLOCK_TYPE" => "products",
+                    "PAGER_BASE_LINK_ENABLE" => "N",
+                    "PAGER_DESC_NUMBERING" => "N",
+                    "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                    "PAGER_SHOW_ALL" => "N",
+                    "PAGER_SHOW_ALWAYS" => "N",
+                    "PAGER_TEMPLATE" => "ads",
+                    "PAGER_TITLE" => "Ранее смотрели",
+                    "PAGE_ELEMENT_COUNT" => "10",
+                    "RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
+                    "RCM_TYPE" => "personal",
+                    "SEF_MODE" => "N",
+                    "SET_BROWSER_TITLE" => "N",
+                    "SET_LAST_MODIFIED" => "N",
+                    "SET_META_DESCRIPTION" => "N",
+                    "SET_META_KEYWORDS" => "N",
+                    "SET_STATUS_404" => "N",
+                    "SET_TITLE" => "N",
+                    "SHOW_404" => "N",
+                    "SHOW_ALL_WO_SECTION" => "N",
+                    "SHOW_CLOSE_POPUP" => "N",
+                    "SHOW_DISCOUNT_PERCENT" => "Y",
+                    "SHOW_FROM_SECTION" => "N",
+                    "SHOW_MAX_QUANTITY" => "N",
+                    "SHOW_OLD_PRICE" => "N",
+                    "SHOW_PRICE_COUNT" => "1",
+                    "SHOW_SLIDER" => "Y",
+                    "SLIDER_INTERVAL" => "3000",
+                    "SLIDER_PROGRESS" => "N",
+                    "TEMPLATE_THEME" => "blue",
+                    "USE_ENHANCED_ECOMMERCE" => "Y",
+                    "USE_MAIN_ELEMENT_SECTION" => "N",
+                    "USE_PRICE_COUNT" => "N",
+                    "USE_PRODUCT_QUANTITY" => "N",
+                    "COMPONENT_TEMPLATE" => "you-watch-before",
+                    "DISPLAY_COMPARE" => "N"
+                ),
+                false
+            );
+        }
+      ?>
     </div>
 </div>
 <?php

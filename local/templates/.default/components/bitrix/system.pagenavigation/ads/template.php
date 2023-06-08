@@ -29,7 +29,11 @@ if(!$arResult["NavShowAlways"])
 
                 <?else:?>
                     <?if ($arResult["NavPageCount"] == ($arResult["NavPageNomer"]+1) ):?>
-                        <li class="pagination-list__item"><a href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>"></a></li>
+                        <a class="pagination-arrow-left" href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
+                            </svg>
+                        </a>
                     <?else:?>
                         <a class="pagination-arrow-left" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
                             <svg>
@@ -108,7 +112,7 @@ if(!$arResult["NavShowAlways"])
                         </li>
 
                     <?endif; ?>
-                    <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>">
+                    <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
                         </svg>
@@ -242,7 +246,7 @@ if(!$arResult["NavShowAlways"])
                 endif;
                 ?>
 
-                <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>">
+                <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
                     <svg>
                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
                     </svg>

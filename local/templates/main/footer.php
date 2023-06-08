@@ -115,7 +115,7 @@ IncludeTemplateLangFile(__FILE__);
                 "CACHE_NOTES" => "Y",
                 "CACHE_GROUPS" => "Y",
                 "CACHE_FILTER" => "Y",
-                "ALL_CATEGORIES_LINK" => "/ads/"
+                "ALL_CATEGORIES_LINK" => "/"
             )
         );?>
     </div>

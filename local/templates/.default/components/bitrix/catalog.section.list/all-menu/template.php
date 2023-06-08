@@ -12,6 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.svg#item-17';
+$curPage = $APPLICATION->GetCurPage();
 ?>
 <?if (!empty($arResult['SECTIONS']) && !empty($arResult['CATEGORIES'])):?>
 <?php $firstSectionKey = array_key_first($arResult['SECTIONS'])?>
@@ -25,12 +26,12 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
             </button>
             <ul class="category-list">
                 <li class="category-list__item active">
-                    <a href="<?=$arParams['ALL_CATEGORIES_LINK']?>">
+                    <?if ($curPage !== '/'):?><a href="<?=$arParams['ALL_CATEGORIES_LINK']?>"><?else:?><span><?endif;?>
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
                         </svg>
                         Все категории
-                    </a>
+                    <?if ($curPage !== '/'):?></a><?else:?></span><?endif;?>
                 </li>
                 <?foreach ($arResult['CATEGORIES'] as $key => $arCategory):?>
                     <li class="category-list__item category-list__item--pop-up <?=$key === 0 ? 'is-active' : ''?>"

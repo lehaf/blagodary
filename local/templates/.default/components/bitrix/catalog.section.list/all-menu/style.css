@@ -1,0 +1,17 @@
+.category-list__item.active span {
+    font-weight: 700;
+}
+
+.category-list__item span {
+    max-width: 200px;
+}
+.category-list__item span {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+    color: #2a3548;
+    transition: .3s;
+}

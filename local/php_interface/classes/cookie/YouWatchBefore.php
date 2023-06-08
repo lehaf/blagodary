@@ -14,23 +14,10 @@ class YouWatchBefore
     public function setCookie(int $goodId) : void
     {
         if ($arGoodsId = $this->getGoodsFromCookie()) {
-            if (in_array($goodId,$arGoodsId)) {
-                $key = array_search($goodId,$arGoodsId);
-                unset($arGoodsId[$key]);
-            }
-            array_unshift($arGoodsId,$goodId);
-            if (count($arGoodsId) > $this->maxGoodCount) {
-                $arGoodsId = array_chunk($arGoodsId,$this->maxGoodCount)[0];
-            }
-            $arJson = json_encode($arGoodsId);
-            $cookie = new Cookie($this->cookieName, $arJson,time() + $this->timeExpiration);
-            $cookie->setDomain($_SERVER['SERVER_NAME']);
-            Application::getInstance()->getContext()->getResponse()->addCookie($cookie);
+            $this->checkGoodInCookie($goodId,$arGoodsId);
+            $this->setCookieToUser($arGoodsId);
         } else {
-            $arJson = json_encode([$goodId]);
-            $cookie = new Cookie($this->cookieName, $arJson,time() + $this->timeExpiration);
-            $cookie->setDomain($_SERVER['SERVER_NAME']);
-            Application::getInstance()->getContext()->getResponse()->addCookie($cookie);
+            $this->setCookieToUser($goodId);
         }
     }
 
@@ -42,4 +29,24 @@ class YouWatchBefore
         return $arGoodsId ?? NULL;
     }
 
+    private function checkGoodInCookie(int $goodId, array &$arGoodsId) : void
+    {
+        if (in_array($goodId,$arGoodsId)) {
+            $key = array_search($goodId,$arGoodsId);
+            unset($arGoodsId[$key]);
+        }
+        array_unshift($arGoodsId,$goodId);
+        if (count($arGoodsId) > $this->maxGoodCount) {
+            $arGoodsId = array_chunk($arGoodsId,$this->maxGoodCount)[0];
+        }
+    }
+
+    private function setCookieToUser(mixed $arCookieValue) : void
+    {
+        if (!is_array($arCookieValue)) $arCookieValue = [$arCookieValue];
+        $arJson = json_encode($arCookieValue);
+        $cookie = new Cookie($this->cookieName, $arJson,time() + $this->timeExpiration);
+        $cookie->setDomain($_SERVER['SERVER_NAME']);
+        Application::getInstance()->getContext()->getResponse()->addCookie($cookie);
+    }
 }
