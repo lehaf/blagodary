@@ -6,6 +6,14 @@ if (!empty($arResult['ITEMS'])) {
         $unixTime = strtotime($arItem['TIMESTAMP_X']);
         $arItem['TIMESTAMP_X'] = date('d.m.Y в H:i',$unixTime);
 
+        if (!empty($arItem['PROPERTIES']['REGION']['VALUE'])) {
+            $arItem['PLACE'] = $arItem['PROPERTIES']['REGION']['VALUE'];
+        }
+
+        if (!empty($arItem['PROPERTIES']['CITY']['VALUE'])) {
+            $arItem['PLACE'] .= ' / '.$arItem['PROPERTIES']['CITY']['VALUE'];
+        }
+
         // Ресайзим картинки если их нет - тавим заглушку
         if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'])) {
             $arItem['IMG'] = CFile::ResizeImageGet(

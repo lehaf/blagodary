@@ -37,10 +37,12 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
                         </div>
                         <div class="announcements-description__location">
                             <div class="location">
-                                <svg>
-                                    <use xlink:href="<?=$locationSpritePath?>"></use>
-                                </svg>
-                                Минск, Партизанский район
+                                <?if (!empty($arItem['PLACE'])):?>
+                                    <svg>
+                                        <use xlink:href="<?=$locationSpritePath?>"></use>
+                                    </svg>
+                                    <?=$arItem['PLACE']?>
+                                <?endif;?>
                             </div>
                             <div class="announcements-data"><?=$arItem['TIMESTAMP_X']?></div>
                         </div>
@@ -60,11 +62,13 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
                     <span class="viewed-slider__item-description">
                         <span class="announcements-card__item--title"><?=$arItem['NAME']?></span>
                         <div class="location">
+                            <?if (!empty($arItem['PLACE'])):?>
                                 <svg>
-                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
+                                    <use xlink:href="<?=$locationSpritePath?>"></use>
                                 </svg>
-                                Минск, Партизанский район
-                            </div>
+                                <?=$arItem['PLACE']?>
+                            <?endif;?>
+                        </div>
                         <span class="viewed-slider__item-data"><?=$arItem['TIMESTAMP_X']?></span>
                     </span>
                     <span class="favorite-card"></span>
