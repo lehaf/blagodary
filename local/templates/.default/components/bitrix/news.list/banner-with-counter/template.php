@@ -13,7 +13,7 @@
 $this->setFrameMode(true);
 $arItem = $arResult['ITEMS'][0];
 ?>
-<?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['SRC']) && !empty($arItem['PROPERTIES']['COUNTER'])):?>
+<?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['src']) && !empty($arItem['PROPERTIES']['COUNTER'])):?>
     <?
     // Добавляем эрмитаж
     $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
@@ -22,7 +22,7 @@ $arItem = $arResult['ITEMS'][0];
     ?>
     <div id="<?=$this->GetEditAreaID($arItem['ID'])?>"
          class="banner-mini"
-         style="background: url(<?=$arItem['DETAIL_PICTURE']['SRC']?>) no-repeat center/cover;"
+         style="background: url(<?=$arItem['DETAIL_PICTURE']['src']?>) no-repeat center/cover;"
     >
         <div class="banner-mini-title">
             <?=$arItem['DETAIL_TEXT']?>
