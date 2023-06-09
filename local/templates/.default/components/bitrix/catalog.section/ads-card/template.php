@@ -13,6 +13,7 @@
 /** @global string $typeOfView */
 $this->setFrameMode(true);
 $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#location';
+$this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
 ?>
 <?if (!empty($arResult['ITEMS'])):?>
