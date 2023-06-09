@@ -177,7 +177,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'?>
+                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>
             <? global $arFilterAds;
             $arFilterAds = [
@@ -186,7 +186,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
 
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
-                "ads",
+                $typeOfView,
                 array(
                     'SECTION_ID' => $arActiveSection['ID'],
                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],

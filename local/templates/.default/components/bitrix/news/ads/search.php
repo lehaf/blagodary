@@ -184,7 +184,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'?>
+                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>
             <? global $arFilterAds;
             $arFilterAds = [
@@ -192,7 +192,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
             ];
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
-                "ads",
+                $typeOfView,
                 array(
                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                     "IBLOCK_ID" => $arParams["IBLOCK_ID"],

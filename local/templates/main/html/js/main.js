@@ -156,28 +156,28 @@ $(window).resize(function () {
 });
 
 
-const announcementsSwitch = document.querySelector(".announcements-switch");
-
-if (widthWindow < 457) {
-    $(".announcements-content__item--list").removeClass("active");
-    $(".announcements-content__item--card").addClass("active");
-}
-
-if (announcementsSwitch) {
-    announcementsSwitch.addEventListener("click", () => {
-        let target = event.target;
-        $(".announcements-switch__item").removeClass("active");
-        if (target.closest(".switch-list")) {
-            $(".switch-list").addClass("active");
-            $(".announcements-content__item--card").removeClass("active");
-            $(".announcements-content__item--list").addClass("active");
-        } else if (target.closest(".switch-card")) {
-            $(".switch-card").addClass("active");
-            $(".announcements-content__item--list").removeClass("active");
-            $(".announcements-content__item--card").addClass("active");
-        }
-    })
-}
+// const announcementsSwitch = document.querySelector(".announcements-switch");
+//
+// if (widthWindow < 457) {
+//     $(".announcements-content__item--list").removeClass("active");
+//     $(".announcements-content__item--card").addClass("active");
+// }
+//
+// if (announcementsSwitch) {
+//     announcementsSwitch.addEventListener("click", () => {
+//         let target = event.target;
+//         $(".announcements-switch__item").removeClass("active");
+//         if (target.closest(".switch-list")) {
+//             $(".switch-list").addClass("active");
+//             $(".announcements-content__item--card").removeClass("active");
+//             $(".announcements-content__item--list").addClass("active");
+//         } else if (target.closest(".switch-card")) {
+//             $(".switch-card").addClass("active");
+//             $(".announcements-content__item--list").removeClass("active");
+//             $(".announcements-content__item--card").addClass("active");
+//         }
+//     })
+// }
 
 $("#header-search").on("focus", function () {
     $(".header-search").addClass("active")
