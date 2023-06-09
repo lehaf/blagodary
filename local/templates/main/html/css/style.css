@@ -5882,3 +5882,7 @@ ul .news-list__item:before {
     overflow: hidden;
   }
 }
+
+body .bx-core-popup-menu-item-text {
+  color: #f3f5f9;
+}

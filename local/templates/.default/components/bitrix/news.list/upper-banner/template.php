@@ -12,6 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 $arItem = $arResult['ITEM'];
+$this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/main-search.js');
 ?>
 <?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['src'])):?>
     <?

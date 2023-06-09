@@ -26,7 +26,6 @@ if(!$arResult["NavShowAlways"])
                     <li class="pagination-list__item">
                         <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"></a>
                     </li>
-
                 <?else:?>
                     <?if ($arResult["NavPageCount"] == ($arResult["NavPageNomer"]+1) ):?>
                         <a class="pagination-arrow-left" href="<?=$arResult["sUrlPath"]?><?=$strNavQueryStringFull?>">

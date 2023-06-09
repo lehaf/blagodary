@@ -19,8 +19,6 @@ SwitcherView.prototype.init = function () {
     this.createLoader();
 }
 
-
-
 SwitcherView.prototype.setEventListener = function () {
     const _this = this;
 
@@ -29,19 +27,22 @@ SwitcherView.prototype.setEventListener = function () {
             switcherBtn.onclick = () => {
                 if (!switcherBtn.classList.contains('active')) {
                     let typeOfView = switcherBtn.getAttribute('id');
-                    if (typeOfView == 'ads-list') {
-                        document.getElementById('ads-card').classList.remove('active');
-                    } else {
-                        document.getElementById('ads-list').classList.remove('active');
-                    }
-                    switcherBtn.classList.add('active');
+                    _this.setActiveView(switcherBtn);
                     _this.setLoader();
                     _this.sendData({'isAjax': 'Y', 'typeOfView': typeOfView});
-                } else {
-
                 }
             }
         });
+    }
+}
+
+SwitcherView.prototype.setActiveView = function (elementDom) {
+    elementDom.classList.add('active');
+
+    if (elementDom.nextElementSibling) {
+        elementDom.nextElementSibling.classList.remove('active');
+    } else {
+        elementDom.previousElementSibling.classList.remove('active');
     }
 }
 
@@ -66,6 +67,11 @@ SwitcherView.prototype.deleteLoader = function () {
     document.querySelector('.'+this.settings.loaderClassName).remove();
 }
 
+SwitcherView.prototype.getDomElementsFromString = function (string) {
+    let obDomParser = new DOMParser();
+    return obDomParser.parseFromString(string, "text/html");
+}
+
 SwitcherView.prototype.sendData = function (typeOfView) {
     const _this = this;
     fetch(location.href, {
@@ -76,8 +82,7 @@ SwitcherView.prototype.sendData = function (typeOfView) {
     }).then(function(response) {
         return response.text()
     }).then(function(text) {
-        let responseDom = new DOMParser();
-        let response = responseDom.parseFromString(text, "text/html");
+        let response = _this.getDomElementsFromString(text);
         let newView = response.querySelector(_this.settings.elementsClass);
         let curContainer = document.querySelector(_this.settings.elementsContainerClass);
         setTimeout(() => {

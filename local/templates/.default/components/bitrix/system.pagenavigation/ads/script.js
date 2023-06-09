@@ -1,97 +1,93 @@
-const PagerApp = function (settings) {
-	this._settings = {
-		preloaderContainer: '.ajax_container',
-		defaultOffsetSelector: '.breadcrumb',
-		paginationItemClass: '.paginations__link',
+const Pagination = function () {
+	this.settings = {
+		'paginationLinkSelector':'.pagination-list .pagination-list__item a',
+		'switcherBtnClass':'.announcements-switch__item',
+		'loaderClassName':'lds-heart',
+		'loaderContainerClass':'.announcements-content',
+		'blurContainerClass':'.announcements-content__item',
+		'blurClass':'blur',
+		'elementsClass':'.announcements-content__item',
+		'elementsContainerClass':'.announcements-content',
 	}
-	for (let propName in settings) {
-		if (settings.hasOwnProperty(propName)) {
-			this._settings[propName] = settings[propName];
-		}
-	}
-	this._$preloaderContainer = document.querySelector(this._settings.preloaderContainer);
-	this._init();
-}
-PagerApp.prototype._init = function () {
-	this._setupListener.call(this);
-}
-PagerApp.prototype._setupListener = function () {
-	const _this = this,
-		paginationItemSelector = _this._settings.paginationItemClass,
-		paginationItemClass = paginationItemSelector.substring(paginationItemSelector.indexOf('.') + 1);
 
-	_this._$preloaderContainer?.addEventListener('click', (e) => {
-		if (e.target.classList.contains(paginationItemClass) || e.target.closest('.' + paginationItemClass) !== null) {
-			e.preventDefault();
-			let link = e.target.getAttribute('href');
-			if (!link) {
-				link = e.target.closest('.' + paginationItemClass).getAttribute('href')
-			}
-			_this._send({ reload_ajax: 'y' }, link, link);
-		}
-	});
+	this.$loaderContainer = document.querySelector(this.settings.loaderContainerClass);
+	this.init();
 }
-PagerApp.prototype._send = function (data = {}, link = window.location.href, changeLink = '', scroll = true) {
+
+Pagination.prototype.init = function () {
+	this.setEventListener();
+	this.createLoader();
+}
+
+Pagination.prototype.setEventListener = function () {
 	const _this = this;
-	if (data.length === 0 || link === '#' || !link) return;
+	this.$arAllPaginationLinks = document.querySelectorAll(this.settings.paginationLinkSelector);
 
-	_this._displayLoading();
-	if (scroll) {
-		let $topOffset = (document.querySelector(this._settings.defaultOffsetSelector)
-			.getBoundingClientRect().top - 300 + document.body.scrollTop);
-
-		window.scrollBy({
-			top: $topOffset,
-			behavior: 'smooth'
+	if (this.$arAllPaginationLinks.length > 0) {
+		this.$arAllPaginationLinks.forEach((paginationLink) => {
+			paginationLink.onclick = () => {
+				event.preventDefault();
+				let requestLink = paginationLink.getAttribute('href');
+				_this.setLoader();
+				_this.sendData(requestLink,{'isAjax': 'Y',});
+			}
 		});
 	}
+}
 
+Pagination.prototype.createLoader = function () {
+	const loader = document.createElement('div');
+	loader.classList.add(this.settings.loaderClassName);
+	const innerDiv = document.createElement('div');
+	loader.prepend(innerDiv);
+	this.$loader = loader;
+}
+
+Pagination.prototype.setLoader = function () {
+	this.$blurContainer = document.querySelector(this.settings.blurContainerClass);
+	if (this.$loader && this.$loaderContainer && this.$blurContainer) {
+		this.$blurContainer.classList.add(this.settings.blurClass);
+		this.$loaderContainer.prepend(this.$loader);
+	}
+}
+
+Pagination.prototype.deleteLoader = function () {
+	this.$blurContainer.classList.remove(this.settings.blurClass);
+	document.querySelector('.'+this.settings.loaderClassName).remove();
+}
+
+Pagination.prototype.getDomElementsFromString = function (string) {
+	let obDomParser = new DOMParser();
+	return obDomParser.parseFromString(string, "text/html");
+}
+
+Pagination.prototype.sendData = function (link,data) {
+	const _this = this;
 	fetch(link, {
 		method: 'POST',
 		cache: 'no-cache',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		body: new URLSearchParams(data)
-	}).then(function (response) {
+	}).then(function(response) {
 		return response.text()
-	}).then(function (text) {
-		let template = document.createElement('div');
-		template.innerHTML = text;
-
+	}).then(function(text) {
+		let response = _this.getDomElementsFromString(text);
+		let nextElementsContainer = response.querySelector(_this.settings.elementsContainerClass);
+		let curContainer = document.querySelector(_this.settings.elementsContainerClass);
 		setTimeout(() => {
-			if (template.querySelector(_this._settings.preloaderContainer))
-			{
-				_this._$preloaderContainer.innerHTML = template.querySelector(_this._settings.preloaderContainer).innerHTML;
-				if (changeLink !== '') {
-					history.pushState(null, null, changeLink);
-				}
-			}
+			_this.deleteLoader();
+			curContainer.innerHTML = nextElementsContainer.innerHTML;
+			_this.setEventListener();
+		},300);
 
-			window.dispatchEvent(new CustomEvent("ajax-finished", {
-				detail: {}
-			}));
+		window.history.replaceState(null, null, link);
 
-			_this._hideLoading();
-
-		}, 100);
-	})
-		.catch(error => {
-			console.log(error);
-		});
-}
-PagerApp.prototype._displayLoading = function () {
-	this._$preloaderContainer.classList.add('preloader');
-	setTimeout(() => {
-		this._hideLoading();
-	}, 8000);
-}
-PagerApp.prototype._hideLoading = function () {
-	this._$preloaderContainer.classList.remove('preloader')
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-	new PagerApp({
-		preloaderContainer: '.ajax_container',
-		defaultOffsetSelector: '.breadcrumb',
-		paginationItemClass: '.paginations__link',
+	}).catch(error => {
+		console.log(error);
 	});
-})
+}
+
+
+addEventListener('DOMContentLoaded',() => {
+	new Pagination();
+});
