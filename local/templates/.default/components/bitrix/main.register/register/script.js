@@ -8,6 +8,19 @@ const RegisterAjax = function () {
         'acceptCheckboxId':'#accept-register',
     }
 
+    this.validate = {
+        'mailFormat':'/^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$/',
+        'numbersInString':'/\\d+/',
+    }
+
+    this.errors = {
+       'emptyField':'Обязательное поле!',
+       'wrongEmail':'Некоректный email!',
+       'smallPass':'Минимум 8 символов!',
+       'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
+       'numbersInPass':'Пароль должен содержать цифры!'
+    }
+
     this.$form = document.querySelector('form' + this.setting.formId);
     this.$formAction = this.$form.getAttribute('action');
     this.$formInputs = this.$form.querySelectorAll('input');
@@ -18,6 +31,7 @@ const RegisterAjax = function () {
 
 RegisterAjax.prototype.init = function () {
     this.setupListener();
+    this.clickAccept();
 }
 
 RegisterAjax.prototype.setupListener = function () {
@@ -33,12 +47,65 @@ RegisterAjax.prototype.setupListener = function () {
     }
 }
 
+RegisterAjax.prototype.checkFormFields = function () {
+    const _this = this;
+    if (this.$formInputs) {
+        this.$formInputs.forEach((input) => {
+            let errors = [];
+            switch (input.getAttribute('type')) {
+                case 'email':
+                    if (!input.value) {
+                        errors.push(_this.errors.emptyField)
+                    } else {
+                        if (!input.value.match(this.validate.mailFormat)) {
+                            errors.push(_this.errors.wrongEmail)
+                        }
+                    }
+                    break;
+                case 'pass':
+                    if (input.value.length < 8) {
+                        errors.push(_this.errors.smallPass);
+                    }
+
+                    if (input.value === input.value.toLowerCase()) {
+                        errors.push(_this.errors.upperLowerCase);
+                    }
+
+                    if (!input.value.match(this.validate.numbersInString)) {
+                        errors.push(_this.errors.numbersInPass);
+                    }
+                    break;
+                case 'checkbox':
+                    break;
+                default:
+                    if (!input.value) {
+                        errors.push(_this.errors.emptyField)
+                    }
+                    break;
+            }
+        });
+    }
+}
+
 RegisterAjax.prototype.checkAccept = function () {
     if (this.$acceptInput.checked) {
         return this.$acceptInput.checked;
     } else {
         this.errorAccept();
         return this.$acceptInput.checked;
+    }
+}
+
+RegisterAjax.prototype.clickAccept = function () {
+    if (this.$acceptInput) {
+        this.$acceptInput.onchange= () => {
+            if (this.$acceptInput.checked) {
+                let acceptSpan = this.$acceptInput.parentNode.querySelector('.user-agreement');
+                if (acceptSpan.classList.contains('error')) {
+                    acceptSpan.classList.remove('error');
+                }
+            }
+        }
     }
 }
 
