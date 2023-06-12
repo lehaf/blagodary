@@ -1,5 +1,5 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-IncludeTemplateLangFile(__FILE__);
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+global $USER;
 ?>
 
     </div>
@@ -330,6 +330,83 @@ IncludeTemplateLangFile(__FILE__);
         </ul>
     </div>
 </div>
+
 <div class="mobile_menu_overlay"></div>
+
+<div class="popUp popUp-reset-mail">
+    <h3 class="reset-mail__title">Введите E-mail от своего профиля</h3>
+    <p class="reset-mail__subtitle">Мы отправим на него ссылку для восстановления пароля</p>
+    <form action="#" class="form-reset-mail data-user">
+        <div class="form-group">
+            <label for="reset-email" class="data-user__label">E-mail*</label>
+            <input type="email" name="email" id="reset-email" placeholder="test@gmail.com">
+        </div>
+        <button class="btn-bg" id="submit-reset-password">Отправить</button>
+    </form>
+    <span class="modal-cross">
+        <svg>
+            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup-white"></use>
+        </svg>
+    </span>
+</div>
+<?if (!$USER->IsAuthorized()) :?>
+    <div class="substrate"></div>
+    <div class="popUp popUp-login">
+        <div class="login-btn-list">
+            <button class="login-btn-list__item login-btn active">Вход</button>
+            <button class="login-btn-list__item registration-btn">Регистрация</button>
+        </div>
+        <div class="login-services">
+            <span class="login-services__title">Войдите через сервисы:</span>
+            <div class="login-services-content">
+                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#vk-popup"></use></svg></a></div>
+                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#fb"></use></svg></a></div>
+                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#google"></use></svg></a></div>
+                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#yandex"></use></svg></a></div>
+                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#mymir"></use></svg></a></div>
+            </div>
+        </div>
+        <div class="popUp-login-content">
+            <div class="login-content active">
+                <?$APPLICATION->IncludeComponent(
+                    "bitrix:main.auth.form",
+                    "auth",
+                    Array(
+                        "AUTH_FORGOT_PASSWORD_URL" => "",
+                        "AUTH_REGISTER_URL" => "",
+                        "AUTH_SUCCESS_URL" => "",
+                    ),
+                    false
+                ); ?>
+            </div>
+            <div class="registration-content">
+                <?$APPLICATION->IncludeComponent(
+	"bitrix:main.register", 
+	"register", 
+	array(
+		"AUTH" => "Y",
+		"REQUIRED_FIELDS" => array(
+		),
+		"SET_TITLE" => "N",
+		"SHOW_FIELDS" => array(
+		),
+		"SUCCESS_PAGE" => "",
+		"USER_PROPERTY" => array(
+		),
+		"USER_PROPERTY_NAME" => "",
+		"USE_BACKURL" => "N",
+		"COMPONENT_TEMPLATE" => "register"
+	),
+	false
+);?>
+            </div>
+        </div>
+        <span class="modal-cross">
+            <svg>
+                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup-white"></use>
+            </svg>
+        </span>
+    </div>
+<?endif?>
 </body>
 </html>

@@ -77,101 +77,42 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 )
             );?>
         </div>
-        <div class="aside__item aside__item-form">
-            <div class="aside-form">
-                <form class="aside-form-search" action="#">
-                    <div class="form-group-search aside-form__item mobile-input-search">
-                        <label for="form-search-mobile">Поиск по товарам</label>
-                        <input type="text" placeholder="Искать товары" name="form-search" class="form-search-input" id="form-search-mobile">
-                    </div>
-                    <div class="form-group-search form-group-search--select aside-form__item">
-                        <label for="selectForm">Область</label>
-                        <div class="jq-selectbox jqselect custom-select custom-old" id="selectForm-styler"><select name="country" class="custom-select custom-old" id="selectForm">
-                                <option value="minsk" selected="">Минск</option>
-                                <option value="brest">Минская область</option>
-                                <option value="grodno">Гродненская область</option>
-                                <option value="gomel">Гомельская область</option>
-                                <option value="mogilev">Могилевская область</option>
-                                <option value="vit">Витебская область</option>
-                            </select><div class="jq-selectbox__select"><div class="jq-selectbox__select-text">Минск</div><div class="jq-selectbox__trigger"><div class="jq-selectbox__trigger-arrow"></div></div></div><div class="jq-selectbox__dropdown" style="display: none;"><ul><li class="selected sel" style="">Минск</li><li style="">Минская область</li><li style="">Гродненская область</li><li style="">Гомельская область</li><li style="">Могилевская область</li><li style="">Витебская область</li></ul></div></div>
-                    </div>
-                    <div class="form-group-search form-group-search--select-new aside-form__item">
-                        <label for="selectFormNew">Город / Район</label>
-                        <div class="jq-selectbox jqselect custom-select new-select" id="selectFormNew-styler"><select name="city" class="custom-select new-select" data-select="new-list" id="selectFormNew"><option value="0">Любой</option><option value="1">Минская область</option><option value="2">Брестская область</option><option value="3">Гродненская область</option><option value="4">Гомельская область</option><option value="5">Могилевская область</option><option value="6">Витебская область</option></select><div class="jq-selectbox__select"><div class="jq-selectbox__select-text">Любой</div><div class="jq-selectbox__trigger"><div class="jq-selectbox__trigger-arrow"></div></div></div><div class="jq-selectbox__dropdown" style="display: none;"><ul><li class="selected sel" style="">Любой</li><li style="">Минская область</li><li style="">Брестская область</li><li style="">Гродненская область</li><li style="">Гомельская область</li><li style="">Могилевская область</li><li style="">Витебская область</li></ul></div></div>
-                    </div>
-                    <div class="form-group-search aside-form__item">
-                        <label for="range-min">Диапазон</label>
-                        <div class="form-group-range">
-                            <div class="range__item range-min">
-                                <input type="text" class="range__item-input" placeholder="От" name="range-min" id="range-min">
-                            </div>
-                            <div class="range__item range-max">
-                                <input type="text" class="range__item-input" placeholder="От" name="range-max">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group-search aside-form__item">
-                        <label>Выбор из одного варианта</label>
-                        <div class="form-group-wrapper">
-                            <div class="form-group__item">
-                                <label for="radio-1">Параметр 1</label>
-                                <input type="radio" id="radio-1" name="radio-btn">
-                            </div>
-                            <div class="form-group__item">
-                                <label for="radio-2">Параметр 2 c длинным названием в 2 строки</label>
-                                <input type="radio" id="radio-2" name="radio-btn">
-                            </div>
-                            <div class="form-group__item">
-                                <label for="radio-3">Параметр 2</label>
-                                <input type="radio" id="radio-3" name="radio-btn">
-                            </div>
-                            <div class="form-group__item">
-                                <label for="radio-4">Параметр 2</label>
-                                <input type="radio" id="radio-4" name="radio-btn">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group-search aside-form__item">
-                        <label>Множественный выбор</label>
-                        <div class="form-group-wrapper checkbox">
-                            <div class="form-group__item">
-                                <label for="checkbox-1" class="label-checkbox">
-                                    <input type="checkbox" name="value-1" id="checkbox-1">
-                                    <span>Параметр 1</span>
-                                </label>
-
-                            </div>
-                            <div class="form-group__item checkbox">
-                                <label for="checkbox-2" class="label-checkbox">
-                                    <input type="checkbox" name="value-1" id="checkbox-2">
-                                    <span>Параметр 2</span>
-                                </label>
-                            </div>
-                            <div class="form-group__item checkbox">
-                                <label for="checkbox-3" class="label-checkbox">
-                                    <input type="checkbox" name="value-1" id="checkbox-3">
-                                    <span>Параметр 3</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="aside-form__item--btn">
-                        <button class="btn-bg btn--main-search">
-                            Найти
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#search-white"></use>
-                            </svg>
-                        </button>
-                        <button type="reset" class="btn-reset btn-reset--scroll active">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-btn"></use>
-                            </svg>
-                            Сбросить фильтры
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <?$APPLICATION->IncludeComponent(
+	"bitrix:catalog.smart.filter", 
+	"filter",
+	array(
+		"COMPONENT_TEMPLATE" => "filter",
+		"IBLOCK_TYPE" => "products",
+		"IBLOCK_ID" => ADS_IBLOCK_ID,
+		"FILTER_NAME" => "arrFilter",
+		"HIDE_NOT_AVAILABLE" => "N",
+		"DISPLAY_ELEMENT_COUNT" => "Y",
+		"SEF_MODE" => "N",
+		"CACHE_TYPE" => "A",
+		"CACHE_TIME" => "36000000",
+		"CACHE_GROUPS" => "Y",
+		"SAVE_IN_SESSION" => "N",
+		"INSTANT_RELOAD" => "Y",
+		"PAGER_PARAMS_NAME" => "arrPager",
+		"PRICE_CODE" => array(
+			0 => "BASE",
+		),
+		"CONVERT_CURRENCY" => "Y",
+		"SECTION_TITLE" => "-",
+		"SECTION_DESCRIPTION" => "-",
+		"POPUP_POSITION" => "left",
+		"SEF_RULE" => "/ads/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/",
+		"SECTION_CODE_PATH" => "",
+		"SMART_FILTER_PATH" => $_REQUEST["SMART_FILTER_PATH"],
+		"CURRENCY_ID" => "RUB",
+		"PREFILTER_NAME" => "smartPreFilter",
+		"SECTION_CODE" => $_REQUEST["SECTION_CODE"],
+		"XML_EXPORT" => "N",
+		"TEMPLATE_THEME" => "blue",
+		"SECTION_ID" => $_REQUEST["SECTION_ID"]
+	),
+	false
+); ?>
     </aside>
     <div class="page-content">
         <div class="announcements">
