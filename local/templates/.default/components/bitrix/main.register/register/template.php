@@ -29,6 +29,7 @@ if ($isAjax) die();
 ?>
 <?if (!empty($arResult["SHOW_FIELDS"])):?>
     <form id="register" action="<?=POST_FORM_ACTION_URI?>" name="regform" class="registration-form data-user">
+        <div class="error-block">Некорректный адрес электронной почты</div>
         <?foreach ($arResult["SHOW_FIELDS"] as $fieldCode):?>
             <?switch ($fieldCode):
                 case 'LOGIN':?>
@@ -76,6 +77,7 @@ if ($isAjax) die();
                                placeholder="Повторно введите пароль"
                                id="passwordRegistrationConfirm"
                                data-field="<?=$fieldCode?>"
+                               data-validate="n"
                         >
                         <span class="password-control"></span>
                     </div>

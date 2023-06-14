@@ -8,11 +8,6 @@ const RegisterAjax = function () {
         'acceptCheckboxId':'#accept-register',
     }
 
-    this.validate = {
-        'mailFormat':'/^([A-Za-z0-9_\\-\\.])+\\@([A-Za-z0-9_\\-\\.])+\\.([A-Za-z]{2,4})$/',
-        'numbersInString':'/\\d+/',
-    }
-
     this.errors = {
        'emptyField':'Обязательное поле!',
        'wrongEmail':'Некоректный email!',
@@ -42,7 +37,9 @@ RegisterAjax.prototype.setupListener = function () {
             let formData = new FormData(this.$form);
             formData.set('register_submit_button', 'Y');
             formData.set(this.setting.additionalField, formData.get('REGISTER[LOGIN]'));
-            if (_this.checkAccept())  _this.sendData(formData);
+            _this.checkFormFields();
+            _this.checkAccept();
+            // if (_this.checkAccept())  _this.sendData(formData);
         }
     }
 }
@@ -57,12 +54,12 @@ RegisterAjax.prototype.checkFormFields = function () {
                     if (!input.value) {
                         errors.push(_this.errors.emptyField)
                     } else {
-                        if (!input.value.match(this.validate.mailFormat)) {
+                        if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(input.value)) {
                             errors.push(_this.errors.wrongEmail)
                         }
                     }
                     break;
-                case 'pass':
+                case 'password':
                     if (input.value.length < 8) {
                         errors.push(_this.errors.smallPass);
                     }
@@ -71,17 +68,32 @@ RegisterAjax.prototype.checkFormFields = function () {
                         errors.push(_this.errors.upperLowerCase);
                     }
 
-                    if (!input.value.match(this.validate.numbersInString)) {
+                    if (!/[0-9]/.test(input.value)) {
                         errors.push(_this.errors.numbersInPass);
                     }
                     break;
                 case 'checkbox':
+                    if (!this.$acceptInput.checked) {
+                        _this.errorAccept();
+                    }
                     break;
                 default:
                     if (!input.value) {
                         errors.push(_this.errors.emptyField)
                     }
                     break;
+            }
+            let errorMessage = errors.join('<br>');
+            if (input.getAttribute('data-validate') !== 'n' && errorMessage) {
+                _this.createInputErrorMessage(input,errorMessage);
+            } else {
+                if (input.getAttribute('data-validate') === 'n') {
+                    if (_this.$form.querySelector('#passwordRegistration').value !== input.value) {
+                        console.log(input);
+                        _this.createInputErrorMessage(input,'Пароли не совпадают!');
+                    }
+                }
+                _this.deleteInputErrorMessage(input);
             }
         });
     }
@@ -193,6 +205,7 @@ RegisterAjax.prototype.sendData = function (data) {
             _this.enterErrors(jsonFields);
         } else {
             _this.resetForm();
+            location.reload();
         }
 
     }).catch(error => {

@@ -84,7 +84,47 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                         </svg>
                     </button>
-                    <button class="btn-white sign-in">Войти</button>
+                    <?if ($USER->IsAuthorized()) :?>
+                        <div class="header-account-menu">
+                        <button class="btn-white sign-in is-active">Личный кабинет
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#authorized"></use>
+                            </svg>
+                        </button>
+                        <button class="btn-white sign-in sign-in--mobile is-active">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#sign-in-mobile">
+                                </use>
+                            </svg>
+                        </button>
+                        <div class="menu-authorized">
+                            <div class="mobile_menu_content__title mobile_menu_content__title--authorized">
+                                Личный кабинет
+                                <span class="menu-authorized__cross">
+                                     <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+                                     </svg>
+                                </span>
+                            </div>
+                            <ul class="menu-authorized-list">
+                                <li class="menu-authorized-list__item"><a href="#">Мои объявления</a></li>
+                                <li class="menu-authorized-list__item"><a href="#">Избранные товары</a></li>
+                                <li class="menu-authorized-list__item"><a href="#">Подписка</a></li>
+                                <li class="menu-authorized-list__item"><a href="#">Реферальная программа</a></li>
+                                <li class="menu-authorized-list__item"><a class="menu-subcategory" href="#">Настройки</a>
+                                    <div class="menu-subcategory-content">
+                                        <a href="#">Персональные данные</a>
+                                        <a href="#">Контактная информация</a>
+                                        <a href="#">Безопасность</a>
+                                    </div>
+                                </li>
+                                <li class="menu-authorized-list__item"><a href="#">Выйти</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <?else:?>
+                        <button class="btn-white sign-in">Войти</button>
+                    <?endif;?>
                     <button class="btn-white sign-in sign-in--mobile">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#sign-in-mobile">
