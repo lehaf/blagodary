@@ -20,10 +20,20 @@ $isAjax = $obRequest->getPost('register_submit_button') === 'Y';
 
 if ($isAjax) $APPLICATION->RestartBuffer();
    if (!empty($arResult["ERRORS"])) {
-       foreach ($arResult["ERRORS"] as $key => $error)
-           if (intval($key) == 0 && $key !== 0)
+       foreach ($arResult["ERRORS"] as $key => $error) {
+           if (intval($key) == 0 && $key !== 0) {
                $arResult["ERRORS"][$key] = str_replace("#FIELD_NAME#", "&quot;".GetMessage("REGISTER_FIELD_".$key)."&quot;", $error);
-                echo json_encode($arResult["ERRORS"]);
+           } else {
+                if (str_contains($error,'логином')) {
+                    $arResult["ERRORS"]['LOGIN'] = str_replace("логином", 'Email', $error);
+                }
+
+               if (str_contains($error,'Пароли')) {
+                   $arResult["ERRORS"]['CONFIRM_PASSWORD'] = $error;
+               }
+           }
+       }
+       echo json_encode($arResult["ERRORS"]);
    }
 if ($isAjax) die();
 ?>

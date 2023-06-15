@@ -13,7 +13,9 @@ const RegisterAjax = function () {
        'wrongEmail':'Некоректный email!',
        'smallPass':'Минимум 8 символов!',
        'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
-       'numbersInPass':'Пароль должен содержать цифры!'
+       'numbersInPass':'Пароль должен содержать цифры!',
+       'passNotMatch':'Пароли не совпадают!'
+
     }
 
     this.$form = document.querySelector('form' + this.setting.formId);
@@ -37,9 +39,9 @@ RegisterAjax.prototype.setupListener = function () {
             let formData = new FormData(this.$form);
             formData.set('register_submit_button', 'Y');
             formData.set(this.setting.additionalField, formData.get('REGISTER[LOGIN]'));
-            _this.checkFormFields();
-            _this.checkAccept();
-            // if (_this.checkAccept())  _this.sendData(formData);
+            if (_this.checkFormFields() && _this.checkAccept()) {
+                _this.sendData(formData);
+            }
         }
     }
 }
@@ -47,6 +49,7 @@ RegisterAjax.prototype.setupListener = function () {
 RegisterAjax.prototype.checkFormFields = function () {
     const _this = this;
     if (this.$formInputs) {
+        let testPassed = true;
         this.$formInputs.forEach((input) => {
             let errors = [];
             switch (input.getAttribute('type')) {
@@ -84,18 +87,20 @@ RegisterAjax.prototype.checkFormFields = function () {
                     break;
             }
             let errorMessage = errors.join('<br>');
-            if (input.getAttribute('data-validate') !== 'n' && errorMessage) {
-                _this.createInputErrorMessage(input,errorMessage);
-            } else {
+            if (errorMessage) {
+                testPassed = false;
                 if (input.getAttribute('data-validate') === 'n') {
                     if (_this.$form.querySelector('#passwordRegistration').value !== input.value) {
-                        console.log(input);
-                        _this.createInputErrorMessage(input,'Пароли не совпадают!');
+                        _this.createInputErrorMessage(input,_this.errors.passNotMatch);
                     }
+                } else {
+                    _this.createInputErrorMessage(input,errorMessage);
                 }
+            } else {
                 _this.deleteInputErrorMessage(input);
             }
         });
+        return testPassed;
     }
 }
 
