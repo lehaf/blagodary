@@ -39,7 +39,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
             </div>
         </aside>
         <div class="page-content page-content--profile">
-            <h2 class="title-section">Избранные товары</h2>
+            <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
             <div class="favorites-list">
                 <a href="#" class="announcements-list__item">
                     <div class="announcements-img">

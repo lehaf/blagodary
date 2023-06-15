@@ -1,8 +1,8 @@
 <?
-$sSectionName = "Вопрос-ответ";
+$sSectionName = "Реферальная программа";
 $arDirProperties = Array(
-    "title" => "Вопрос-ответ",
-    "keywords" => "Вопрос-ответ",
-    'pageSpecialClass' => 'page--question'
+    "title" => "Реферальная программа",
+    "keywords" => "Реферальная программа",
+    'pageSpecialClass' => 'page--cabinet'
 );
 ?>

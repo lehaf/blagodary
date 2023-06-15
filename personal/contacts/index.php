@@ -39,7 +39,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         </div>
     </aside>
     <div class="page-content page-content--profile">
-        <h2 class="title-section">Контактная информация</h2>
+        <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
         <form action="#" class="data-user">
             <div class="data-user-container data-user-container--tel">
                 <h3 class="title-block title-block--left">Контактные телефоны</h3>

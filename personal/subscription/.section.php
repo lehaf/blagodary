@@ -1,8 +1,8 @@
 <?
-$sSectionName = "Вопрос-ответ";
+$sSectionName = "Подписка";
 $arDirProperties = Array(
-    "title" => "Вопрос-ответ",
-    "keywords" => "Вопрос-ответ",
-    'pageSpecialClass' => 'page--question'
+    "title" => "Подписка",
+    "keywords" => "Подписка",
+    'pageSpecialClass' => 'page--cabinet'
 );
 ?>

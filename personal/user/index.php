@@ -39,38 +39,21 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         </div>
     </aside>
     <div class="page-content page-content--profile">
-        <h2 class="title-section">Персональные данные</h2>
-        <div class="profile-data">
-            <h3 class="title-block title-block--left">Данные профиля</h3>
-            <div class="profile-data__description">E-mail:</div>
-            <div class="profile-data__email">test@google.com</div>
-            <div class="profile-data__text">Вы указали этот e-mail при регистрации, его нельзя изменить.</div>
-        </div>
-        <form action="#" class="data-user">
-            <div class="data-user-container">
-                <div class="form-group">
-                    <label for="dataUserName" class="data-user__label">Имя*</label>
-                    <input type="text" placeholder="Павел" id="dataUserName">
-                </div>
-                <div class="form-group-row">
-                    <div class="form-group">
-                        <label for="dataUserGender" class="data-user__label">Пол</label>
-                        <select name="country" class="custom-select custom-old" id="dataUserGender">
-                            <option value="minsk" selected>Не выбран</option>
-                            <option value="brest">Ж</option>
-                            <option value="grodno">M</option>
-                        </select>
-                        <div class="form-group-description">Не будет отображаться в профиле</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="dataUserBirth" class="data-user__label">Дата рождения</label>
-                        <input type="text" placeholder="27.10.2022" id="dataUserBirth">
-                        <div class="form-group-description">Не будет отображаться в профиле</div>
-                    </div>
-                </div>
-            </div>
-            <button type="submit" class="btn-bg data-user-btn">Сохранить изменения</button>
-        </form>
+        <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
+        <?$APPLICATION->IncludeComponent(
+	"bitrix:main.profile", 
+	"user", 
+	array(
+		"CHECK_RIGHTS" => "Y",
+		"SEND_INFO" => "N",
+		"SET_TITLE" => "Y",
+		"USER_PROPERTY" => array(
+		),
+		"USER_PROPERTY_NAME" => "",
+		"COMPONENT_TEMPLATE" => "user"
+	),
+	false
+);?>
     </div>
 </div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
