@@ -6,7 +6,7 @@
             <?if (!empty($arItem['SELECTED']) && $arItem['SELECTED'] == 'Y'):?>
                 <?if (empty($arItem['PARAMS']['PAGES'])):?>
                     <li class="menu-authorized-list__item">
-                        <span href="<?=$arItem["LINK"]?>"><?=$arItem["TEXT"]?></span>
+                        <span><?=$arItem["TEXT"]?></span>
                     </li>
                 <?else:?>
                     <li class="menu-authorized-list__item">
@@ -15,7 +15,7 @@
                             <div class="menu-subcategory-content" style="display:block">
                                 <?php foreach($arItem['PARAMS']['PAGES'] as $innerPageName => $innerPageLink):?>
                                     <?if (!empty($arItem['ACTIVE_MENU_NAME']) && $innerPageName == $arItem['ACTIVE_MENU_NAME']):?>
-                                        <span href="<?=$innerPageLink?>"><?=$innerPageName?></span>
+                                        <span class="active"><?=$innerPageName?></span>
                                     <?else:?>
                                         <a href="<?=$innerPageLink?>"><?=$innerPageName?></a>
                                     <?endif;?>
