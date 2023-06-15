@@ -40,36 +40,20 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         </aside>
         <div class="page-content page-content--profile">
             <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-            <form action="#" class="data-user">
-                <div class="data-user-container">
-                    <h3 class="title-block title-block--left">Изменение пароля</h3>
-                    <div class="password-requirements">
-                        <h4 class="password-requirements-title">Требования к паролю:</h4>
-                        <ul class="password-requirements-list">
-                            <li class="password-requirements-list__item">Минимум 8 символов</li>
-                            <li class="password-requirements-list__item">Большая буква</li>
-                            <li class="password-requirements-list__item">Маленькая буква</li>
-                            <li class="password-requirements-list__item">Цифра</li>
-                        </ul>
-                    </div>
-                    <div class="form-group ">
-                        <label for="dataUserPassword" class="data-user__label">Текущий пароль*</label>
-                        <input type="password" name="password" class="dataUserPassword" placeholder="********" id="dataUserPassword">
-                        <span class="password-control"></span>
-                    </div>
-                    <div class="form-group ">
-                        <label for="dataUserNewPassword" class="data-user__label">Новый пароль*</label>
-                        <input type="password" name="password" class="dataUserPassword" placeholder="********" id="dataUserNewPassword">
-                        <span class="password-control"></span>
-                    </div>
-                    <div class="form-group ">
-                        <label for="dataUserPasswordRepeat" class="data-user__label">Повторите пароль*</label>
-                        <input type="password" name="password" class="dataUserPassword" placeholder="********" id="dataUserPasswordRepeat">
-                        <span class="password-control"></span>
-                    </div>
-                </div>
-                <button type="submit" class="btn-bg data-user-btn">Сохранить изменения</button>
-            </form>
+            <?$APPLICATION->IncludeComponent(
+                "bitrix:main.profile",
+                "security",
+                array(
+                    "CHECK_RIGHTS" => "Y",
+                    "SEND_INFO" => "N",
+                    "SET_TITLE" => "Y",
+                    "USER_PROPERTY" => array(
+                    ),
+                    "USER_PROPERTY_NAME" => "",
+                    "COMPONENT_TEMPLATE" => "user"
+                ),
+                false
+            );?>
         </div>
     </div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
