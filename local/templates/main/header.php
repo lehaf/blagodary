@@ -118,7 +118,7 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                                         <a href="#">Безопасность</a>
                                     </div>
                                 </li>
-                                <li class="menu-authorized-list__item"><a href="#">Выйти</a></li>
+                                <li class="menu-authorized-list__item"><a href="/personal/logout/?logout=y">Выйти</a></li>
                             </ul>
                         </div>
                     </div>
