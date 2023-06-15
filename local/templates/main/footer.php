@@ -383,22 +383,22 @@ global $USER;
                 <?$APPLICATION->IncludeComponent(
 	"bitrix:main.register", 
 	"register", 
-	array(
-		"AUTH" => "Y",
-		"REQUIRED_FIELDS" => array(
-		),
-		"SET_TITLE" => "N",
-		"SHOW_FIELDS" => array(
-		),
-		"SUCCESS_PAGE" => "",
-		"USER_PROPERTY" => array(
-		),
-		"USER_PROPERTY_NAME" => "",
-		"USE_BACKURL" => "N",
-		"COMPONENT_TEMPLATE" => "register"
-	),
-	false
-);?>
+                array(
+                    "AUTH" => "Y",
+                    "REQUIRED_FIELDS" => array(
+                    ),
+                    "SET_TITLE" => "N",
+                    "SHOW_FIELDS" => array(
+                    ),
+                    "SUCCESS_PAGE" => "",
+                    "USER_PROPERTY" => array(
+                    ),
+                    "USER_PROPERTY_NAME" => "",
+                    "USE_BACKURL" => "N",
+                    "COMPONENT_TEMPLATE" => "register"
+                ),
+                false
+            );?>
             </div>
         </div>
         <span class="modal-cross">

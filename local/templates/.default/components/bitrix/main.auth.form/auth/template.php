@@ -1,16 +1,21 @@
 <?php if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED!==true) die();
 
+/** @var object $APPLICATION */
 /** @var array $arResult */
 
-\Bitrix\Main\Page\Asset::getInstance()->addCss(
-	'/bitrix/css/main/system.auth/flat/style.css'
-);
+$obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+$isAjax = $obRequest->getPost('AUTH_ACTION') === 'Y';
+
+if ($isAjax) $APPLICATION->RestartBuffer();
+    if (!empty($arResult['ERRORS'])) {
+        echo json_encode($arResult["ERRORS"]);
+    }
+if ($isAjax) die();
 ?>
-<form name="<?=$arResult['FORM_ID'];?>" action="<?=POST_FORM_ACTION_URI;?>" class="login-form data-user">
-    <div class="form-group mb-15 error">
+<form id="auth-form" name="<?=$arResult['FORM_ID'];?>" action="<?=POST_FORM_ACTION_URI;?>" class="login-form data-user">
+    <div class="form-group mb-15">
         <label for="email" class="data-user__label">E-mail*</label>
         <input type="email" name="<?=$arResult['FIELDS']['login'];?>" id="email" placeholder="test@gmail.com" required>
-        <div class="error-block">Некорректный адрес электронной почты</div>
     </div>
     <div class="form-group ">
         <label for="passwordLogin" class="data-user__label">Пароль*</label>
