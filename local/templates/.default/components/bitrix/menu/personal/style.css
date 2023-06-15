@@ -1,0 +1,17 @@
+.menu-authorized-list__item span {
+    display: block;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+    color: #2a3548;
+    padding: 8px 22px;
+    transition: .3s;
+    background: #fae26e url(/local/templates/main/html/assets/img/menu-arrow-next.svg) no-repeat center right 15px;
+    border-radius: 3px;
+}
+
+.menu-authorized-list__item .menu-subcategory-content span {
+    background: transparent url(/local/templates/main/html/assets/img/menu-arrow-next.svg) no-repeat center right 15px;
+    font-weight: 700;
+}

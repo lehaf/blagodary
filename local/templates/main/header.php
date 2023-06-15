@@ -106,20 +106,22 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                                      </svg>
                                 </span>
                             </div>
-                            <ul class="menu-authorized-list">
-                                <li class="menu-authorized-list__item"><a href="#">Мои объявления</a></li>
-                                <li class="menu-authorized-list__item"><a href="#">Избранные товары</a></li>
-                                <li class="menu-authorized-list__item"><a href="#">Подписка</a></li>
-                                <li class="menu-authorized-list__item"><a href="#">Реферальная программа</a></li>
-                                <li class="menu-authorized-list__item"><a class="menu-subcategory" href="#">Настройки</a>
-                                    <div class="menu-subcategory-content">
-                                        <a href="#">Персональные данные</a>
-                                        <a href="#">Контактная информация</a>
-                                        <a href="#">Безопасность</a>
-                                    </div>
-                                </li>
-                                <li class="menu-authorized-list__item"><a href="/personal/logout/?logout=y">Выйти</a></li>
-                            </ul>
+                            <?$APPLICATION->IncludeComponent(
+                                "bitrix:menu",
+                                "personal",
+                                Array(
+                                    "ROOT_MENU_TYPE" => "personal",
+                                    "MAX_LEVEL" => "1",
+                                    "CHILD_MENU_TYPE" => "",
+                                    "USE_EXT" => "N",
+                                    "DELAY" => "N",
+                                    "ALLOW_MULTI_SELECT" => "Y",
+                                    "MENU_CACHE_TYPE" => "A",
+                                    "MENU_CACHE_TIME" => "360000",
+                                    "MENU_CACHE_USE_GROUPS" => "Y",
+                                    "MENU_CACHE_GET_VARS" => ""
+                                )
+                            );?>
                         </div>
                     </div>
                     <?else:?>
