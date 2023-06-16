@@ -512,28 +512,28 @@ new AirDatepicker('#dataUserBirth', {
     autoClose: true
 });
 
-const maskPhone = () => {
-    $(".dataUserTel").mask("+375 (99) 999-99-99");
-}
-
-maskPhone()
-
-
-const templatePhone = `
- <div class="form-group form-group--tel">
-     <label class="data-user__label data-user__label--tel">Контактный телефон</label>
-     <input type="tel" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" name="new-number">
-     <span class="remove_phone"><svg><use xlink:href="assets/img/sprites/sprite.svg#cross-popup"></use></svg></span>
- </div>
-`
-
-$('.add-new-phone').on('click', function () {
-    $('.form-tel-container').append(templatePhone)
-    maskPhone()
-    $(".remove_phone").on("click",function(event){
-        this.parentElement.remove();
-    })
-});
+// const maskPhone = () => {
+//     $(".dataUserTel").mask("+375 (99) 999-99-99");
+// }
+//
+// maskPhone()
+//
+//
+// const templatePhone = `
+//  <div class="form-group form-group--tel">
+//      <label class="data-user__label data-user__label--tel">Контактный телефон</label>
+//      <input type="tel" name placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" name="new-number">
+//      <span class="remove_phone"><svg><use xlink:href="/local/templates/main/html/assets/img/sprites/sprite.svg#plus"></use></svg></span>
+//  </div>
+// `
+//
+// $('.add-new-phone').on('click', function () {
+//     $('.form-tel-container').append(templatePhone)
+//     maskPhone()
+//     $(".remove_phone").on("click",function(event){
+//         this.parentElement.remove();
+//     })
+// });
 
 $('.password-control').on('click', function () {
     if ($(this).prev().attr('type') == 'password') {

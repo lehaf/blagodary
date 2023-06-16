@@ -41,19 +41,19 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         <div class="page-content page-content--profile">
             <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
             <?$APPLICATION->IncludeComponent(
-                "bitrix:main.profile",
-                "security",
-                array(
-                    "CHECK_RIGHTS" => "Y",
-                    "SEND_INFO" => "N",
-                    "SET_TITLE" => "Y",
-                    "USER_PROPERTY" => array(
-                    ),
-                    "USER_PROPERTY_NAME" => "",
-                    "COMPONENT_TEMPLATE" => "user"
-                ),
-                false
-            );?>
+	"bitrix:main.profile", 
+	"security", 
+	array(
+		"CHECK_RIGHTS" => "N",
+		"SEND_INFO" => "N",
+		"SET_TITLE" => "Y",
+		"USER_PROPERTY" => array(
+		),
+		"USER_PROPERTY_NAME" => "",
+		"COMPONENT_TEMPLATE" => "security"
+	),
+	false
+);?>
         </div>
     </div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

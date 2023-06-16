@@ -40,45 +40,21 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
     </aside>
     <div class="page-content page-content--profile">
         <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-        <form action="#" class="data-user">
-            <div class="data-user-container data-user-container--tel">
-                <h3 class="title-block title-block--left">Контактные телефоны</h3>
-                <div class="data-user-container--tel__text">Укажите номера телефонов, по которым покупатели смогут с вами связаться</div>
-                <div class="form-tel-container">
-                    <div class="form-group form-group--tel">
-                        <label for="dataUserTel" class="data-user__label data-user__label--tel">Контактный телефон*</label>
-                        <input type="tel" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" id="dataUserTel">
-                    </div>
-                </div>
-                <div class="add-new-phone">
-                        <span class="add-new-phone-btn">
-                            <svg><use xlink:href="assets/img/sprites/sprite.svg#plus"></use></svg>
-                        </span>
-                    <div class="add-new-phone-text">Добавить телефон</div>
-                </div>
-            </div>
-            <div class="data-user-container">
-                <h3 class="title-block title-block--left">Местоположение</h3>
-                <div class="form-group">
-                    <label for="selectForm" class="data-user__label">Область</label>
-                    <select name="country" class="custom-select custom-old" id="selectForm">
-                        <option value="minsk" selected>Минск</option>
-                        <option value="brest">Минская область</option>
-                        <option value="grodno">Гродненская область</option>
-                        <option value="gomel">Гомельская область</option>
-                        <option value="mogilev">Могилевская область</option>
-                        <option value="vit">Витебская область</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="selectFormNew" class="data-user__label">Город / Район</label>
-                    <select name="city" class="custom-select new-select" data-select="new-list"
-                            id="selectFormNew">
-                    </select>
-                </div>
-            </div>
-            <button type="submit" class="btn-bg data-user-btn">Сохранить изменения</button>
-        </form>
+        <?$APPLICATION->IncludeComponent(
+	"bitrix:main.profile", 
+	"contacts", 
+	array(
+		"CHECK_RIGHTS" => "N",
+		"SEND_INFO" => "N",
+		"SET_TITLE" => "Y",
+		"USER_PROPERTY" => array(
+		),
+		"USER_PROPERTY_NAME" => "UF_PHONES",
+		"COMPONENT_TEMPLATE" => "contacts"
+	),
+	false
+);?>
+
     </div>
 </div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
