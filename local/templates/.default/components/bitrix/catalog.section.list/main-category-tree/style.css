@@ -1,3 +1,11 @@
 .category-list a img {
 	margin-right: 5px;
 }
+
+.all-category > a {
+	font-weight: 700 !important;;
+}
+
+ul.category-list li.category-list__item.active > a {
+	color: #059ea3 !important;
+}

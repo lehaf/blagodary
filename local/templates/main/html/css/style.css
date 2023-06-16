@@ -1045,7 +1045,7 @@ select.custom-select {
   }
 }
 
-.category-list__item.active a {
+.category-list__item.active > a {
   font-weight: 700;
 }
 

@@ -15,7 +15,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
 ?>
 <?if (!empty($arResult['SECTIONS'])):?>
     <ul class="category-list">
-        <li class="category-list__item active">
+        <li class="category-list__item all-category ">
             <a href="<?=$arParams['ALL_CATEGORIES_LINK']?>">
                 <svg>
                     <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
