@@ -15,6 +15,9 @@ use WebCompany\YouWatchBefore;
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
+$obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+$isAjax = $obRequest->getPost('isAjax') === 'Y';
+
 $isNotFirstPage = strpos(implode('',array_keys($_GET)),'PAGEN');
 if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
     $arActiveSection = getSectionData($arResult["VARIABLES"]['SECTION_ID'],ADS_IBLOCK_ID); // Выбранный текущий раздел
@@ -80,39 +83,39 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         <?$APPLICATION->IncludeComponent(
 	"bitrix:catalog.smart.filter", 
 	"filter",
-	array(
-		"COMPONENT_TEMPLATE" => "filter",
-		"IBLOCK_TYPE" => "products",
-		"IBLOCK_ID" => ADS_IBLOCK_ID,
-		"FILTER_NAME" => "arrFilter",
-		"HIDE_NOT_AVAILABLE" => "N",
-		"DISPLAY_ELEMENT_COUNT" => "Y",
-		"SEF_MODE" => "N",
-		"CACHE_TYPE" => "A",
-		"CACHE_TIME" => "36000000",
-		"CACHE_GROUPS" => "Y",
-		"SAVE_IN_SESSION" => "N",
-		"INSTANT_RELOAD" => "Y",
-		"PAGER_PARAMS_NAME" => "arrPager",
-		"PRICE_CODE" => array(
-			0 => "BASE",
-		),
-		"CONVERT_CURRENCY" => "Y",
-		"SECTION_TITLE" => "-",
-		"SECTION_DESCRIPTION" => "-",
-		"POPUP_POSITION" => "left",
-		"SEF_RULE" => "/ads/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/",
-		"SECTION_CODE_PATH" => "",
-		"SMART_FILTER_PATH" => $_REQUEST["SMART_FILTER_PATH"],
-		"CURRENCY_ID" => "RUB",
-		"PREFILTER_NAME" => "smartPreFilter",
-		"SECTION_CODE" => $_REQUEST["SECTION_CODE"],
-		"XML_EXPORT" => "N",
-		"TEMPLATE_THEME" => "blue",
-		"SECTION_ID" => $_REQUEST["SECTION_ID"]
-	),
-	false
-); ?>
+            array(
+                "COMPONENT_TEMPLATE" => "",
+                "IBLOCK_TYPE" => "products",
+                "IBLOCK_ID" => ADS_IBLOCK_ID,
+                "FILTER_NAME" => "arrFilter",
+                "HIDE_NOT_AVAILABLE" => "N",
+                "DISPLAY_ELEMENT_COUNT" => "Y",
+                "SEF_MODE" => "N",
+                "CACHE_TYPE" => "A",
+                "CACHE_TIME" => "36000000",
+                "CACHE_GROUPS" => "N",
+                "SAVE_IN_SESSION" => "N",
+                "INSTANT_RELOAD" => "Y",
+                "PAGER_PARAMS_NAME" => "arrPager",
+                "PRICE_CODE" => array(
+                    0 => "BASE",
+                ),
+                "CONVERT_CURRENCY" => "Y",
+                "SECTION_TITLE" => "-",
+                "SECTION_DESCRIPTION" => "-",
+                "POPUP_POSITION" => "left",
+                "SEF_RULE" => "/ads/#SECTION_CODE#/filter/#SMART_FILTER_PATH#/",
+                "SECTION_CODE_PATH" => "",
+                "SMART_FILTER_PATH" => $_REQUEST["SMART_FILTER_PATH"],
+                "CURRENCY_ID" => "RUB",
+                "PREFILTER_NAME" => "smartPreFilter",
+                "SECTION_CODE" => $_REQUEST["SECTION_CODE"],
+                "XML_EXPORT" => "N",
+                "TEMPLATE_THEME" => "blue",
+                "SECTION_ID" => $_REQUEST["SECTION_ID"]
+            ),
+            false
+        );?>
     </aside>
     <div class="page-content">
         <div class="announcements">
@@ -120,11 +123,14 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
                 <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>
-            <? global $arFilterAds;
+            <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
+            <?
+            global $arFilterAds;
+            global $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
             ];
-
+            pr($arrFilter);
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 $typeOfView,
@@ -180,6 +186,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             );
             ?>
         </div>
+        <?if ($isAjax) die(); ?>
         <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false):?>
             <div class="text-block">
                 <h2 class="title-section"><?=$arActiveSection['UF_SEO_TITLE']?></h2>

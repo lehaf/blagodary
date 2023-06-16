@@ -15,7 +15,7 @@ $this->setFrameMode(true);
 <? if (!empty($arResult['ITEMS'])):?>
     <div class="aside__item aside__item-form">
         <div class="aside-form">
-            <form class="aside-form-search" name="<?=$arResult["FILTER_NAME"]."_form"?>" action="<?=$arResult["FORM_ACTION"]?>">
+            <form id="filter" class="aside-form-search" name="<?=$arResult["FILTER_NAME"]."_form"?>" action="<?=$arResult["FORM_ACTION"]?>">
                 <div class="form-group-search aside-form__item mobile-input-search">
                     <label for="form-search-mobile">Поиск по товарам</label>
                     <input type="text" placeholder="Искать товары" name="form-search"
@@ -57,11 +57,12 @@ $this->setFrameMode(true);
                         <?break;?>
                         <?case 'P':?>
                             <?if (!empty($arFilter['VALUES'])):?>
+                            <?$firstKey = array_key_first($arFilter['VALUES'])?>
                                 <div class="form-group-search form-group-search--select aside-form__item">
                                     <label for="<?=$arFilter['NAME']?>"><?=$arFilter['NAME']?></label>
-                                    <select name="<?=$arFilter['VALUES'][0]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['NAME']?>">
+                                    <select name="<?=$arFilter['VALUES'][$firstKey]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['NAME']?>">
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
-                                            <option value="<?=$arVal['VALUE']?>"><?=$arVal['VALUE']?></option>
+                                            <option value="<?=$arVal['HTML_VALUE_ALT']?>" <?=$key === $firstKey ? 'selected' : ''?>><?=$arVal['VALUE']?></option>
                                         <?endforeach;?>
                                     </select>
                                 </div>
@@ -124,13 +125,13 @@ $this->setFrameMode(true);
                     <?endswitch;?>
                 <?endforeach;?>
                 <div class="aside-form__item--btn">
-                    <button class="btn-bg btn--main-search">
+                    <button id="filter-submit" class="btn-bg btn--main-search">
                         Найти
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#search-white"></use>
                         </svg>
                     </button>
-                    <button type="reset" class="btn-reset btn-reset--scroll">
+                    <button id="filter-reset" type="reset" class="btn-reset btn-reset--scroll">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-btn"></use>
                         </svg>
