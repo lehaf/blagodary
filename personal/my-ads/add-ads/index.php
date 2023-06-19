@@ -15,6 +15,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.maskedinput.mi
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/slick.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
 
+$arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
 ?>
 <div class="page-container">
     <aside class="aside aside-cabinet">
@@ -71,307 +72,61 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                 </div>
             </div>
             <div class="form-wrapper" id="categorySelection">
-                <div class="category-selection">
-                    <div class="category-selection-main">
-                        <h3 class="title-block title-block--left">Выбор категории*</h3>
-                        <ul class="category-list category-list--selection">
-                            <li class="category-list__item is-active" data-announcement-category="1"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-2"></use>
-                                    </svg>
-                                    Бытовая техника</a></li>
-                            <li class="category-list__item" data-announcement-category="2"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-3"></use>
-                                    </svg>
-                                    Компьютерная техника</a></li>
-                            <li class="category-list__item" data-announcement-category="3"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-4"></use>
-                                    </svg>
-                                    Телефоны и планшеты</a></li>
-                            <li class="category-list__item" data-announcement-category="4"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-5"></use>
-                                    </svg>
-                                    Электроника</a></li>
-                            <li class="category-list__item" data-announcement-category="5"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-6"></use>
-                                    </svg>
-                                    Женский гардероб</a></li>
-                            <li class="category-list__item" data-announcement-category="6"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-7"></use>
-                                    </svg>
-                                    Мужской гардероб</a></li>
-                            <li class="category-list__item" data-announcement-category="8"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-8"></use>
-                                    </svg>
-                                    Красота и здоровье</a></li>
-                            <li class="category-list__item no-fill" data-announcement-category="9"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-9"></use>
-                                    </svg>
-                                    Все для детей и мам</a></li>
-                            <li class="category-list__item" data-announcement-category="10"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-10"></use>
-                                    </svg>
-                                    Мебель</a></li>
-                            <li class="category-list__item" data-announcement-category="11"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-11"></use>
-                                    </svg>
-                                    Все для дома</a></li>
-                            <li class="category-list__item" data-announcement-category="12"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-12"></use>
-                                    </svg>
-                                    Ремонт и стройка</a></li>
-                            <li class="category-list__item no-fill" data-announcement-category="13"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-13"></use>
-                                    </svg>
-                                    Сад и огород</a></li>
-                            <li class="category-list__item no-fill" data-announcement-category="14"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-14"></use>
-                                    </svg>
-                                    Хобби, спорт и туризм</a></li>
-                            <li class="category-list__item" data-announcement-category="15"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-15"></use>
-                                    </svg>
-                                    Свадьба и праздники</a></li>
-                            <li class="category-list__item no-fill" data-announcement-category="16"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-16"></use>
-                                    </svg>
-                                    Животные</a></li>
-                            <li class="category-list__item" data-announcement-category="17"><a href="#">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-17"></use>
-                                    </svg>
-                                    Прочее</a></li>
-                        </ul>
-                    </div>
-                    <div class="category-selection-subcategory">
-                        <h3 class="title-block title-block--left title-subcategory">Подкатегории выбранной категории</h3>
-                        <div class="category-selection-content">
-                            <div class="category-selection-content__item is-active" data-announcement-category="1">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
+                <?if (!empty($arSectionsTree)):?>
+                    <?$firstKey = array_key_first($arSectionsTree)?>
+                    <div class="category-selection">
+                        <div class="category-selection-main">
+                            <h3 class="title-block title-block--left">Выбор категории*</h3>
+                            <ul class="category-list category-list--selection">
+                                <?foreach ($arSectionsTree as $key => $arSect):?>
+                                    <li class="category-list__item <?=$key === $firstKey ? 'is-active' : ''?>" data-announcement-category="<?=$arSect['ID']?>">
+                                        <a href="<?=$arSect['SECTION_PAGE_URL']?>">
+                                            <img src="<?=$arSect['PICTURE']?>"
+                                                 title="<?=$arSect['NAME']?>"
+                                                 alt="<?=$arSect['NAME']?>"
+                                            >
+                                            <?=$arSect['NAME']?>
+                                        </a>
+                                    </li>
+                                <?endforeach;?>
+                            </ul>
+                        </div>
+                        <div class="category-selection-subcategory">
+                            <h3 class="title-block title-block--left title-subcategory">Подкатегории выбранной категории</h3>
+                            <div class="category-selection-content">
+                                <?foreach ($arSectionsTree as $key => $arSect):?>
+                                    <div class="category-selection-content__item <?=$key === $firstKey ? 'is-active' : ''?>"
+                                         data-announcement-category="<?=$arSect['ID']?>"
+                                    >
+                                        <ul class="category-selection-list">
+                                            <?foreach ($arSect['ITEMS'] as $arSectLvl2):?>
+                                                <li class="category-selection-list__item"><?=$arSectLvl2['NAME']?></li>
+                                            <?endforeach;?>
+                                        </ul>
+                                    </div>
+                                <?endforeach;?>
                             </div>
-                            <div class="category-selection-content__item" data-announcement-category="2">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="3">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="4">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="5">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="6">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="7">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="8">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="9">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="10">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
-                            </div>
-                            <div class="category-selection-content__item" data-announcement-category="11">
-                                <ul class="category-selection-list">
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры</li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Периферия и аксессуары</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                    <li class="category-selection-list__item">Периферия </li>
-                                    <li class="category-selection-list__item">Комплектующие</li>
-                                    <li class="category-selection-list__item">Ноутбуки</li>
-                                    <li class="category-selection-list__item">Компьютеры и системные блоки</li>
-                                    <li class="category-selection-list__item">Компьютеры / системные блоки / аксессуары</li>
-                                </ul>
+                        </div>
+                        <div class="category-selection-subcategory-3">
+                            <h3 class="title-block title-block--left title-subcategory">Подкатегории третьего уровня</h3>
+                            <div class="category-selection-content-3">
+                                <?foreach ($arSectionsTree as $key => $arSect):?>
+                                    <?foreach ($arSect['ITEMS'] as $arSectLvl2):?>
+                                        <div class="category-selection-content__item <?=$key === $firstKey ? 'is-active' : ''?>"
+                                             data-announcement-category="<?=$arSectLvl2['ID']?>"
+                                        >
+                                            <ul class="category-selection-list">
+                                                <?foreach ($arSectLvl2['ITEMS'] as $arSectLvl3):?>
+                                                    <li class="category-selection-list__item"><?=$arSectLvl3['NAME']?></li>
+                                                <?endforeach;?>
+                                            </ul>
+                                        </div>
+                                    <?endforeach;?>
+                                <?endforeach;?>
                             </div>
                         </div>
                     </div>
-                </div>
+                <?endif;?>
                 <div class="category-selection-ready">
                     <h3 class="title-block title-block--left">Выбор категории*</h3>
                     <div class="category-selection-ready__main" id="category-select"></div>

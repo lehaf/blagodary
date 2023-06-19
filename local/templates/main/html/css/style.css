@@ -4647,7 +4647,8 @@ input[type="checkbox"] {
 }
 
 .category-selection-main,
-.category-selection-subcategory{
+.category-selection-subcategory,
+.category-selection-subcategory-3{
   padding: 20px;
   background: #F6F8F9;
   border-radius: 6px;

@@ -127,3 +127,56 @@ function sklonen(int $number, array $arVariants) : string
 
     return $arVariants[$titleIndex];
 }
+
+function getSectionsTree($iblockId, $ttl = 360000, $cacheId = 'sections_tree') : ?array
+{
+    $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
+
+    if ($cache->read($ttl,$cacheId)) {
+        $sectionTree = $cache->get($cacheId); // достаем переменные из кеша
+    } else {
+        if (\Bitrix\Main\Loader::includeModule('iblock') && !empty($iblockId)) {
+            $arSections = \Bitrix\Iblock\SectionTable::getList(array(
+                'select' => array(
+                    'ID',
+                    'NAME',
+                    'CODE',
+                    'DEPTH_LEVEL',
+                    'IBLOCK_SECTION_ID',
+                    'PICTURE',
+                    'SECTION_PAGE_URL' => 'IBLOCK.SECTION_PAGE_URL'
+                ),
+                'filter' => array('IBLOCK_ID' => $iblockId, 'ACTIVE'),
+                'cache' => array(
+                    'ttl' => $ttl,
+                    'cache_joins' => true
+                ),
+            ))->fetchAll();
+
+            if (!empty($arSections)) {
+                $arSectionsLvl = [];
+                foreach ($arSections as &$arSect) {
+                    if ($arSect['DEPTH_LEVEL'] == 1 && !empty($arSect['PICTURE'])) $arSect['PICTURE'] = CFile::GetPath($arSect['PICTURE']);
+                    $arSect['SECTION_PAGE_URL'] = CIBlock::ReplaceDetailUrl($arSect['SECTION_PAGE_URL'], $arSect, false, 'S');
+                    $arSectionsLvl[$arSect['DEPTH_LEVEL']][$arSect['ID']] = $arSect;
+                }
+                unset($arSect);
+
+                $arSectionsLvlReverse = array_reverse($arSectionsLvl, true);
+
+                foreach ($arSectionsLvlReverse as $sectLvl => $arSections) {
+                    foreach ($arSections as $sectId => $arSect) {
+                        if ($sectLvl != 1) {
+                            $arSectionsLvlReverse[$sectLvl-1][$arSect['IBLOCK_SECTION_ID']]['ITEMS'][$sectId] = $arSectionsLvlReverse[$sectLvl][$sectId];
+                        }
+                    }
+                }
+
+                $cache->set($cacheId, $arSectionsLvlReverse[1]);
+
+                return $arSectionsLvlReverse[1];
+            }
+        }
+    }
+    return $sectionTree ?? NULL;
+}
