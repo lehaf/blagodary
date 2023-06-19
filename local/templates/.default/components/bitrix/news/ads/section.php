@@ -81,8 +81,8 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             );?>
         </div>
         <?$APPLICATION->IncludeComponent(
-	"bitrix:catalog.smart.filter", 
-	"filter",
+            "bitrix:catalog.smart.filter",
+            "filter",
             array(
                 "COMPONENT_TEMPLATE" => "",
                 "IBLOCK_TYPE" => "products",
