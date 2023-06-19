@@ -31,7 +31,11 @@ $this->setFrameMode(true);
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
                                             <div class="form-group__item">
                                                 <label for="<?=$arVal['CONTROL_ID']?>" class="label-checkbox">
-                                                    <input type="checkbox" name="<?=$arVal['CONTROL_NAME']?>" id="<?=$arVal['CONTROL_ID']?>">
+                                                    <input type="checkbox"
+                                                           name="<?=$arVal['CONTROL_NAME']?>"
+                                                           id="<?=$arVal['CONTROL_ID']?>"
+                                                           <?if(!empty($arVal['CHECKED'])):?>checked<?endif;?>
+                                                    >
                                                     <span><?=$arVal['VALUE']?></span>
                                                 </label>
                                             </div>
@@ -48,7 +52,12 @@ $this->setFrameMode(true);
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
                                             <div class="form-group__item">
                                                 <label for="<?=$arVal['CONTROL_ID']?>"><?=$arVal['VALUE']?></label>
-                                                <input type="radio" name="<?=$arVal['CONTROL_NAME']?>" id="<?=$arVal['CONTROL_ID']?>" value="<?=$arVal['CONTROL_ID']?>">
+                                                <input type="radio"
+                                                       name="<?=$arVal['CONTROL_NAME_ALT']?>"
+                                                       id="<?=$arVal['CONTROL_ID']?>"
+                                                       value="<?=$arVal['HTML_VALUE_ALT']?>"
+                                                       <?if(!empty($arVal['CHECKED'])):?>checked<?endif;?>
+                                                >
                                             </div>
                                         <?endforeach;?>
                                     </div>
@@ -61,8 +70,9 @@ $this->setFrameMode(true);
                                 <div class="form-group-search form-group-search--select aside-form__item">
                                     <label for="<?=$arFilter['NAME']?>"><?=$arFilter['NAME']?></label>
                                     <select name="<?=$arFilter['VALUES'][$firstKey]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['NAME']?>">
+                                        <option value="">Все</option>
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
-                                            <option value="<?=$arVal['HTML_VALUE_ALT']?>" <?=$key === $firstKey ? 'selected' : ''?>><?=$arVal['VALUE']?></option>
+                                            <option value="<?=$arVal['HTML_VALUE_ALT']?>" <?=!empty($arVal['CHECKED']) ? 'selected' : ''?>><?=$arVal['VALUE']?></option>
                                         <?endforeach;?>
                                     </select>
                                 </div>

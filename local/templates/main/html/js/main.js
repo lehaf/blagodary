@@ -43,18 +43,15 @@ selectAdd()
 
 function selectCountry(ev) {
     $('[data-select="new-list"]').empty();
-    let itemSelect = this.value || "minsk", o;
-    for (let i = 0; i < listsArr[itemSelect].length; i++) {
-        o = new Option(listsArr[itemSelect][i], i, false, false);
-
-        $('[data-select="new-list"]').append(o);
-
-    }
-    ;
+    // let itemSelect = this.value || "minsk", o;
+    // for (let i = 0; i < listsArr[itemSelect].length; i++) {
+    //     o = new Option(listsArr[itemSelect][i], i, false, false);
+    //
+    //     $('[data-select="new-list"]').append(o);
+    //
+    // };
     $('.custom-select').styler();
-
     $('.new-select').trigger('refresh');
-
 }
 
 if (innerWidth > 1220) {

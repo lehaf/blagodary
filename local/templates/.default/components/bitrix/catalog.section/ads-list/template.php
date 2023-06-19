@@ -16,8 +16,8 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
 $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
 ?>
-<?if (!empty($arResult['ITEMS'])):?>
-    <div class="announcements-content">
+<div class="announcements-content">
+    <?if (!empty($arResult['ITEMS'])):?>
         <div class="announcements-content__item announcements-content__item--list active">
             <?foreach ($arResult['ITEMS'] as $arItem):?>
                 <?
@@ -56,5 +56,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
         <?if($arParams["DISPLAY_BOTTOM_PAGER"]):?>
             <br /><?=$arResult["NAV_STRING"]?>
         <?endif;?>
-    </div>
-<?endif;?>
+    <?else:?>
+        <div class="empty-ads">Объявлений в каталоге не найдено!</div>
+    <?endif;?>
+</div>

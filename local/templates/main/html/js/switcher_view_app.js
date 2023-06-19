@@ -63,8 +63,10 @@ SwitcherView.prototype.setLoader = function () {
 }
 
 SwitcherView.prototype.deleteLoader = function () {
-    this.$blurContainer.classList.remove(this.settings.blurClass);
-    document.querySelector('.'+this.settings.loaderClassName).remove();
+    if (this.$blurContainer) {
+        this.$blurContainer.classList.remove(this.settings.blurClass);
+        document.querySelector('.'+this.settings.loaderClassName).remove();
+    }
 }
 
 SwitcherView.prototype.getDomElementsFromString = function (string) {
@@ -87,8 +89,9 @@ SwitcherView.prototype.sendData = function (typeOfView) {
         let curContainer = document.querySelector(_this.settings.elementsContainerClass);
         setTimeout(() => {
             _this.deleteLoader();
-            curContainer.querySelector(_this.settings.elementsClass).remove();
-            curContainer.prepend(newView);
+            let curElements = curContainer.querySelector(_this.settings.elementsClass);
+            if (curElements) curElements.remove();
+            if (newView) curContainer.prepend(newView);
         },300);
 
     }).catch(error => {

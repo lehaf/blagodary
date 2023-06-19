@@ -16,7 +16,7 @@ use WebCompany\YouWatchBefore;
 $this->setFrameMode(true);
 
 $obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
-$isAjax = $obRequest->getPost('isAjax') === 'Y';
+$isAjax = $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 
 $isNotFirstPage = strpos(implode('',array_keys($_GET)),'PAGEN');
 if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
@@ -125,12 +125,12 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             </div>
             <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
             <?
-            global $arFilterAds;
-            global $arrFilter;
+            global $arFilterAds, $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
+                ...$arrFilter
             ];
-            pr($arrFilter);
+
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 $typeOfView,
@@ -185,9 +185,9 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 false
             );
             ?>
+            <?if ($isAjax) die(); ?>
         </div>
-        <?if ($isAjax) die(); ?>
-        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false):?>
+        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false && empty($arrFilter)):?>
             <div class="text-block">
                 <h2 class="title-section"><?=$arActiveSection['UF_SEO_TITLE']?></h2>
                 <p class="text"><?=$arActiveSection['DESCRIPTION']?></p>
