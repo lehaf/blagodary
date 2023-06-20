@@ -230,6 +230,7 @@ const categoryFormSelectedContent = document.querySelector(".category-selection-
 const categoryFormSelectedContentLvl3 = document.querySelector(".category-selection-content-3");
 const categorySelectionReady = document.querySelector(".category-selection-ready")
 let formCategorySelectedItem = document.querySelector(".category-selection-ready__main")
+let inputSectionId = document.querySelector("#section-id-value");
 
 if (categoryForm) {
 
@@ -280,7 +281,7 @@ if (categoryForm) {
                     }, 1000);
                     categorySelectionReady.classList.add("active")
                     formCategorySelectedItem.innerText = text;
-                    formCategorySelectedItem.setAttribute('data-section-id',sectionId);
+                    inputSectionId.value = sectionId;
                 }
             }
         });
@@ -301,7 +302,7 @@ if (categoryForm) {
                 }, 1000);
                 categorySelectionReady.classList.add("active")
                 formCategorySelectedItem.innerText = text;
-                formCategorySelectedItem.setAttribute('data-section-id',sectionId);
+                inputSectionId.value = sectionId;
                 target.classList.add("active");
             }
         });
@@ -634,9 +635,36 @@ function readerImgFile(imgList){
 }
 
 $("#inputFile").on("change", function () {
-    let imgList = Array.from(this.files)
-    readerImgFile(imgList)
-    this.value = ""
+    // var input = document.getElementById('inputFile');
+    // var files = [];
+    //
+    // input.addEventListener('change', function() {
+    //     for (var i = 0; i < this.files.length; i++) {
+    //         files.push(this.files[i]);
+    //     }
+    //     uploadFiles();
+    // });
+    //
+    // function uploadFiles() {
+    //     if (files.length > 0) {
+    //         var file = files.shift();
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('POST', '/upload.php');
+    //         xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+    //         xhr.setRequestHeader('X-File-Name', file.name);
+    //         xhr.setRequestHeader('X-File-Size', file.size);
+    //         xhr.setRequestHeader('X-File-Type', file.type);
+    //         xhr.onreadystatechange = function() {
+    //             if (xhr.readyState === 4 && xhr.status === 200) {
+    //                 console.log(xhr.responseText);
+    //                 uploadFiles();
+    //             }
+    //         };
+    //         xhr.send(file);
+    //     }
+    // }
+    let imgList = Array.from(this.files);
+    readerImgFile(imgList);
 })
 
 
@@ -696,7 +724,7 @@ $("#announcementTextarea").on("input", function () {
 
 
 
-$(".btn--form").on("click", function (event) {
+$(".btn--no-name-error").on("click", function (event) {
     event.preventDefault()
     $(".popUp-error").addClass("active")
     $('.substrate').addClass("active")

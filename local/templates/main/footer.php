@@ -94,6 +94,8 @@ global $USER;
         </div>
     </div>
 </footer>
+<div class="substrate"></div>
+
 <div class="category-pop-up">
     <div class="wrapper">
         <? $APPLICATION->IncludeComponent(
@@ -120,6 +122,8 @@ global $USER;
         );?>
     </div>
 </div>
+
+
 <div class="popUp-overlay">
     <div class="popUp-overlay-header">
         <span class="popUp-title">Фильтры</span>
@@ -350,7 +354,6 @@ global $USER;
     </span>
 </div>
 <?if (!$USER->IsAuthorized()) :?>
-    <div class="substrate"></div>
     <div class="popUp popUp-login">
         <div class="login-btn-list">
             <button class="login-btn-list__item login-btn active">Вход</button>

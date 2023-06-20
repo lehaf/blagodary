@@ -1061,6 +1061,13 @@ select.custom-select {
   margin-right: 5px;
 }
 
+.category-list__item img {
+  width: 16px;
+  height: 16px;
+  fill: #2a3548;
+  margin-right: 5px;
+}
+
 .category-list__item-active > a {
   font-weight: 700;
   color: #2a3548;

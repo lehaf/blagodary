@@ -15,7 +15,6 @@ use WebCompany\YouWatchBefore;
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-$obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 $isAjax = $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 
 $isNotFirstPage = strpos(implode('',array_keys($_GET)),'PAGEN');
