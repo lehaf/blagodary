@@ -180,3 +180,50 @@ function getSectionsTree($iblockId, $ttl = 360000, $cacheId = 'sections_tree') :
     }
     return $sectionTree ?? NULL;
 }
+
+function getSectionsLvlTree($iblockId, $ttl = 360000, $cacheId = 'sections_lvl') : ?array
+{
+    $cache = \Bitrix\Main\Application::getInstance()->getManagedCache();
+
+    if ($cache->read($ttl,$cacheId)) {
+        $arSectionsLvl = $cache->get($cacheId); // достаем переменные из кеша
+    } else {
+        if (\Bitrix\Main\Loader::includeModule('iblock') && !empty($iblockId)) {
+            $arSections = \Bitrix\Iblock\SectionTable::getList(array(
+                'select' => array(
+                    'ID',
+                    'NAME',
+                    'CODE',
+                    'DEPTH_LEVEL',
+                    'IBLOCK_SECTION_ID',
+                    'PICTURE',
+                    'SECTION_PAGE_URL' => 'IBLOCK.SECTION_PAGE_URL'
+                ),
+                'filter' => array('IBLOCK_ID' => $iblockId, 'ACTIVE'),
+                'cache' => array(
+                    'ttl' => $ttl,
+                    'cache_joins' => true
+                ),
+            ))->fetchAll();
+
+            if (!empty($arSections)) {
+                $arSectionsLvl = [];
+                foreach ($arSections as &$arSect) {
+                    if ($arSect['DEPTH_LEVEL'] == 1 && !empty($arSect['PICTURE'])) $arSect['PICTURE'] = CFile::GetPath($arSect['PICTURE']);
+                    $arSect['SECTION_PAGE_URL'] = CIBlock::ReplaceDetailUrl($arSect['SECTION_PAGE_URL'], $arSect, false, 'S');
+                    if (!empty($arSect['IBLOCK_SECTION_ID'])) {
+                        $arSectionsLvl[$arSect['DEPTH_LEVEL']][$arSect['IBLOCK_SECTION_ID']][$arSect['ID']] = $arSect;
+                    } else {
+                        $arSectionsLvl[$arSect['DEPTH_LEVEL']][$arSect['ID']] = $arSect;
+                    }
+                }
+                unset($arSect);
+
+                $cache->set($cacheId, $arSectionsLvl);
+
+                return $arSectionsLvl;
+            }
+        }
+    }
+    return $arSectionsLvl ?? NULL;
+}

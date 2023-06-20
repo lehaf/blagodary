@@ -15,7 +15,8 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.maskedinput.mi
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/slick.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
 
-$arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
+$arSectionsLvlTree = getSectionsLvlTree(ADS_IBLOCK_ID);
+//pr($arSectionsLvlTree);
 ?>
 <div class="page-container">
     <aside class="aside aside-cabinet">
@@ -72,14 +73,17 @@ $arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
                 </div>
             </div>
             <div class="form-wrapper" id="categorySelection">
-                <?if (!empty($arSectionsTree)):?>
-                    <?$firstKey = array_key_first($arSectionsTree)?>
+                <?if (!empty($arSectionsLvlTree)):?>
+                    <?$firstKey = array_key_first($arSectionsLvlTree[1])?>
                     <div class="category-selection">
                         <div class="category-selection-main">
                             <h3 class="title-block title-block--left">Выбор категории*</h3>
                             <ul class="category-list category-list--selection">
-                                <?foreach ($arSectionsTree as $key => $arSect):?>
-                                    <li class="category-list__item <?=$key === $firstKey ? 'is-active' : ''?>" data-announcement-category="<?=$arSect['ID']?>">
+                                <?foreach ($arSectionsLvlTree[1] as $sectId => $arSect):?>
+                                    <li class="category-list__item <?=$sectId === $firstKey ? 'is-active' : ''?>"
+                                        data-section-id="<?=$sectId?>"
+                                        data-announcement-category="<?=$arSect['ID']?>"
+                                    >
                                         <a href="<?=$arSect['SECTION_PAGE_URL']?>">
                                             <img src="<?=$arSect['PICTURE']?>"
                                                  title="<?=$arSect['NAME']?>"
@@ -92,15 +96,16 @@ $arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
                             </ul>
                         </div>
                         <div class="category-selection-subcategory">
-                            <h3 class="title-block title-block--left title-subcategory">Подкатегории выбранной категории</h3>
+                            <h3 class="title-block title-block--left title-subcategory">Подкатегории второго уровня</h3>
                             <div class="category-selection-content">
-                                <?foreach ($arSectionsTree as $key => $arSect):?>
-                                    <div class="category-selection-content__item <?=$key === $firstKey ? 'is-active' : ''?>"
-                                         data-announcement-category="<?=$arSect['ID']?>"
+                                <?foreach ($arSectionsLvlTree[2] as $parentSectId => $arSections):?>
+                                    <div class="category-selection-content__item <?=$parentSectId === $firstKey ? 'is-active' : ''?>"
+                                         data-parent-id="<?=$parentSectId?>"
+                                         data-announcement-category="<?=$parentSectId?>"
                                     >
                                         <ul class="category-selection-list">
-                                            <?foreach ($arSect['ITEMS'] as $arSectLvl2):?>
-                                                <li class="category-selection-list__item"><?=$arSectLvl2['NAME']?></li>
+                                            <?foreach ($arSections as $arSectLvl2):?>
+                                                <li class="category-selection-list__item" data-section-id="<?=$arSectLvl2['ID']?>"><?=$arSectLvl2['NAME']?></li>
                                             <?endforeach;?>
                                         </ul>
                                     </div>
@@ -110,18 +115,17 @@ $arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
                         <div class="category-selection-subcategory-3">
                             <h3 class="title-block title-block--left title-subcategory">Подкатегории третьего уровня</h3>
                             <div class="category-selection-content-3">
-                                <?foreach ($arSectionsTree as $key => $arSect):?>
-                                    <?foreach ($arSect['ITEMS'] as $arSectLvl2):?>
-                                        <div class="category-selection-content__item <?=$key === $firstKey ? 'is-active' : ''?>"
-                                             data-announcement-category="<?=$arSectLvl2['ID']?>"
-                                        >
-                                            <ul class="category-selection-list">
-                                                <?foreach ($arSectLvl2['ITEMS'] as $arSectLvl3):?>
-                                                    <li class="category-selection-list__item"><?=$arSectLvl3['NAME']?></li>
-                                                <?endforeach;?>
-                                            </ul>
-                                        </div>
-                                    <?endforeach;?>
+                                <?foreach ($arSectionsLvlTree[3] as $parentSectId => $arSections):?>
+                                    <div class="category-selection-content__item"
+                                         data-announcement-category="<?=$parentSectId?>"
+                                         data-parent-id="<?=$parentSectId?>"
+                                    >
+                                        <ul class="category-selection-list">
+                                            <?foreach ($arSections as $arSectLvl3):?>
+                                                <li class="category-selection-list__item" data-section-id="<?=$arSectLvl2['ID']?>"><?=$arSectLvl3['NAME']?></li>
+                                            <?endforeach;?>
+                                        </ul>
+                                    </div>
                                 <?endforeach;?>
                             </div>
                         </div>
@@ -129,7 +133,7 @@ $arSectionsTree = getSectionsTree(ADS_IBLOCK_ID);
                 <?endif;?>
                 <div class="category-selection-ready">
                     <h3 class="title-block title-block--left">Выбор категории*</h3>
-                    <div class="category-selection-ready__main" id="category-select"></div>
+                    <div class="category-selection-ready__main" id="category-select" data-section-id=""></div>
                     <div class="btn-bg category-selection-ready-btn">
                         <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
                         Изменить подкатегорию</div>

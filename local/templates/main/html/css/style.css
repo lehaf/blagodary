@@ -4654,6 +4654,10 @@ input[type="checkbox"] {
   border-radius: 6px;
 }
 
+.category-selection-subcategory-3 {
+  display: none;
+}
+
 .category-selection-main{
   width: 40%;
 }

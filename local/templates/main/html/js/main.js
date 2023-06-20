@@ -224,30 +224,34 @@ if (categoryListItem) {
 
 const categoryForm = document.querySelectorAll(".category-selection-main .category-list__item");
 const categoryFormLvl2 = document.querySelectorAll(".category-selection-subcategory .category-selection-content__item");
-const categoryFormSelected = document.querySelectorAll(".category-selection-content__item");
+const categoryFormLiLvl2 = document.querySelectorAll(".category-selection-subcategory .category-selection-content__item li");
+const categoryFormLvl3 = document.querySelectorAll(".category-selection-subcategory-3 .category-selection-content__item");
 const categoryFormSelectedContent = document.querySelector(".category-selection-content");
 const categoryFormSelectedContentLvl3 = document.querySelector(".category-selection-content-3");
 const categorySelectionReady = document.querySelector(".category-selection-ready")
 let formCategorySelectedItem = document.querySelector(".category-selection-ready__main")
 
 if (categoryForm) {
+
     categoryForm.forEach((el) => {
         el.addEventListener("click", () => {
             event.preventDefault()
-            let dataValue = el.getAttribute("data-announcement-category")
-
+            let dataSectionId = el.getAttribute("data-section-id");
             removeActive(categoryForm, "is-active");
-            removeActive(categoryFormSelected, "is-active", dataValue, "data-announcement-category");
+            removeActive(categoryFormLiLvl2, "active");
+            removeActive(categoryFormLvl2, "is-active", dataSectionId, "data-parent-id");
+            removeActive(categoryFormLvl3, "is-active");
+            $(".category-selection-subcategory-3").hide(600)
             el.classList.add("is-active")
-
         })
     });
 
-    categoryFormLvl2.forEach((el) => {
+
+    categoryFormLiLvl2.forEach((el) => {
         el.addEventListener("click", () => {
             event.preventDefault()
-            let dataValue = el.getAttribute("data-announcement-category")
-            removeActive(categoryFormSelectedContentLvl3, "is-active", dataValue, "data-announcement-category");
+            let dataSectionId = el.getAttribute("data-section-id")
+            removeActive(categoryFormLvl3, "is-active", dataSectionId, "data-parent-id");
             el.classList.add("is-active")
         })
     })
@@ -259,14 +263,25 @@ if (categoryForm) {
 
             if(target.closest(".category-selection-list__item")){
                 $(".category-selection-list__item").removeClass("active");
-                let text = target.closest(".category-selection-list__item").innerText;
-                $(".category-selection").hide(600)
-                $('html, body').animate({
-                    scrollTop: $("#categorySelection").offset().top - 120
-                }, 1000);
-                categorySelectionReady.classList.add("active")
-                formCategorySelectedItem.innerText = text;
+                let chosenSection = target.closest(".category-selection-list__item");
+                let text = chosenSection.innerText;
+                let sectionId = chosenSection.getAttribute("data-section-id");
                 target.classList.add("active");
+                if (document.querySelector('div[data-parent-id="'+sectionId+'"]')) {
+                    $(".category-selection-subcategory-3").show(600)
+                    $('html, body').animate({
+                        scrollTop: $("#categorySelection").offset().top - 120
+                    }, 1000);
+                } else {
+                    $(".category-selection-subcategory-3").hide(600);
+                    $(".category-selection").hide(600)
+                    $('html, body').animate({
+                        scrollTop: $("#categorySelection").offset().top - 120
+                    }, 1000);
+                    categorySelectionReady.classList.add("active")
+                    formCategorySelectedItem.innerText = text;
+                    formCategorySelectedItem.setAttribute('data-section-id',sectionId);
+                }
             }
         });
     }
@@ -277,14 +292,16 @@ if (categoryForm) {
             let target = event.target;
 
             if(target.closest(".category-selection-list__item")){
-                $(".category-selection-list__item").removeClass("active");
-                let text = target.closest(".category-selection-list__item").innerText;
+                let chosenSection = target.closest(".category-selection-list__item");
+                let text = chosenSection.innerText;
+                let sectionId = chosenSection.getAttribute("data-section-id");
                 $(".category-selection").hide(600)
                 $('html, body').animate({
                     scrollTop: $("#categorySelection").offset().top - 120
                 }, 1000);
                 categorySelectionReady.classList.add("active")
                 formCategorySelectedItem.innerText = text;
+                formCategorySelectedItem.setAttribute('data-section-id',sectionId);
                 target.classList.add("active");
             }
         });
