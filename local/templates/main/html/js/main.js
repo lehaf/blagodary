@@ -635,34 +635,6 @@ function readerImgFile(imgList){
 }
 
 $("#inputFile").on("change", function () {
-    // var input = document.getElementById('inputFile');
-    // var files = [];
-    //
-    // input.addEventListener('change', function() {
-    //     for (var i = 0; i < this.files.length; i++) {
-    //         files.push(this.files[i]);
-    //     }
-    //     uploadFiles();
-    // });
-    //
-    // function uploadFiles() {
-    //     if (files.length > 0) {
-    //         var file = files.shift();
-    //         var xhr = new XMLHttpRequest();
-    //         xhr.open('POST', '/upload.php');
-    //         xhr.setRequestHeader('Content-Type', 'application/octet-stream');
-    //         xhr.setRequestHeader('X-File-Name', file.name);
-    //         xhr.setRequestHeader('X-File-Size', file.size);
-    //         xhr.setRequestHeader('X-File-Type', file.type);
-    //         xhr.onreadystatechange = function() {
-    //             if (xhr.readyState === 4 && xhr.status === 200) {
-    //                 console.log(xhr.responseText);
-    //                 uploadFiles();
-    //             }
-    //         };
-    //         xhr.send(file);
-    //     }
-    // }
     let imgList = Array.from(this.files);
     readerImgFile(imgList);
 })

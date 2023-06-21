@@ -2,16 +2,32 @@
 
 namespace WebCompany;
 
+use Bitrix\Main\Loader;
+use Bitrix\Iblock\ElementTable;
+
 class AddElementForm extends \CBitrixComponent
 {
-    private array $arNeedsUserInfo = [
-        'ID',
-        'NAME',
-        'REGION' => 'PERSONAL_STATE',
-        'CITY' => 'PERSONAL_CITY'
+    private string $errorLogTitle = 'Ошибка создания объявления!';
+    private string $errorLogDesc = "В компоненте webcompany:add.element.form при создании нового объявления возникли следующие ошибки:";
+    private array $arNeedsUserInfo = ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY'];
+    private array $arPostValidFields = [
+        'NAME' => 'Название товара',
+        'IBLOCK_SECTION_ID' => 'Выбор категории',
+        'DETAIL_TEXT' => 'Описание',
+        'REGION' => 'Область',
+        'CITY' => 'Город / Район'
     ];
-
+    private string $propOwnerCode = 'OWNER';
+    private int $maxDescriptionLen = 4000;
+    private array $arValidImgFormat = ['png', 'jpg', 'jpeg'];
+    private string $postImagesArrayName = 'IMAGES';
+    private int $maxImgSizeBytes = 10485760; // 10 MB
+    private int $maxCountUploadImg = 10;
+    private array $arErrors = [];
     private ?int $curUserId;
+    private ?array $arFieldsForRecord;
+    private ?array $arImgForRecord;
+
 
     public function __construct($component = \null)
     {
@@ -47,11 +63,11 @@ class AddElementForm extends \CBitrixComponent
 
             while ($arValue = $obPropRegionValues->fetch()) {
                 if (REGION_PROP_ID == $arValue['PROPERTY_ID']) {
-                    $arResult['REGION'][] = $arValue['VALUE'];
+                    $arResult['REGION'][$arValue['ID']] = $arValue['VALUE'];
                 }
 
                 if (CITY_PROP_ID == $arValue['PROPERTY_ID']) {
-                    $arResult['CITY'][] = $arValue['VALUE'];
+                    $arResult['CITY'][$arValue['ID']] = $arValue['VALUE'];
                 }
             }
         }
@@ -104,20 +120,181 @@ class AddElementForm extends \CBitrixComponent
         return false;
     }
 
-    public function prepareResult() : void
+    public function editSomeFields(&$arFields) : void
+    {
+        if (!empty($this->curUserId)) {
+            $arFields[$this->propOwnerCode] = $this->curUserId;
+        }
+
+        if (!empty($this->arResult['SELECTS']['REGION'])) {
+            $regionValueId = array_search($arFields['REGION'],$this->arResult['SELECTS']['REGION']);
+            if ($regionValueId) $arFields['REGION'] = $regionValueId;
+        }
+
+        if (!empty($this->arResult['SELECTS']['CITY'])) {
+            $cityValueId = array_search($arFields['CITY'],$this->arResult['SELECTS']['CITY']);
+            if ($cityValueId) $arFields['CITY'] = $cityValueId;
+        }
+
+        $arFields['CODE'] = $this->createSymbolCode($arFields['NAME']);
+    }
+
+    private function checkPostFields() : bool
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST)) {
+            $arCheckedFields = [];
+            foreach ($_POST as $propName => $propValue) {
+                if (key_exists($propName, $this->arPostValidFields)) {
+                    $fieldValue = htmlspecialchars(trim($propValue));
+                    // Проверяем, что все поля заполнены
+                    if (empty($fieldValue)) {
+                        $this->arErrors[$propName][] = "Поле '".$this->arPostValidFields[$propName]."' обязательно для заполнения!";
+                        continue;
+                    }
+
+                    // Проверяем, что длина Описания не превышена
+                    if ($propName === $this->fieldDescriptionName && strlen($fieldValue) > $this->maxDescriptionLen) {
+                        $this->arErrors[$propName][] = "Длина поля $propName не должна превышать $this->maxDescriptionLen символов.";
+                        continue;
+                    }
+
+                    $arCheckedFields[$propName] = $fieldValue;
+                }
+            }
+
+            if (empty($this->arErrors)) {
+                $this->editSomeFields($arCheckedFields);
+                $this->arFieldsForRecord = $arCheckedFields;
+                return true;
+            }
+
+        } else {
+            $this->arErrors[] = "Ошибка! Данные не были отправлены.";
+        }
+        return false;
+    }
+
+    private function checkPostImages() : void
+    {
+        if(isset($_FILES[$this->postImagesArrayName])) {
+            $arImages = $_FILES[$this->postImagesArrayName];
+            $arImagesPath = [];
+            $countFiles = 0;
+            for($i = 0; $i < count($arImages['name']); $i++) {
+                $type = pathinfo($arImages['name'][$i], PATHINFO_EXTENSION); // Получаем тип файла
+                 // Проверяем, является ли файл изображением исключительно типов PNG, JPG, JPEG
+                if (!in_array($type, $this->arValidImgFormat)) {
+                    $this->arErrors[$this->postImagesArrayName][] = "Файл ".$arImages['name'][$i]." не является изображением одним из следующих типов: ".implode(', ',$this->arValidImgFormat).'.';
+                    continue;
+                }
+                $fileSize = $arImages['size'][$i]; // Получаем размер файла в байтах
+                if($fileSize > $this->maxImgSizeBytes) {
+                    $this->arErrors[$this->postImagesArrayName][] = "Файл ".$arImages['name'][$i]." превышает максимальный размер 10 МБ.";
+                    continue;
+                }
+
+                $countFiles++; // Увеличиваем счетчик загруженных файлов
+                if($countFiles > $this->maxCountUploadImg) {
+                    $this->arErrors[$this->postImagesArrayName][] = "Ошибка! Превышено максимальное число загружаемых изображений (".$this->maxCountUploadImg.").";
+                    break;
+                }
+
+                $arImagesPath[] = $_SERVER['DOCUMENT_ROOT'].'/'.$arImages['name'][$i];
+            }
+
+            if (empty($this->arErrors)) {
+                foreach ($arImagesPath as $imgPath) {
+                    $this->arFieldsForRecord[$this->postImagesArrayName][] = \CFile::MakeFileArray($imgPath);
+                }
+            }
+
+        } else {
+            $this->arErrors[$this->postImagesArrayName][] = "Ошибка! Изображения не были загружены.";
+        }
+
+    }
+
+    private function createSymbolCode($string) : string
+    {
+        $string = mb_strtolower($string);
+        $code_match = array("'", '"', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}',
+            '|', ':', '"', '<', '>', '?', '[', ']', ';', "'", ',', '.', '/', '', '~', '`', '=',"«","»");
+        $string = str_replace($code_match, '', $string);
+        $arString = explode(' ',$string);
+        $string = implode('-',$arString);
+        $converter = array(
+            'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
+            'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
+            'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
+            'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+            'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
+            'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
+            'э' => 'e',    'ю' => 'yu',   'я' => 'ya',
+
+            'А' => 'A',    'Б' => 'B',    'В' => 'V',    'Г' => 'G',    'Д' => 'D',
+            'Е' => 'E',    'Ё' => 'E',    'Ж' => 'Zh',   'З' => 'Z',    'И' => 'I',
+            'Й' => 'Y',    'К' => 'K',    'Л' => 'L',    'М' => 'M',    'Н' => 'N',
+            'О' => 'O',    'П' => 'P',    'Р' => 'R',    'С' => 'S',    'Т' => 'T',
+            'У' => 'U',    'Ф' => 'F',    'Х' => 'H',    'Ц' => 'C',    'Ч' => 'Ch',
+            'Ш' => 'Sh',   'Щ' => 'Sch',  'Ь' => '',     'Ы' => 'Y',    'Ъ' => '',
+            'Э' => 'E',    'Ю' => 'Yu',   'Я' => 'Ya',
+        );
+
+        return strtr($string, $converter);
+    }
+
+    private function processErrors(array $arErrorsMessages) : void
+    {
+        if (!empty($arErrorsMessages)) {
+            \CEventLog::Add(array(
+                "SEVERITY" => "SECURITY",
+                "AUDIT_TYPE_ID" => $this->errorLogTitle,
+                "MODULE_ID" => $this->__name,
+                "ITEM_ID" => NULL,
+                "DESCRIPTION" => $this->errorLogDesc." ".implode('<br>',$arErrorsMessages)
+            ));
+        }
+    }
+
+    private function createNewUserAds() : void
+    {
+        if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID') && !empty($this->arFieldsForRecord)) {
+            $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+            $obNewElement = $iblockClassName::createObject();
+
+            foreach ($this->arFieldsForRecord as $propName => $propValue) {
+                $obNewElement->set($propName,$propValue);
+                pr(get_class_methods($obNewElement->setImages()));
+            }
+
+            $obRes = $obNewElement->save();
+
+            if ($obRes->isSuccess()) {
+                echo "Элемент успешно добавлен";
+            } else {
+                $this->processErrors($obRes->getErrorMessages());
+            }
+        }
+    }
+
+    private function prepareResult() : void
     {
         $arResult['USER'] = $this->getUserInfo();
         $arResult['SECTIONS_LVL'] = $this->getSectionsLvlTree();
         $arResult['SELECTS'] = $this->getRegionsAndCitiesProps();
         $this->arResult = $arResult;
     }
+
     public function executeComponent() : void
     {
-        if ($this->isPostFormData()) {
-            pr($_FILES);
-            pr($_POST);
-        }
         $this->prepareResult();
+        if ($this->isPostFormData()) {
+            $this->checkPostImages();
+            if ($this->checkPostFields()) {
+                $this->createNewUserAds();
+            }
+            pr($this->arErrors);
+        }
         $this->includeComponentTemplate();
     }
 }

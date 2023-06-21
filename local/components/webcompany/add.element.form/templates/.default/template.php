@@ -18,7 +18,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
         <h3 class="title-block title-block--left mobile-center">Фотографии</h3>
         <div class="form-group form-group__file">
             <label for="inputFile">
-                <input name="IMG[]" type="file" accept="image/*" id="inputFile" multiple>
+                <input name="IMAGES[]" type="file" accept="image/*" id="inputFile" multiple>
                 <span class="input-file-btn">
                     <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
                     Добавить фотографии
@@ -112,7 +112,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
         <div class="category-selection-ready">
             <h3 class="title-block title-block--left">Выбор категории*</h3>
             <div class="category-selection-ready__main" id="category-select"></div>
-            <input id="section-id-value" type="hidden" name="SECTION_ID">
+            <input id="section-id-value" type="hidden" name="IBLOCK_SECTION_ID">
             <div class="btn-bg category-selection-ready-btn">
                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
                 Изменить подкатегорию</div>
@@ -208,7 +208,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
             <h3 class="title-block title-block--left mb-20">Описание*:</h3>
             <div class="form-group">
                 <label>
-                    <textarea name="DESCRIPTION" placeholder="Введите описание" id="announcementTextarea" maxlength="4000"></textarea>
+                    <textarea name="DETAIL_TEXT" placeholder="Введите описание" id="announcementTextarea" maxlength="4000"></textarea>
                 </label>
                 <div class="form-textarea-description">
                     <div class="min-text">Минимально: 20 знаков</div>
