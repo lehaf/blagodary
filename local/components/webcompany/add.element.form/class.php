@@ -3,6 +3,7 @@
 namespace WebCompany;
 
 use Bitrix\Main\Loader;
+use Bitrix\Iblock\ORM\PropertyValue;
 use Bitrix\Iblock\ElementTable;
 
 class AddElementForm extends \CBitrixComponent
@@ -178,7 +179,7 @@ class AddElementForm extends \CBitrixComponent
     {
         if(isset($_FILES[$this->postImagesArrayName])) {
             $arImages = $_FILES[$this->postImagesArrayName];
-            $arImagesPath = [];
+            $arImagesData = [];
             $countFiles = 0;
             for($i = 0; $i < count($arImages['name']); $i++) {
                 $type = pathinfo($arImages['name'][$i], PATHINFO_EXTENSION); // Получаем тип файла
@@ -199,13 +200,16 @@ class AddElementForm extends \CBitrixComponent
                     break;
                 }
 
-                $arImagesPath[] = $_SERVER['DOCUMENT_ROOT'].'/'.$arImages['name'][$i];
+                $arImagesData[] = [
+                    'name' => $arImages['name'][$i],
+                    'type' => $arImages['type'][$i],
+                    'tmp_name' => $arImages['tmp_name'][$i],
+                    'size' => $arImages['size'][$i]
+                ];
             }
 
             if (empty($this->arErrors)) {
-                foreach ($arImagesPath as $imgPath) {
-                    $this->arFieldsForRecord[$this->postImagesArrayName][] = \CFile::MakeFileArray($imgPath);
-                }
+                $this->arImgForRecord[$this->postImagesArrayName] = $arImagesData;
             }
 
         } else {
@@ -264,9 +268,19 @@ class AddElementForm extends \CBitrixComponent
 
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
                 $obNewElement->set($propName,$propValue);
-                pr(get_class_methods($obNewElement->setImages()));
             }
 
+            foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
+                $arImage['MODULE_ID'] = 'iblock';
+//                $arImage['old_file'] = '';
+//                $arImage['del'] = 'Y';
+
+                $fileId = \CFile::SaveFile($arImage,'iblock');
+//                $obNewElement->removeFromImages(new PropertyValue(91));
+//                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue(91));
+            }
+
+            pr($this->arImgForRecord);
             $obRes = $obNewElement->save();
 
             if ($obRes->isSuccess()) {
