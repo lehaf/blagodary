@@ -14,6 +14,7 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
     <?
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/style.css");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/linksstyle.css");
+    Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/add-favorite-app.js");
     ?>
     <title><?$APPLICATION->ShowTitle()?></title>
 </head>

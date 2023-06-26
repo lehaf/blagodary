@@ -36,7 +36,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                     <div class="announcements-description">
                         <div class="announcements-description__head">
                             <h3><?=$arItem['NAME']?></h3>
-                            <span class="favorite-card"></span>
+                            <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                         </div>
                         <div class="announcements-description__location">
                             <div class="location">
