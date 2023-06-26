@@ -15,6 +15,7 @@ $this->setFrameMode(true);
 <?if (!empty($arResult)):?>
     <div class="page-card" id="<?=$this->GetEditAreaID($arResult['ID'])?>">
         <div class="page-card__item page-card__item--slider">
+
             <div class="card-slider">
                 <span class="favorite-card"></span>
                 <?if (!empty($arResult['IMAGES'])):?>
@@ -70,83 +71,77 @@ $this->setFrameMode(true);
                     Редактировать объявление
                 </button>
                 <div class="card-info">
-                    <div class="card-info__item card-info__item--contact">
-                        <div class="card-info__item-container">
-                            <h4 class="card-info-title">Контактная информация</h4>
-                            <div class="card-info__user">
-                                <div class="card-info-person">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#person"></use>
-                                    </svg>
-                                    Константин
-                                </div>
-                                <div class="card-info-rating">
-                                    <div class="rating-result-text">4,0</div>
-                                    <div class="rating-result">
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span class="active"></span>
-                                        <span></span>
+                    <?if (!empty($arResult['OWNER'])):?>
+                        <div class="card-info__item card-info__item--contact">
+                            <div class="card-info__item-container">
+                                <h4 class="card-info-title">Контактная информация</h4>
+                                <div class="card-info__user">
+                                    <div class="card-info-person">
+                                        <svg>
+                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#person"></use>
+                                        </svg>
+                                        <?=$arResult['OWNER']['NAME']?>
                                     </div>
+                                    <div class="card-info-rating">
+                                        <div class="rating-result-text">4,0</div>
+                                        <div class="rating-result">
+                                            <span class="active"></span>
+                                            <span class="active"></span>
+                                            <span class="active"></span>
+                                            <span class="active"></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="total-rating">
+                                        <span class="total-rating__text">Оценок:</span>
+                                        <span class="total-rating__num">76</span>
+                                    </div>
+                                    <a href="#" class="card-info-announcements">
+                                        <span class="card-info-announcements__text">Объявлений:</span>
+                                        <span class="card-info-announcements__num">2</span>
+                                    </a>
                                 </div>
-                                <div class="total-rating">
-                                    <span class="total-rating__text">Оценок:</span>
-                                    <span class="total-rating__num">76</span>
-                                </div>
-                                <a href="#" class="card-info-announcements">
-                                    <span class="card-info-announcements__text">Объявлений:</span>
-                                    <span class="card-info-announcements__num">2</span>
-                                </a>
-                            </div>
-                            <div class="card-info__phone">
-                                <button class="btn-pick-up btn">
-                                    <svg>
-                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pick-up">
-                                        </use>
-                                    </svg>
-                                    Хочу забрать</button>
-                                <ul class="phone-list">
-                                    <li class="phone-list__item">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
-                                        </svg>
-                                        <a href="tel:+375296453637">+375 (29) 645-36-37</a>
-                                    </li>
-                                    <li class="phone-list__item">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
-                                        </svg>
-                                        <a href="tel:+375296453637">+375 (29) 645-36-37</a>
-                                    </li>
-                                    <li class="phone-list__item">
-                                        <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
-                                        </svg>
-                                        <a href="tel:+375296453637">+375 (29) 645-36-37</a>
-                                    </li>
-                                </ul>
+                                <?if (!empty($arResult['OWNER']['UF_PHONES'])):?>
+                                    <div class="card-info__phone">
+                                        <button class="btn-pick-up btn">
+                                            <svg>
+                                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pick-up">
+                                                </use>
+                                            </svg>
+                                            Хочу забрать</button>
+                                        <ul class="phone-list">
+                                            <?foreach ($arResult['OWNER']['UF_PHONES'] as $phone):?>
+                                                <li class="phone-list__item">
+                                                    <svg>
+                                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
+                                                    </svg>
+                                                    <a href="tel:<?=$phone?>"><?=$phone?></a>
+                                                </li>
+                                            <?endforeach;?>
+                                        </ul>
+                                    </div>
+                                <?endif;?>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-info__item card-info__item-location">
-                        <div class="card-info__item-container">
-                            <h4 class="card-info-title">Местоположение</h4>
-                            <div class="location-region">
-                                <span class="location-region__name">Область:</span>
-                                <span class="location-region__data">Гродненская</span>
-                            </div>
-                            <div class="location-city">
-                                <span class="location-city__name">Город / Район:</span>
-                                <span class="location-city__data">Партизанский</span>
+                    <?endif;?>
+                    <?if (!empty($arResult['PROPERTIES']['REGION']['VALUE']) && !empty($arResult['PROPERTIES']['CITY']['VALUE'])):?>
+                        <div class="card-info__item card-info__item-location">
+                            <div class="card-info__item-container">
+                                <h4 class="card-info-title">Местоположение</h4>
+                                <div class="location-region">
+                                    <span class="location-region__name">Область:</span>
+                                    <span class="location-region__data"><?=$arResult['PROPERTIES']['REGION']['VALUE']?></span>
+                                </div>
+                                <div class="location-city">
+                                    <span class="location-city__name">Город / Район:</span>
+                                    <span class="location-city__data"><?=$arResult['PROPERTIES']['CITY']['VALUE']?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?endif;?>
                 </div>
                 <div class="complain">
-                            <span class="complain-warning">
-
-                            </span>
+                    <span class="complain-warning"></span>
                     <span class="complain__text">Пожаловаться на пользователя</span>
                 </div>
                 <div class="card-description">
@@ -183,27 +178,235 @@ $this->setFrameMode(true);
                             <div class="card-description-list__item-result">5</div>
                         </li>
                     </ul>
-                    <h4 class="card-description__title">Описание</h4>
-                    <div class="card-description-text">
-                        <p>Безусловно, понимание сути ресурсосберегающих технологий позволяет оценить значение
-                            глубокомысленных рассуждений. Современные технологии достигли такого уровня. </p>
-                        <p>Что дальнейшее развитие различных форм деятельности предопределяет высокую
-                            востребованность своевременного выполнения сверхзадачи. Являясь всего лишь частью
-                            общей картины, элементы политического процесса заблокированы в рамках своих
-                            собственных рациональных ограничений.</p>
-                        <p>Что дальнейшее развитие различных форм деятельности предопределяет высокую
-                            востребованность своевременного выполнения сверхзадачи. Являясь всего лишь
-                            частью общей картины, элементы политического процесса заблокированы в рамках
-                            своих собственных рациональных ограничений.</p>
-                    </div>
-                    <div class="card-description-text-btn" >
-                        Развернуть описание
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-down"></use>
-                        </svg>
-                    </div>
+                    <?if (!empty($arResult['DETAIL_TEXT'])):?>
+                        <h4 class="card-description__title">Описание</h4>
+                        <div class="card-description-text">
+                            <?=$arResult['DETAIL_TEXT']?>
+                        </div>
+                        <div class="card-description-text-btn" >
+                            Развернуть описание
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-down"></use>
+                            </svg>
+                        </div>
+                    <?endif;?>
                 </div>
             </div>
         </div>
     </div>
 <?endif;?>
+
+
+<div class="popUp popUp-grade">
+    <h5 class="popUp__title">Оценка</h5>
+    <span class="modal-cross">
+            <svg>
+                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+            </svg>
+        </span>
+    <p class="popUp-grade__description">
+        Рейтинг пользователя складывается из оценок тех, кто забирает вещи и тех, кто отдает
+    </p>
+    <div class="popUp-grade-content">
+        <div class="popUp-grade-result">
+            <div class="card-info-rating">
+                <div class="rating-result-text">4,0</div>
+                <div class="rating-result">
+                    <span class="active"></span>
+                    <span class="active"></span>
+                    <span class="active"></span>
+                    <span class="active"></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="popUp-grade-result-text">
+                Средняя оценка пользователя
+            </div>
+            <div class="total-reviews">
+                <div class="total-reviews__text">
+                    Всего отзывов:
+                </div>
+                <div class="total-reviews__score">
+                    76
+                </div>
+            </div>
+        </div>
+        <div class="grade-list-container">
+            <ul class="grade-list">
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Константин</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Анна</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Константин</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+                <li class="grade-list__item">
+                    <div class="card-info-rating">
+                        <div class="rating-name-user">Олег</div>
+                        <div class="rating-result">
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span class="active"></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="rating-data">
+                        06.12.2022
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="popUp popUp-complain">
+    <h5 class="popUp__title">Пожаловаться на пользователя</h5>
+    <span class="modal-cross">
+            <svg>
+                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+            </svg>
+        </span>
+    <form action="#" class="complain-form">
+        <div class="form-group">
+            <label class="complain-form-label">Причина жалобы:</label>
+            <div class="form-group-wrapper">
+                <div class="form-group__item radio-btn">
+                    <label for="value-1">Вариант 1</label>
+                    <input type="radio" name="complain" checked id="value-1">
+                </div>
+                <div class="form-group__item radio-btn">
+                    <label for="value-2">Вариант 2 с длинным названием причины жалобы на пользователя
+                        в две или три строки</label>
+                    <input type="radio" name="complain" id="value-2">
+                </div>
+                <div class="form-group__item radio-btn">
+                    <label for="value-3">Вариант 3</label>
+                    <input type="radio" name="complain" id="value-3">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="complain-form-label">Сообщение:</label>
+            <label>
+                <textarea placeholder="Текст сообщения."></textarea>
+            </label>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn-bg popUp-complain-btn">Отправить</button>
+        </div>
+    </form>
+</div>

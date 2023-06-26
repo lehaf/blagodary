@@ -234,4 +234,122 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
             ); ?>
         </div>
     </div>
+
+    <div class="popUp popUp-rate">
+        <h5 class="popUp__title">Выставить оценку</h5>
+        <p class="popUp__subtitle">
+            Выберите пользователя из списка ниже, с тем, с кем вы созванивались.
+            Список формируется из пользователей, которые на карточке объявления вашего
+            товара нажали кнопку “Хочу забрать”:
+        </p>
+        <span class="modal-cross">
+            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use></svg>
+        </span>
+        <div class="person-list-container ">
+            <ul class="person-list-list">
+                <li class="grade-list-person">
+                    <div class="grade-list-person__name">Олег</div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                </li>
+                <li class="grade-list-person">
+                    <div class="grade-list-person__name">Анна</div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                </li>
+                <li class="grade-list-person">
+                    <div class="grade-list-person__name">Константин</div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                </li>
+                <li class="grade-list-person">
+                    <div class="grade-list-person__name">Олег</div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                </li>
+                <li class="grade-list-person">
+                    <div class="grade-list-person__name">Олег</div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                    <div class="grade-list-person__phone">
+                        +375 (29) 373-0-03
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <form action="#" class="popUp-form">
+            <div class="form-group form-group-rate">
+                <label class="popUp-form-label popUp-form-label--rate">Выставить оценку:</label>
+                <div class="rating-area">
+                    <input type="radio" id="star-50" name="rating" value="5">
+                    <label for="star-50" title="Оценка «5»"></label>
+                    <input type="radio" id="star-40" name="rating" value="4">
+                    <label for="star-40" title="Оценка «4»"></label>
+                    <input type="radio" id="star-30" name="rating" value="3">
+                    <label for="star-30" title="Оценка «3»"></label>
+                    <input type="radio" id="star-20" name="rating" value="2">
+                    <label for="star-20" title="Оценка «2»"></label>
+                    <input type="radio" id="star-10" name="rating" value="1">
+                    <label for="star-10" title="Оценка «1»"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="popUp-form-label">Комментарий к оценке:*</label>
+                <label>
+                    <textarea placeholder="Текст сообщения."></textarea>
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-bg popUp-rate-btn">Отправить</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <div class="popUp popUp-review">
+        <h5 class="popUp__title">Выставить оценку</h5>
+        <span class="modal-cross">
+            <svg>
+                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+            </svg>
+        </span>
+        <form action="#" class="popUp-form">
+            <div class="form-group form-group-rate">
+                <label class="popUp-form-label popUp-form-label--rate">Выставить оценку:</label>
+                <div class="rating-area">
+                    <input type="radio" id="star-5" name="rating" value="5">
+                    <label for="star-5" title="Оценка «5»"></label>
+                    <input type="radio" id="star-4" name="rating" value="4">
+                    <label for="star-4" title="Оценка «4»"></label>
+                    <input type="radio" id="star-3" name="rating" value="3">
+                    <label for="star-3" title="Оценка «3»"></label>
+                    <input type="radio" id="star-2" name="rating" value="2">
+                    <label for="star-2" title="Оценка «2»"></label>
+                    <input type="radio" id="star-1" name="rating" value="1">
+                    <label for="star-1" title="Оценка «1»"></label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="popUp-form-label">Комментарий к оценке:*</label>
+                <label>
+                    <textarea placeholder="Текст сообщения."></textarea>
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-bg popUp-complain-btn">Отправить</button>
+            </div>
+        </form>
+    </div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

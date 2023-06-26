@@ -180,3 +180,15 @@ function getSectionsTree($iblockId, $ttl = 360000, $cacheId = 'sections_tree') :
     }
     return $sectionTree ?? NULL;
 }
+
+function getUserData($userId) : ?array
+{
+
+    $arUserInfo = \Bitrix\Main\UserTable::getList(array(
+        'select' => ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY', 'UF_PHONES'],
+        'filter' => ['ID' => $userId],
+        'limit' => 1
+    ))->fetch();
+
+    return $arUserInfo ?? NULL;
+}

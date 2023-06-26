@@ -1,5 +1,7 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
+use WebCompany\YouWatchBefore;
+
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -148,267 +150,81 @@ if (!empty($GLOBALS['SECTION_ID'])) {
 }
 ?>
 
-<div class="viewed viewed--big">
-    <div class="wrapper">
-        <div class="viewed--big-content">
-            <h2 class="title-section">Ранее вы смотрели</h2>
-            <div class="viewed-slider viewed-slider--big no-arrow">
-                <a href="https://www.google.com/search?q=dog+img&amp;tbm=isch&amp;ved=2ahUKEwj_j7To9aH8AhWDwgIHHSh6Bn0Q2-cCegQIABAA&amp;oq=dog+img&amp;gs_lcp=CgNpbWcQAzIECCMQJzIECAAQHjIECAAQHjIGCAAQBRAeMgkIABCABBAKEBg6BAgAEEM6BQgAEIAEUIsGWKgNYMcPaABwAHgAgAFeiAGjA5IBATWYAQCgAQGqAQtnd3Mtd2l6LWltZ8ABAQ&amp;sclient=img&amp;ei=AyevY7-CHoOFi-gPqPSZ6Ac&amp;bih=1306&amp;biw=2560#imgrc=u61zC0xCLTOo1M" class="viewed-slider__item">
-                        <span class="viewed-slider__item-img" style="height: 195.749px;">
-                            <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-1.jpg" alt="alt">
-                        </span>
-                    <span class="viewed-slider__item-description">
-                                      <span class="viewed-slider__item-title">Зеркало с люминесцентной подсветкой (120х75 см).  290G - SP20</span>
-                                <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                            </span>
-                    <span class="favorite-card">
-                            </span>
-                </a>
-                <a href="https://www.youtube.com/" class="viewed-slider__item">
-                        <span class="viewed-slider__item-img" style="height: 195.749px;">
-                            <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/card/item-2.jpg" alt="alt">
-                        </span>
-                    <span class="viewed-slider__item-description">
-                                  <span class="viewed-slider__item-title">Свитер желтый из нейлона (размер S)</span>
-                            <span class="viewed-slider__item-data">28.11.2022 в 12:02</span>
-                            </span>
-                    <span class="favorite-card">
-                            </span>
-                </a>
-
-            </div>
-            <div class="viewed-slider-arrows slider-arrows-container">
-                <div class="viewed-slider-prev slider-arrow-prev">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev">
-                        </use>
-                    </svg>
-                </div>
-                <div class="viewed-slider-next slider-arrow-next">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="popUp popUp-grade">
-    <h5 class="popUp__title">Оценка</h5>
-    <span class="modal-cross">
-            <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-        </span>
-    <p class="popUp-grade__description">
-        Рейтинг пользователя складывается из оценок тех, кто забирает вещи и тех, кто отдает
-    </p>
-    <div class="popUp-grade-content">
-        <div class="popUp-grade-result">
-            <div class="card-info-rating">
-                <div class="rating-result-text">4,0</div>
-                <div class="rating-result">
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span></span>
-                </div>
-            </div>
-            <div class="popUp-grade-result-text">
-                Средняя оценка пользователя
-            </div>
-            <div class="total-reviews">
-                <div class="total-reviews__text">
-                    Всего отзывов:
-                </div>
-                <div class="total-reviews__score">
-                    76
-                </div>
-            </div>
-        </div>
-        <div class="grade-list-container">
-            <ul class="grade-list">
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Константин</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Анна</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Константин</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-
-
-
-<div class="popUp popUp-complain">
-    <h5 class="popUp__title">Пожаловаться на пользователя</h5>
-    <span class="modal-cross">
-            <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-        </span>
-    <form action="#" class="complain-form">
-        <div class="form-group">
-            <label class="complain-form-label">Причина жалобы:</label>
-            <div class="form-group-wrapper">
-                <div class="form-group__item radio-btn">
-                    <label for="value-1">Вариант 1</label>
-                    <input type="radio" name="complain" checked id="value-1">
-                </div>
-                <div class="form-group__item radio-btn">
-                    <label for="value-2">Вариант 2 с длинным названием причины жалобы на пользователя
-                        в две или три строки</label>
-                    <input type="radio" name="complain" id="value-2">
-                </div>
-                <div class="form-group__item radio-btn">
-                    <label for="value-3">Вариант 3</label>
-                    <input type="radio" name="complain" id="value-3">
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="complain-form-label">Сообщение:</label>
-            <label>
-                <textarea placeholder="Текст сообщения."></textarea>
-            </label>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn-bg popUp-complain-btn">Отправить</button>
-        </div>
-    </form>
-</div>
+<?
+$obViewedGoods = new YouWatchBefore();
+$arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
+if (!empty($arViewedGoodsId)) {
+    global $arViewedGoodsFilter;
+    $arViewedGoodsFilter = ['ID' => $arViewedGoodsId,'!ID' => $ElementID];
+    $APPLICATION->IncludeComponent(
+        "bitrix:catalog.section",
+        "you-watch-before-detail",
+        array(
+            "ACTION_VARIABLE" => "",
+            "ADD_PICT_PROP" => "MORE_PHOTO",
+            "ADD_PROPERTIES_TO_BASKET" => "N",
+            "ADD_SECTIONS_CHAIN" => "N",
+            "CACHE_FILTER" => "Y",
+            "CACHE_GROUPS" => "Y",
+            "CACHE_TIME" => "36000000",
+            "CACHE_TYPE" => "A",
+            "COMPATIBLE_MODE" => "N",
+            "CONVERT_CURRENCY" => "Y",
+            "CURRENCY_ID" => "RUB",
+            "CUSTOM_FILTER" => "",
+            "DATA_LAYER_NAME" => "dataLayer",
+            "DETAIL_URL" => "",
+            "DISABLE_INIT_JS_IN_COMPONENT" => "N",
+            "DISPLAY_BOTTOM_PAGER" => "Y",
+            "DISPLAY_TOP_PAGER" => "N",
+            "ELEMENT_SORT_FIELD" => "id",
+            "ELEMENT_SORT_FIELD2" => "sort",
+            "ELEMENT_SORT_ORDER" => $arViewedGoodsId,
+            "ELEMENT_SORT_ORDER2" => "asc",
+            "ENLARGE_PRODUCT" => "PROP",
+            "ENLARGE_PROP" => "NEWPRODUCT",
+            "FILTER_NAME" => "arViewedGoodsFilter",
+            "HIDE_NOT_AVAILABLE" => "N",
+            "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+            "IBLOCK_ID" => ADS_IBLOCK_ID,
+            "IBLOCK_TYPE" => "products",
+            "PAGER_BASE_LINK_ENABLE" => "N",
+            "PAGER_DESC_NUMBERING" => "N",
+            "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+            "PAGER_SHOW_ALL" => "N",
+            "PAGER_SHOW_ALWAYS" => "N",
+            "PAGER_TEMPLATE" => "ads",
+            "PAGER_TITLE" => "Ранее смотрели",
+            "PAGE_ELEMENT_COUNT" => "10",
+            "RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
+            "RCM_TYPE" => "personal",
+            "SEF_MODE" => "N",
+            "SET_BROWSER_TITLE" => "N",
+            "SET_LAST_MODIFIED" => "N",
+            "SET_META_DESCRIPTION" => "N",
+            "SET_META_KEYWORDS" => "N",
+            "SET_STATUS_404" => "N",
+            "SET_TITLE" => "N",
+            "SHOW_404" => "N",
+            "SHOW_ALL_WO_SECTION" => "N",
+            "SHOW_CLOSE_POPUP" => "N",
+            "SHOW_DISCOUNT_PERCENT" => "Y",
+            "SHOW_FROM_SECTION" => "N",
+            "SHOW_MAX_QUANTITY" => "N",
+            "SHOW_OLD_PRICE" => "N",
+            "SHOW_PRICE_COUNT" => "1",
+            "SHOW_SLIDER" => "Y",
+            "SLIDER_INTERVAL" => "3000",
+            "SLIDER_PROGRESS" => "N",
+            "TEMPLATE_THEME" => "blue",
+            "USE_ENHANCED_ECOMMERCE" => "Y",
+            "USE_MAIN_ELEMENT_SECTION" => "N",
+            "USE_PRICE_COUNT" => "N",
+            "USE_PRODUCT_QUANTITY" => "N",
+            "COMPONENT_TEMPLATE" => "you-watch-before",
+            "DISPLAY_COMPARE" => "N"
+        ),
+        false
+    );
+}
+?>

@@ -175,7 +175,7 @@ class AddElementForm extends \CBitrixComponent
         return false;
     }
 
-    private function checkPostImages() : void
+    private function checkPostImages() : bool
     {
         if(isset($_FILES[$this->postImagesArrayName])) {
             $arImages = $_FILES[$this->postImagesArrayName];
@@ -210,12 +210,14 @@ class AddElementForm extends \CBitrixComponent
 
             if (empty($this->arErrors)) {
                 $this->arImgForRecord[$this->postImagesArrayName] = $arImagesData;
+                return true;
             }
 
         } else {
             $this->arErrors[$this->postImagesArrayName][] = "Ошибка! Изображения не были загружены.";
         }
 
+        return false;
     }
 
     private function createSymbolCode($string) : string
@@ -265,26 +267,21 @@ class AddElementForm extends \CBitrixComponent
         if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID') && !empty($this->arFieldsForRecord)) {
             $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obNewElement = $iblockClassName::createObject();
-
+            $obNewElement->setId($obNewElement->sysGetPrimaryAsString());
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
                 $obNewElement->set($propName,$propValue);
             }
 
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
                 $arImage['MODULE_ID'] = 'iblock';
-//                $arImage['old_file'] = '';
-//                $arImage['del'] = 'Y';
-
                 $fileId = \CFile::SaveFile($arImage,'iblock');
-//                $obNewElement->removeFromImages(new PropertyValue(91));
-//                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue(91));
+                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
             }
 
-            pr($this->arImgForRecord);
             $obRes = $obNewElement->save();
 
             if ($obRes->isSuccess()) {
-                echo "Элемент успешно добавлен";
+                echo json_encode(["OK" => "Элемент успешно добавлен"]);
             } else {
                 $this->processErrors($obRes->getErrorMessages());
             }
@@ -303,11 +300,11 @@ class AddElementForm extends \CBitrixComponent
     {
         $this->prepareResult();
         if ($this->isPostFormData()) {
-            $this->checkPostImages();
-            if ($this->checkPostFields()) {
+            if ($this->checkPostFields() && $this->checkPostImages()) {
                 $this->createNewUserAds();
+            } else {
+                echo json_encode($this->arErrors);
             }
-            pr($this->arErrors);
         }
         $this->includeComponentTemplate();
     }

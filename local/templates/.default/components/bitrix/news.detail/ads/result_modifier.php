@@ -27,6 +27,10 @@ if (!empty($arResult)) {
             BX_RESIZE_IMAGE_PROPORTIONAL,
         );
     }
+    // Получаем данные владельца объявления
+    if ($arResult['PROPERTIES']['OWNER']['VALUE']) {
+        $arResult['OWNER'] = getUserData($arResult['PROPERTIES']['OWNER']['VALUE']);
+    }
 
     // Добавляем товару эрмитаж
     $arButtons = CIBlock::GetPanelButtons(
