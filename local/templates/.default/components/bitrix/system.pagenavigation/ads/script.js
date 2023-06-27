@@ -78,6 +78,7 @@ Pagination.prototype.sendData = function (link,data) {
 			_this.deleteLoader();
 			curContainer.innerHTML = nextElementsContainer.innerHTML;
 			_this.setEventListener();
+			window.FavoriteManager.init();
 		},300);
 
 		window.history.replaceState(null, null, link);

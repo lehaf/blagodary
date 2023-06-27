@@ -38,7 +38,7 @@ class AddFavorite extends \CBitrixComponent
         $this->obDbConnection->queryExecute("
             CREATE TABLE $this->tableName (
             ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            USER_ID INT NOT NULL,
+            USER_ID INT NOT NULL UNIQUE,
             GOODS VARCHAR(1000)
           )
             ");

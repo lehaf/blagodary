@@ -92,6 +92,7 @@ SwitcherView.prototype.sendData = function (typeOfView) {
             let curElements = curContainer.querySelector(_this.settings.elementsClass);
             if (curElements) curElements.remove();
             if (newView) curContainer.prepend(newView);
+            window.FavoriteManager.init();
         },300);
 
     }).catch(error => {

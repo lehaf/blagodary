@@ -8,12 +8,12 @@ const FavoriteManager = function () {
         'getFavoriteMethod':'get'
     }
 
-    this.$arAllbtns = document.querySelectorAll(this.settings.favoriteBtnClass);
     this.init();
     window.FavoriteManager = this;
 }
 
 FavoriteManager.prototype.init = function () {
+    this.$arAllbtns = document.querySelectorAll(this.settings.favoriteBtnClass);
     this.getUserFavoriteGoods();
     this.setEventListener();
 }
@@ -53,6 +53,22 @@ FavoriteManager.prototype.setEventListener = function () {
     }
 }
 
+// FavoriteManager.prototype.changeDuplicates = function (itemId, method = '') {
+//     const _this = this;
+//     let duplicates = document.querySelectorAll('span[data-item="'+itemId+'"]');
+//     console.log(itemId);
+//     duplicates.forEach((favoriteBtn) => {
+//        switch (method) {
+//            case 'delete':
+//                favoriteBtn.classList.remove('active');
+//                break;
+//            case 'add':
+//                favoriteBtn.classList.add('active');
+//                break;
+//        }
+//     });
+// }
+
 FavoriteManager.prototype.sendData = function (data) {
     const _this = this;
     fetch(_this.settings.link, {
@@ -70,6 +86,8 @@ FavoriteManager.prototype.setFavoriteGoodsOnPage = function (text) {
         let itemId = Number(favoriteBtn.getAttribute(_this.settings.itemIdAttrName));
         if (_this.$arFavorites.includes(itemId)) {
             favoriteBtn.classList.add('active');
+        } else {
+            favoriteBtn.classList.remove('active');
         }
     });
 }
