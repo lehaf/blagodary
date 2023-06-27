@@ -1,0 +1,22 @@
+.delete-all {
+    display: none;
+    padding-top: 6px;
+    float: right;
+    background: none;
+    color: #2a3548;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: color 300ms ease;
+}
+
+.delete-all:hover {
+    color: #059ea3;
+}
+
+.delete-all:active {
+    color: #08b8bd;
+}
+
+.favorites-container {
+    position: relative;
+}

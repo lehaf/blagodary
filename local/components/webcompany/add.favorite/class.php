@@ -102,6 +102,19 @@ class AddFavorite extends \CBitrixComponent
         }
     }
 
+    private function deleteAll() : void
+    {
+        if ($this->isUserExistOnTable()) {
+            $jsonNewGoods = json_encode([]);
+            if (!empty($jsonNewGoods) && !empty($this->curUserId))
+                $this->obDbConnection->queryExecute(
+                    "UPDATE $this->tableName 
+                             SET  $this->favoriteGoodsFieldName = '$jsonNewGoods' 
+                             WHERE $this->userIdFieldName = $this->curUserId"
+                );
+        }
+    }
+
     private function getFavoriteGoods() : array
     {
         if (!empty($this->curUserId))
@@ -158,6 +171,10 @@ class AddFavorite extends \CBitrixComponent
                     'IBLOCK'
                 ],
                 'filter' => ['=ACTIVE' => 'Y', 'ID' => $arItemsID],
+                'cache' => [
+                    'cache_joins' => true,
+                    'ttl' => 360000,
+                ]
             ])->fetchCollection();
 
             $arEnumPropData = $this->getRegionsAndCitiesData();
@@ -210,13 +227,16 @@ class AddFavorite extends \CBitrixComponent
                         ob_start();
                         echo json_encode($this->getFavoriteGoods());
                         die();
+                    case 'delete_all':
+                        ob_end_clean();
+                        ob_start();
+                        $this->deleteAll();
                         break;
                 }
-            } /*else {
-                $this->arResult['ITEMS']
-            }*/
+            }
             $this->arResult['ITEMS'] = $this->getGoodsData($this->getFavoriteGoods());
             $this->includeComponentTemplate();
+            if ($_POST['favorite'] === 'y' && $_POST['method'] === 'delete_all') die();
         }
     }
 }

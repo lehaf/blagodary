@@ -11,35 +11,40 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
+$this->addExternalCss(SITE_TEMPLATE_PATH . "/html/css/loader.css");
 ?>
-<?if (!empty($arResult['ITEMS'])):?>
-    <div class="favorites-list">
-        <?foreach ($arResult['ITEMS'] as $arItem):?>
-            <a href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-list__item">
-                <div class="announcements-img">
-                    <img src="<?=$arItem['IMG']['src']?>"
-                         title="<?=$arItem['NAME']?>"
-                         alt="<?=$arItem['NAME']?>"
-                    >
-                </div>
-                <div class="announcements-description">
-                    <div class="announcements-description__head">
-                        <h3><?=$arItem['NAME']?></h3>
-                        <span data-item="<?=$arItem['ID']?>" class="favorite-card active"></span>
+<div class="favorites-container">
+    <?if (!empty($arResult['ITEMS'])):?>
+        <div class="favorites-list">
+            <?foreach ($arResult['ITEMS'] as $arItem):?>
+                <a href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-list__item">
+                    <div class="announcements-img">
+                        <img src="<?=$arItem['IMG']['src']?>"
+                             title="<?=$arItem['NAME']?>"
+                             alt="<?=$arItem['NAME']?>"
+                        >
                     </div>
-                    <div class="announcements-description__location">
-                        <div class="location">
-                            <?if (!empty($arItem['REGION']) && !empty($arItem['CITY'])):?>
-                                <svg>
-                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
-                                </svg>
-                                <?=$arItem['REGION'].', '.$arItem['CITY']?>
-                            <?endif;?>
+                    <div class="announcements-description">
+                        <div class="announcements-description__head">
+                            <h3><?=$arItem['NAME']?></h3>
+                            <span data-item="<?=$arItem['ID']?>" class="favorite-card active"></span>
                         </div>
-                        <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
+                        <div class="announcements-description__location">
+                            <div class="location">
+                                <?if (!empty($arItem['REGION']) && !empty($arItem['CITY'])):?>
+                                    <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
+                                    </svg>
+                                    <?=$arItem['REGION'].', '.$arItem['CITY']?>
+                                <?endif;?>
+                            </div>
+                            <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
+                        </div>
                     </div>
-                </div>
-            </a>
-        <?endforeach;?>
-    </div>
-<?endif;?>
+                </a>
+            <?endforeach;?>
+        </div>
+    <?else:?>
+        <div class="favorites-list">У вас нет избранных товаров</div>
+    <?endif;?>
+<div class="favorites-list">

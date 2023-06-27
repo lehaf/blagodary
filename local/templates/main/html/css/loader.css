@@ -3,6 +3,7 @@
 }
 .lds-heart {
     position: absolute;
+    filter: blur(0) !important;
     top: 30%;
     left: 45%;
     width: 80px;
