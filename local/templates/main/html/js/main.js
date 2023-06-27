@@ -434,7 +434,9 @@ $('.menu-authorized__cross').on('click', function () {
 });
 
 $('.btn-pick-up').on('click', function () {
-    $(".phone-list").slideDown("slow")
+    if (!$('.btn-pick-up').hasClass( "sign-in")) {
+        $(".phone-list").slideDown("slow");
+    }
 });
 
 

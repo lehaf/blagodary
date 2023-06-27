@@ -26,7 +26,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"AJAX_OPTION_STYLE" => "N",
 		"BROWSER_TITLE" => "-",
 		"CACHE_FILTER" => "Y",
-		"CACHE_GROUPS" => "N",
+		"CACHE_GROUPS" => "Y",
 		"CACHE_TIME" => "360000",
 		"CACHE_TYPE" => "A",
 		"CATEGORY_CODE" => "CATEGORY",
