@@ -113,6 +113,87 @@ class AddFavorite extends \CBitrixComponent
         return json_decode($strJson[$this->favoriteGoodsFieldName],true) ?? [];
     }
 
+    private function getRegionsAndCitiesData() : array
+    {
+        $arResult = [];
+        if (\Bitrix\Main\Loader::includeModule('iblock')) {
+            $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
+                'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
+                'select' => array('*'),
+                'filter' => array('PROPERTY_ID' => [REGION_PROP_ID,CITY_PROP_ID]),
+                'cache' => array(
+                    'ttl' => 360000,
+                    'cache_joins' => true
+                ),
+            ));
+
+            while ($arValue = $obPropRegionValues->fetch()) {
+                if (REGION_PROP_ID == $arValue['PROPERTY_ID']) {
+                    $arResult['REGION'][$arValue['ID']] = $arValue['VALUE'];
+                }
+
+                if (CITY_PROP_ID == $arValue['PROPERTY_ID']) {
+                    $arResult['CITY'][$arValue['ID']] = $arValue['VALUE'];
+                }
+            }
+        }
+        return $arResult;
+    }
+
+    private function getGoodsData(array $arItemsID) : array
+    {
+        $arItemsData = [];
+        if (!empty($arItemsID)) {
+            \Bitrix\Main\Loader::includeModule('iblock');
+            $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+            $obCollection = $iblockClassName::getList([
+                'select' => [
+                    'ID',
+                    'CODE',
+                    'NAME',
+                    'DATE_CREATE',
+                    'IMAGES',
+                    'REGION',
+                    'CITY',
+                    'IBLOCK'
+                ],
+                'filter' => ['=ACTIVE' => 'Y', 'ID' => $arItemsID],
+            ])->fetchCollection();
+
+            $arEnumPropData = $this->getRegionsAndCitiesData();
+            foreach ($obCollection as $obItem) {
+                $arDPU = ['ID' => $obItem->getId(), 'CODE' => $obItem->getCode()];
+                $detailPageUrl = \CIBlock::ReplaceDetailUrl($obItem->getIblock()->getDetailPageUrl(), $arDPU, false, 'E');
+                $firstImgId = !empty($obItem->getImages()->getAll()[0]) ? $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
+                $arResizeFirstImg = \CFile::ResizeImageGet(
+                    $firstImgId,
+                    array("width" => 131, "height" => 100),
+                    BX_RESIZE_IMAGE_PROPORTIONAL,
+                );
+
+                // Приводим время в нужный формат
+                $unixTime = strtotime($obItem->getDateCreate());
+                $rightDate = date('d.m.Y в H:i',$unixTime);
+
+                $regionVal = !empty($obItem->getRegion()) && !empty($arEnumPropData['REGION'][$obItem->getRegion()->getValue()]) ?
+                    $arEnumPropData['REGION'][$obItem->getRegion()->getValue()] : '';
+                $cityVal = !empty($obItem->getCity()) && !empty($arEnumPropData['CITY'][$obItem->getCity()->getValue()]) ?
+                    $arEnumPropData['CITY'][$obItem->getCity()->getValue()] : '';
+
+                $arItemsData[] = [
+                    'ID' => $obItem->getId(),
+                    'NAME' => $obItem->getName(),
+                    'IMG' => $arResizeFirstImg,
+                    'DATE_CREATE' => $rightDate,
+                    'REGION' => $regionVal,
+                    'CITY' => $cityVal,
+                    'DETAIL_PAGE_URL' => $detailPageUrl
+                ];
+            }
+        }
+        return $arItemsData;
+    }
+
     public function executeComponent() : void
     {
         if ($this->checkExistenceFavoriteTable()) {
@@ -131,7 +212,10 @@ class AddFavorite extends \CBitrixComponent
                         die();
                         break;
                 }
-            }
+            } /*else {
+                $this->arResult['ITEMS']
+            }*/
+            $this->arResult['ITEMS'] = $this->getGoodsData($this->getFavoriteGoods());
             $this->includeComponentTemplate();
         }
     }
