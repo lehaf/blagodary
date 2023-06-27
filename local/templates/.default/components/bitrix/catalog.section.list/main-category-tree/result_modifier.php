@@ -5,7 +5,7 @@ if (!empty($arResult['SECTIONS']) && !empty($arParams['ROOT_SECTION']) && !empty
     $newSections = [];
     foreach ($arResult['SECTIONS'] as $key => &$arSection) {
         // удаляем разделы без элементов
-        if ($arSection['ELEMENT_CNT'] == 0) unset($arResult['SECTIONS'][$key]);
+        if ($arSection['ELEMENT_CNT'] == 0 && $arSection['DEPTH_LEVEL'] != 1) continue;
 
         if ($arSection['ID'] === $arParams['ACTIVE_SECTION_ID']) $arSection['SELECTED'] = true;
 

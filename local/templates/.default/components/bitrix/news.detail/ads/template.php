@@ -61,7 +61,7 @@ $this->setFrameMode(true);
             <div class="card-content">
                 <div class="card-content__title">
                     <h2 class="title-section"><?=$arResult['NAME']?></h2>
-                    <span class="favorite-card favorite-card--page"></span>
+                    <span data-item="<?=$arResult['ID']?>" class="favorite-card favorite-card--page"></span>
                 </div>
                 <button class="edit-card">
                     <svg>

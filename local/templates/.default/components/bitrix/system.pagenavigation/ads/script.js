@@ -27,9 +27,11 @@ Pagination.prototype.setEventListener = function () {
 		this.$arAllPaginationLinks.forEach((paginationLink) => {
 			paginationLink.onclick = () => {
 				event.preventDefault();
-				let requestLink = paginationLink.getAttribute('href');
-				_this.setLoader();
-				_this.sendData(requestLink,{'isAjax': 'Y',});
+				if (!paginationLink.parentNode.classList.contains('active')) {
+					let requestLink = paginationLink.getAttribute('href');
+					_this.setLoader();
+					_this.sendData(requestLink,{'isAjax': 'Y',});
+				}
 			}
 		});
 	}
