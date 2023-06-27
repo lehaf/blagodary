@@ -156,6 +156,21 @@ AjaxFilter.prototype.deleteLoader = function () {
 	}
 }
 
+AjaxFilter.prototype.scrollToElement = function (element) {
+	// Создаем новый observer (наблюдатель)
+	let observer = new IntersectionObserver(function (entries) {
+		entries.forEach(function (entry) {
+			if (entry.isIntersecting !== true) {
+				element.scrollIntoView({
+					behavior: 'smooth',
+					block: 'start'
+				});
+			}
+		});
+	});
+	observer.observe(element);
+}
+
 AjaxFilter.prototype.prepareLinkForAjax = function (getParams = '') {
 	getParams = getParams.length > 0 ? '?' + getParams : getParams;
 	return  location.origin + location.pathname + getParams;
@@ -176,6 +191,7 @@ AjaxFilter.prototype.sendData = function (link = '') {
 		let response = _this.getDomElementsFromString(text);
 		let newElements = response.querySelector(_this.settings.elementsClass);
 		let curContainer = document.querySelector(_this.settings.elementsContainerClass);
+		_this.scrollToElement(curContainer);
 		setTimeout(() => {
 			_this.deleteLoader();
 			if (newElements) {
