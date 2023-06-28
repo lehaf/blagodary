@@ -63,13 +63,15 @@ $this->setFrameMode(true);
                     <h2 class="title-section"><?=$arResult['NAME']?></h2>
                     <span data-item="<?=$arResult['ID']?>" class="favorite-card favorite-card--page"></span>
                 </div>
-                <button class="edit-card">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#edit-card">
-                        </use>
-                    </svg>
-                    Редактировать объявление
-                </button>
+                <?if ($USER->GetId() === $arResult['OWNER']['ID']):?>
+                    <button class="edit-card">
+                        <svg>
+                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#edit-card">
+                            </use>
+                        </svg>
+                        Редактировать объявление
+                    </button>
+                <?endif;?>
                 <div class="card-info">
                     <?if (!empty($arResult['OWNER'])):?>
                         <div class="card-info__item card-info__item--contact">
