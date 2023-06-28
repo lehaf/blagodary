@@ -98,7 +98,7 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                     </button>
                     <?if ($USER->IsAuthorized()) :?>
                         <div class="header-account-menu">
-                        <button class="btn-white sign-in is-active">Личный кабинет
+                        <button class="btn-white user-authorized is-active">Личный кабинет
                             <svg>
                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#authorized"></use>
                             </svg>
