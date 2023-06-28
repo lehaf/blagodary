@@ -16,9 +16,16 @@ class AddElementForm extends \CBitrixComponent
         'IBLOCK_SECTION_ID' => 'Выбор категории',
         'DETAIL_TEXT' => 'Описание',
         'REGION' => 'Область',
-        'CITY' => 'Город / Район'
+        'CITY' => 'Город / Район',
+        'OWNER_NAME' => 'Имя',
+        'OWNER_PHONE' => 'Контактный телефон'
     ];
+
+    private array $arMultipleFields = ['OWNER_PHONE','IMAGES'];
     private string $propOwnerCode = 'OWNER';
+    private string $fieldOwnerPhoneName = 'OWNER_PHONE';
+    private string $fieldOwnerPhonePattern = '/(?:\+375|80)\s?\(?\d\d\)?\s?\d\d(?:\d[\-\s]\d\d[\-\s]\d\d|[\-\s]\d\d[\-\s]\d\d\d|\d{5})/';
+    private string $fieldDescriptionName = 'DETAIL_TEXT';
     private int $maxDescriptionLen = 4000;
     private array $arValidImgFormat = ['png', 'jpg', 'jpeg'];
     private string $postImagesArrayName = 'IMAGES';
@@ -140,13 +147,29 @@ class AddElementForm extends \CBitrixComponent
         $arFields['CODE'] = $this->createSymbolCode($arFields['NAME']);
     }
 
+    private function checkPostArrayFields(string $fieldName, array$arFieldValue) : array
+    {
+//        if (!empty($arFieldValue)) {
+//            foreach ($arFieldValue as &$value) {
+//                $value = htmlspecialchars(trim($value));
+//                if ($fieldName === $this->fieldOwnerPhoneName && !preg_match($this->fieldOwnerPhonePattern,$value)) {
+//                    $this->arErrors[$fieldName][] = "Поле '".$this->arPostValidFields[$fieldName]."' заполнено некорректно!";
+//                    break;
+//                }
+//            }
+//            unset($value);
+//        }
+        return $arFieldValue;
+    }
+
     private function checkPostFields() : bool
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST)) {
             $arCheckedFields = [];
             foreach ($_POST as $propName => $propValue) {
                 if (key_exists($propName, $this->arPostValidFields)) {
-                    $fieldValue = htmlspecialchars(trim($propValue));
+
+                    $fieldValue = is_array($propValue) ? $this->checkPostArrayFields($propName,$propValue) : htmlspecialchars(trim($propValue));
                     // Проверяем, что все поля заполнены
                     if (empty($fieldValue)) {
                         $this->arErrors[$propName][] = "Поле '".$this->arPostValidFields[$propName]."' обязательно для заполнения!";
@@ -268,8 +291,15 @@ class AddElementForm extends \CBitrixComponent
             $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obNewElement = $iblockClassName::createObject();
             $obNewElement->setId($obNewElement->sysGetPrimaryAsString());
+
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
-                $obNewElement->set($propName,$propValue);
+                if (!in_array($propName, $this->arMultipleFields)) {
+                    $obNewElement->set($propName,$propValue);
+                } else {
+                    foreach ($propValue as $value) {
+                        $obNewElement->addTo($propName, $value);
+                    }
+                }
             }
 
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
@@ -303,7 +333,8 @@ class AddElementForm extends \CBitrixComponent
             if ($this->checkPostFields() && $this->checkPostImages()) {
                 $this->createNewUserAds();
             } else {
-                echo json_encode($this->arErrors);
+                pr($this->arErrors);
+//                echo $this->arErrors;
             }
         }
         $this->includeComponentTemplate();

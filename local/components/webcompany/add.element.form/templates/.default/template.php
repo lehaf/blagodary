@@ -39,7 +39,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
     <div class="product-name">
         <div class="form-group">
             <label for="productName" class="data-user__label">Название товара*</label>
-            <input type="text" name="NAME" placeholder="Например, телевизор Horizont" id="productName">
+            <input type="text" name="NAME" placeholder="Например, телевизор Horizont" id="productName" required>
         </div>
     </div>
     <div class="form-wrapper" id="categorySelection">
@@ -117,98 +117,11 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
                 Изменить подкатегорию</div>
         </div>
-        <!--                <div class="extra-options">-->
-        <!--                    <h3 class="title-block title-block--left">Дополнительные параметры для выбранной подкатегории:</h3>-->
-        <!--                    <div class="form-group">-->
-        <!--                        <label for="extraOptionsSelect" class="data-user__label">Выпадающий список</label>-->
-        <!--                        <select name="country" class="custom-select " id="extraOptionsSelect">-->
-        <!--                            <option value="1" selected>Параметр 1</option>-->
-        <!--                            <option value="2">Параметр 2</option>-->
-        <!--                            <option value="3">Параметр 3</option>-->
-        <!--                        </select>-->
-        <!--                    </div>-->
-        <!--                    <div class="form-container">-->
-        <!--                        <label for="rangeStart" class="data-user__label data-user__label--range">Диапазон</label>-->
-        <!--                        <div class="form-group-wrapper form-group-wrapper--range">-->
-        <!--                            <div class="for-group for-group--range">-->
-        <!--                                <input type="text" id="rangeStart" placeholder="От">-->
-        <!--                            </div>-->
-        <!--                            <div class="for-group for-group--range">-->
-        <!--                                <input type="text" id="rangeEnd" placeholder="До">-->
-        <!--                            </div>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-        <!--                    <div class="form-group form-group-100">-->
-        <!--                        <label class="data-user__label">Выбор из одного варианта</label>-->
-        <!--                        <div class="form-group-wrapper form-group-radio">-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-1">Параметр 1</label>-->
-        <!--                                <input type="radio" id="radio-1" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-2">Параметр 2 c длинным названием в 2 строки</label>-->
-        <!--                                <input type="radio" id="radio-2" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-3">Параметр 2</label>-->
-        <!--                                <input type="radio" id="radio-3" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-4">Параметр 2</label>-->
-        <!--                                <input type="radio" id="radio-4" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-5">Параметр 1</label>-->
-        <!--                                <input type="radio" id="radio-5" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-6">Параметр 2 c длинным названием в 2 строки</label>-->
-        <!--                                <input type="radio" id="radio-6" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-7">Параметр 2</label>-->
-        <!--                                <input type="radio" id="radio-7" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-8">Параметр 2</label>-->
-        <!--                                <input type="radio" id="radio-8" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="radio-9">Параметр 2 c длинным названием в 2 строки</label>-->
-        <!--                                <input type="radio" id="radio-9" name="radio-btn">-->
-        <!--                            </div>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-        <!--                    <div class="form-group">-->
-        <!--                        <label class="data-user__label">Множественный выбор</label>-->
-        <!--                        <div class="form-group-wrapper checkbox">-->
-        <!--                            <div class="form-group__item">-->
-        <!--                                <label for="checkbox-1" class="label-checkbox">-->
-        <!--                                    <input type="checkbox" name="value-1" id="checkbox-1">-->
-        <!--                                    <span>Параметр 1</span>-->
-        <!--                                </label>-->
-        <!---->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item checkbox">-->
-        <!--                                <label for="checkbox-2" class="label-checkbox">-->
-        <!--                                    <input type="checkbox" name="value-1" id="checkbox-2">-->
-        <!--                                    <span>Параметр 2</span>-->
-        <!--                                </label>-->
-        <!--                            </div>-->
-        <!--                            <div class="form-group__item checkbox">-->
-        <!--                                <label for="checkbox-3" class="label-checkbox">-->
-        <!--                                    <input type="checkbox" name="value-1" id="checkbox-3">-->
-        <!--                                    <span>Параметр 3</span>-->
-        <!--                                </label>-->
-        <!--                            </div>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-        <!--                </div>-->
         <div class="form-textarea">
             <h3 class="title-block title-block--left mb-20">Описание*:</h3>
             <div class="form-group">
                 <label>
-                    <textarea name="DETAIL_TEXT" placeholder="Введите описание" id="announcementTextarea" maxlength="4000"></textarea>
+                    <textarea name="DETAIL_TEXT" placeholder="Введите описание" id="announcementTextarea" maxlength="4000" required></textarea>
                 </label>
                 <div class="form-textarea-description">
                     <div class="min-text">Минимально: 20 знаков</div>
@@ -227,7 +140,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 <div class="data-user-container">
                     <div class="form-group">
                         <label for="REGION" class="data-user__label">Область*</label>
-                        <select name="REGION" class="custom-select custom-old" id="REGION">
+                        <select name="REGION" class="custom-select custom-old" id="REGION" required>
                             <?foreach ($arResult['SELECTS']['REGION'] as $key => $regionName):?>
                                 <option value="<?=$regionName?>"
                                     <?=!empty($arResult['USER']['REGION']) && $arResult['USER']['REGION'] === $regionName ? "selected" : ($key === 0 ? "selected" : '')?>
@@ -237,7 +150,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     </div>
                     <div class="form-group">
                         <label for="CITY" class="data-user__label">Город / Район*</label>
-                        <select name="CITY" class="custom-select new-select" id="CITY">
+                        <select name="CITY" class="custom-select new-select" id="CITY" required>
                             <?foreach ($arResult['SELECTS']['CITY'] as $key => $cityName):?>
                                 <option value="<?=$cityName?>"
                                     <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $cityName ? "selected" : ($key === 0 ? "selected" : '')?>
@@ -248,6 +161,27 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 </div>
             </div>
         <?endif;?>
+        <div class="from-person-phone">
+            <h3 class="title-block title-block--left">О продавце:</h3>
+            <div class="data-user-container data-user-container--tel">
+                <div class="form-group">
+                    <label for="personName" class="data-user__label">Имя*</label>
+                    <input type="text" name="OWNER_NAME" placeholder="Введите ваше имя для объявления" id="personName" required>
+                </div>
+                <div class="form-tel-container">
+                    <div class="form-group form-group--tel">
+                        <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
+                        <input type="tel" name="OWNER_PHONE[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" id="dataUserTel" required>
+                    </div>
+                </div>
+                <div class="add-new-phone">
+                    <span class="add-new-phone-btn">
+                        <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
+                    </span>
+                    <div class="add-new-phone-text">Добавить телефон</div>
+                </div>
+            </div>
+        </div>
         <button type="submit" class="btn btn--form <?=empty($arResult['USER']['NAME']) ? 'btn--no-name-error' : ''?>">
             <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
             Подать объявление
