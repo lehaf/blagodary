@@ -1,6 +1,8 @@
 const Pagination = function () {
 	this.settings = {
-		'paginationLinkSelector':'.pagination-list .pagination-list__item a',
+		'paginationLinkSelector':'ul.pagination-list a',
+		'paginationArrowRightClass':'.pagination-arrow-right',
+		'paginationArrowLeftClass':'.pagination-arrow-right',
 		'switcherBtnClass':'.announcements-switch__item',
 		'loaderClassName':'lds-heart',
 		'loaderContainerClass':'.announcements-content',

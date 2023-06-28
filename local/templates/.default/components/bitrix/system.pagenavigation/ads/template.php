@@ -24,7 +24,7 @@ if(!$arResult["NavShowAlways"])
                 if($arResult["bSavePage"]):
                     ?>
                     <li class="pagination-list__item">
-                        <a  href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"></a>
+                        <a href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>"></a>
                     </li>
                 <?else:?>
                     <?if ($arResult["NavPageCount"] == ($arResult["NavPageNomer"]+1) ):?>
@@ -111,7 +111,7 @@ if(!$arResult["NavShowAlways"])
                         </li>
 
                     <?endif; ?>
-                    <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
+                    <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
                         </svg>
@@ -245,7 +245,7 @@ if(!$arResult["NavShowAlways"])
                 endif;
                 ?>
 
-                <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]-1)?>">
+                <a class="pagination-arrow-right" href="<?=$arResult["sUrlPath"]?>?<?=$strNavQueryString?>PAGEN_<?=$arResult["NavNum"]?>=<?=($arResult["NavPageNomer"]+1)?>">
                     <svg>
                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
                     </svg>
