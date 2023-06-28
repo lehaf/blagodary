@@ -123,7 +123,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"SHOW_404" => "Y",
 		"SHOW_LINK_TO_FORUM" => "Y",
 		"SORT_BY1" => "ACTIVE_FROM",
-		"SORT_BY2" => "SORT",
+		"SORT_BY2" => "ID",
 		"SORT_ORDER1" => "DESC",
 		"SORT_ORDER2" => "ASC",
 		"STRICT_SECTION_CHECK" => "Y",
