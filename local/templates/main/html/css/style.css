@@ -2092,14 +2092,6 @@ input[type="checkbox"] {
   transition: 0.3s;
 }
 
-.user-authorized.is-active:not(.sign-in--mobile) svg {
-  width: 10px;
-  height: 5px;
-  margin-left: 10px;
-  transform: rotate(180deg);
-  transition: 0.3s;
-}
-
 .header-account-menu:hover .sign-in.is-active svg {
   transform: rotate(0);
 }

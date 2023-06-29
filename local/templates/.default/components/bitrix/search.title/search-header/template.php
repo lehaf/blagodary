@@ -12,7 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);?>
 
-<div class="header-search" style="position:absolute; left: 377.5px">
+<div class="header-search">
     <form id="header-search" action="<?=$arResult["FORM_ACTION"]?>"></form>
     <label for="header-search">
         <input form="header-search"
@@ -24,5 +24,3 @@ $this->setFrameMode(true);?>
     </label>
     <button form="header-search" type="submit" class="btn-bg btn-search"><?=$arParams["BUTTON_NAME"]?></button>
 </div>
-
-

@@ -10,12 +10,12 @@
 /** @var string $templateFolder */
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
+$isUserAuthorized = $USER->IsAuthorized();
 $this->setFrameMode(true);
 ?>
 <?if (!empty($arResult)):?>
     <div class="page-card" id="<?=$this->GetEditAreaID($arResult['ID'])?>">
         <div class="page-card__item page-card__item--slider">
-
             <div class="card-slider">
                 <span data-item="<?=$arResult['ID']?>" class="favorite-card"></span>
                 <?if (!empty($arResult['IMAGES'])):?>
@@ -105,22 +105,25 @@ $this->setFrameMode(true);
                                 </div>
                                 <?if (!empty($arResult['OWNER']['UF_PHONES']) && $USER->GetId() !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
-                                        <button class="btn-pick-up btn <?=!$USER->IsAuthorized() ? 'sign-in' : ''?>">
+                                        <button class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>">
                                             <svg>
                                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pick-up">
                                                 </use>
                                             </svg>
-                                            Хочу забрать</button>
-                                        <ul class="phone-list">
-                                            <?foreach ($arResult['OWNER']['UF_PHONES'] as $phone):?>
-                                                <li class="phone-list__item">
-                                                    <svg>
-                                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
-                                                    </svg>
-                                                    <a href="tel:<?=$phone?>"><?=$phone?></a>
-                                                </li>
-                                            <?endforeach;?>
-                                        </ul>
+                                            Хочу забрать
+                                        </button>
+                                        <?if ($isUserAuthorized):?>
+                                            <ul class="phone-list">
+                                                <?foreach ($arResult['OWNER']['UF_PHONES'] as $phone):?>
+                                                    <li class="phone-list__item">
+                                                        <svg>
+                                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
+                                                        </svg>
+                                                        <a href="tel:<?=$phone?>"><?=$phone?></a>
+                                                    </li>
+                                                <?endforeach;?>
+                                            </ul>
+                                        <?endif;?>
                                     </div>
                                 <?endif;?>
                             </div>

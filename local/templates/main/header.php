@@ -77,28 +77,47 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                 );?>
                 <div class="header-account">
                     <?if ($USER->IsAuthorized()) :?>
-                        <?if (!$isAddAdsPage):?><a href="/personal/my-ads/add-ads/" class="btn submit-an-ad"><?else:?><span class="btn submit-an-ad"><?endif;?>
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                            </svg>
-                            Подать объявление
-                        <?if (!$isAddAdsPage):?></a><?else:?></span ><?endif;?>
+                        <?if (!$isAddAdsPage):?>
+                            <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                </svg>
+                                Подать объявление
+                            </a>
+                            <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad submit-an-ad--mobile">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                </svg>
+                            </a>
+                        <?else:?>
+                            <button class="btn submit-an-ad sign-in sign-in-modal">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                </svg>
+                                Подать объявление
+                            </button>
+                            <button class="btn submit-an-ad submit-an-ad--mobile sign-in-modal">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                </svg>
+                            </button>
+                        <?endif;?>
                     <?else:?>
-                        <button class="btn submit-an-ad sign-in">
+                        <button class="btn submit-an-ad sign-in sign-in-modal">
                             <svg>
                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                             </svg>
                             Подать объявление
                         </button>
+                        <button class="btn submit-an-ad submit-an-ad--mobile sign-in-modal">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                            </svg>
+                        </button>
                     <?endif;?>
-                    <button class="btn submit-an-ad submit-an-ad--mobile">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                        </svg>
-                    </button>
                     <?if ($USER->IsAuthorized()) :?>
                         <div class="header-account-menu">
-                        <button class="btn-white user-authorized is-active">Личный кабинет
+                        <button class="btn-white sign-in user-authorized is-active">Личный кабинет
                             <svg>
                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#authorized"></use>
                             </svg>
@@ -137,14 +156,14 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                         </div>
                     </div>
                     <?else:?>
-                        <button class="btn-white sign-in">Войти</button>
+                        <button class="btn-white sign-in sign-in-modal">Войти</button>
+                        <button class="btn-white sign-in sign-in-modal sign-in--mobile">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#sign-in-mobile">
+                                </use>
+                            </svg>
+                        </button>
                     <?endif;?>
-                    <button class="btn-white sign-in sign-in--mobile">
-                        <svg>
-                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#sign-in-mobile">
-                            </use>
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
