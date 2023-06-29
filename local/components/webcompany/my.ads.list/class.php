@@ -4,8 +4,9 @@ namespace WebCompany;
 
 class AddElementForm extends \CBitrixComponent
 {
-    private string $errorLogTitle = 'Ошибка создания объявления!';
-    private string $errorLogDesc = "В компоненте webcompany:add.element.form при создании нового объявления возникли следующие ошибки:";
+    private string $errorLogTitle = 'Ошибка добавления пользователя в свойство!';
+    private string $errorLogDesc = "В компоненте webcompany:my.ads.list при добавлении в свойство WHO_WANT_TAKE
+     нового пользователя возникли следующие ошибки:";
     private ?int $curUserId;
 
 
@@ -15,10 +16,50 @@ class AddElementForm extends \CBitrixComponent
         parent::__construct($component);
     }
 
-    public function isPostFormData() : bool
+    public function isPostRequest() : bool
     {
-        if (!empty($_POST)) return true;
+        if (!empty($_POST) && $_POST['component'] === $this->getName()) return true;
         return false;
+    }
+
+    private function processErrors(array $arErrorsMessages) : void
+    {
+        if (!empty($arErrorsMessages)) {
+            \CEventLog::Add(array(
+                "SEVERITY" => "SECURITY",
+                "AUDIT_TYPE_ID" => $this->errorLogTitle,
+                "MODULE_ID" => $this->__name,
+                "ITEM_ID" => NULL,
+                "DESCRIPTION" => $this->errorLogDesc." ".implode('<br>',$arErrorsMessages)
+            ));
+        }
+    }
+
+    private function addUserToWantTakeList(int $adsId) : void
+    {
+        if (!empty($adsId)) {
+            if (\Bitrix\Main\Loader::includeModule('iblock')) {
+                $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+                $obAds = $className::getList(array(
+                    'select' => array('ID', 'WHO_WANT_TAKE'),
+                    'filter' => array('=ACTIVE' => 'Y', 'ID' => $adsId),
+                    'limit' => 1
+                ))->fetchObject();
+
+                if (!empty($this->curUserId)) {
+                    if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
+                        foreach ($obAllUsers as $obValue) {
+                            if ($obValue->getValue() == $this->curUserId) exit;
+                        }
+                    }
+                    $obAds->addToWhoWantTake($this->curUserId);
+                    $res = $obAds->save();
+                    if (!$res->isSuccess()) {
+                        $this->processErrors($res->getErrorMessages());
+                    }
+                }
+            }
+        }
     }
 
     public function getHermitageButtons(int $itemId, int $iblockId) : array
@@ -46,7 +87,7 @@ class AddElementForm extends \CBitrixComponent
         if (\Bitrix\Main\Loader::includeModule('iblock')) {
             $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obCollection = $className::getList(array(
-                'order' => array('SORT' => 'ASC'),
+                'order' => array('DATE_CREATE' => 'DESC','ID' => 'ASC'),
                 'select' => array('ID', 'CODE', 'NAME', 'DATE_CREATE', 'IMAGES', 'IBLOCK'),
                 'filter' => array('=ACTIVE' => 'Y', 'OWNER.VALUE' => $this->curUserId),
                 'cache' => array(
@@ -89,8 +130,11 @@ class AddElementForm extends \CBitrixComponent
     public function executeComponent() : void
     {
         $this->prepareResult();
-//        if ($this->isPostFormData()) {
-//        }
+            if ($this->isPostRequest()) {
+                if ($_POST['action'] === 'addUserToWantTakeList' && !empty($_POST['ads_id'])) {
+                    $this->addUserToWantTakeList($_POST['ads_id']);
+                }
+            }
         $this->includeComponentTemplate();
     }
 }

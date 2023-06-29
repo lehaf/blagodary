@@ -13,13 +13,6 @@ if(empty($arResult))
 
 $strReturn = '';
 
-
-//                <li class="bread-crumbs-list__item"><a href="#">Главная</a></li>
-//                <li class="bread-crumbs-list__item"><a href="#">Раздел</a></li>
-//                <li class="bread-crumbs-list__item"><a href="#">Страница выбранного товара</a></li>
-//                <li class="bread-crumbs-list__item mobile"><a href="#">Выбранный раздел товаров</a></li>
-
-
 $strReturn .= '<div class="bread-crumbs"><div class="wrapper"><ul class="bread-crumbs-list">';
 
 $itemSize = count($arResult);

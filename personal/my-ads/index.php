@@ -146,7 +146,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
             ];
 
             $APPLICATION->IncludeComponent(
-	"webcompany:deactivate.list",
+	"webcompany:my.ads.list",
 	"",
             ); ?>
         </div>

@@ -11,6 +11,7 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 $isUserAuthorized = $USER->IsAuthorized();
+$curUserId = $USER->GetId();
 $this->setFrameMode(true);
 ?>
 <?if (!empty($arResult)):?>
@@ -63,7 +64,7 @@ $this->setFrameMode(true);
                     <h2 class="title-section"><?=$arResult['NAME']?></h2>
                     <span data-item="<?=$arResult['ID']?>" class="favorite-card favorite-card--page"></span>
                 </div>
-                <?if ($USER->GetId() === $arResult['OWNER']['ID']):?>
+                <?if ($curUserId === $arResult['OWNER']['ID']):?>
                     <button class="edit-card">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#edit-card">
@@ -103,9 +104,11 @@ $this->setFrameMode(true);
                                         <span class="card-info-announcements__num">2</span>
                                     </a>
                                 </div>
-                                <?if (!empty($arResult['OWNER']['UF_PHONES']) && $USER->GetId() !== $arResult['OWNER']['ID']):?>
+                                <?if (!empty($arResult['OWNER']['UF_PHONES']) && $curUserId !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
-                                        <button class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>">
+                                        <button data-ads-id="<?=$arResult['ID']?>"
+                                                class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>"
+                                        >
                                             <svg>
                                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pick-up">
                                                 </use>
