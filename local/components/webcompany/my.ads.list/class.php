@@ -2,6 +2,7 @@
 
 namespace WebCompany;
 
+use Bitrix\Iblock\ORM\PropertyValue;
 class AddElementForm extends \CBitrixComponent
 {
     private string $errorLogTitle = 'Ошибка добавления пользователя в свойство!';
@@ -22,6 +23,28 @@ class AddElementForm extends \CBitrixComponent
         return false;
     }
 
+    private function executeAction(string $action) : void
+    {
+        switch ($action) {
+            case 'addUserToWantTakeList':
+                if (!empty($_POST['ads_id'])) {
+                    $this->addUserToWantTakeList($_POST['ads_id']);
+                }
+                break;
+            case 'getAdsWantTakeListUsers':
+                if (!empty($_POST['ads_id'])) {
+                    $this->getAdsWantTakeListUsers($_POST['ads_id']);
+                }
+                break;
+            case 'setUserRatingAndDeactivate':
+                if (!empty($_POST['ads_id']) && !empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
+                    $this->setUserRating($_POST['user_id'],$_POST['RATING'],$_POST['COMMENT']);
+//                    $this->deactivateAds($_POST['ads_id']);
+                }
+                break;
+        }
+    }
+
     private function processErrors(array $arErrorsMessages) : void
     {
         if (!empty($arErrorsMessages)) {
@@ -32,6 +55,86 @@ class AddElementForm extends \CBitrixComponent
                 "ITEM_ID" => NULL,
                 "DESCRIPTION" => $this->errorLogDesc." ".implode('<br>',$arErrorsMessages)
             ));
+        }
+    }
+
+    private function setUserRating(int $userId, int $rating, string $comment) : void
+    {
+        if (!empty($userId) && !empty($rating) && !empty($comment)) {
+            if (\Bitrix\Main\Loader::includeModule('iblock')) {
+
+                $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
+                $arSection = $entity::getList(array(
+                    "filter" => array("UF_USER_ID" => $userId),
+                    "select" => array("ID"),
+                ))->fetch();
+                $className = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
+                $obUser = $className::createObject();
+                ob_end_clean();
+                ob_start();
+                if (!empty($obUser)) {
+                    $arUserInfo = \Bitrix\Main\UserTable::getList(array(
+                        'select' => ['ID', 'NAME'],
+                        'filter' => ['ID' => $this->curUserId],
+                        'limit' => 1
+                    ))->fetch();
+                    $obUser->setName($arUserInfo['NAME']);
+                    $obUser->setIblockSectionId($arSection['ID']);
+                    $obUser->addToRating(new PropertyValue($this->curUserId,$rating));
+                    $obUser->save();
+                }
+//                if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
+//                    $arUsersId = [];
+//                    foreach ($obAllUsers as $obValue) {
+//                        $arUsersId[] = $obValue->getValue();
+//                    }
+//                    $arUsersInfo = \Bitrix\Main\UserTable::getList(array(
+//                        'select' => ['ID', 'NAME','UF_PHONES'],
+//                        'filter' => ['ID' => $arUsersId],
+//                    ))->fetchAll();
+//
+//                    echo json_encode(!empty($arUsersInfo) ? $arUsersInfo : []);
+//                } else {
+//                    echo '[]';
+//                }
+                die();
+            }
+        }
+    }
+
+    private function getAdsWantTakeListUsers(int $adsId) : void
+    {
+        if (!empty($adsId)) {
+            if (\Bitrix\Main\Loader::includeModule('iblock')) {
+                $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+                $obAds = $className::getList(array(
+                    'select' => array('ID', 'WHO_WANT_TAKE'),
+                    'filter' => array('=ACTIVE' => 'Y', 'ID' => $adsId),
+                    'limit' => 1,
+                    'cache' => [
+                        'ttl' => 360000,
+                        'cache_joins' => true
+                    ]
+                ))->fetchObject();
+
+                ob_end_clean();
+                ob_start();
+                if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
+                    $arUsersId = [];
+                    foreach ($obAllUsers as $obValue) {
+                        $arUsersId[] = $obValue->getValue();
+                    }
+                    $arUsersInfo = \Bitrix\Main\UserTable::getList(array(
+                        'select' => ['ID', 'NAME','UF_PHONES'],
+                        'filter' => ['ID' => $arUsersId],
+                    ))->fetchAll();
+
+                    echo json_encode(!empty($arUsersInfo) ? $arUsersInfo : []);
+                } else {
+                    echo '[]';
+                }
+                die();
+            }
         }
     }
 
@@ -130,10 +233,8 @@ class AddElementForm extends \CBitrixComponent
     public function executeComponent() : void
     {
         $this->prepareResult();
-            if ($this->isPostRequest()) {
-                if ($_POST['action'] === 'addUserToWantTakeList' && !empty($_POST['ads_id'])) {
-                    $this->addUserToWantTakeList($_POST['ads_id']);
-                }
+            if ($this->isPostRequest() && !empty($_POST['action'])) {
+                $this->executeAction($_POST['action']);
             }
         $this->includeComponentTemplate();
     }

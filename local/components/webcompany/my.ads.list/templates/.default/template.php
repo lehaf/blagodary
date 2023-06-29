@@ -48,7 +48,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                     <div class="announcements-description__del">
                         <button class="del-ed">
                             <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
-                            <span data-delete="<?=$arItem['ID']?>"> Деактивировать</span>
+                            <span class="deactivate-btn" data-item-id="<?=$arItem['ID']?>"> Деактивировать</span>
                         </button>
                         <span class="day-active-cart">Товар будет удален автоматически через N дней</span>
                     </div>
@@ -71,68 +71,28 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
             <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use></svg>
         </span>
         <div class="person-list-container ">
-            <ul class="person-list-list">
-                <li class="grade-list-person">
-                    <div class="grade-list-person__name">Олег</div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                </li>
-                <li class="grade-list-person">
-                    <div class="grade-list-person__name">Анна</div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                </li>
-                <li class="grade-list-person">
-                    <div class="grade-list-person__name">Константин</div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                </li>
-                <li class="grade-list-person">
-                    <div class="grade-list-person__name">Олег</div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                </li>
-                <li class="grade-list-person">
-                    <div class="grade-list-person__name">Олег</div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                    <div class="grade-list-person__phone">
-                        +375 (29) 373-0-03
-                    </div>
-                </li>
-            </ul>
+            <ul class="person-list-list"></ul>
         </div>
-        <form action="#" class="popUp-form">
+        <form id="rate-form" action="" class="popUp-form">
             <div class="form-group form-group-rate">
                 <label class="popUp-form-label popUp-form-label--rate">Выставить оценку:</label>
                 <div class="rating-area">
-                    <input type="radio" id="star-50" name="rating" value="5">
+                    <input type="radio" id="star-50" name="RATING" value="5">
                     <label for="star-50" title="Оценка «5»"></label>
-                    <input type="radio" id="star-40" name="rating" value="4">
+                    <input type="radio" id="star-40" name="RATING" value="4">
                     <label for="star-40" title="Оценка «4»"></label>
-                    <input type="radio" id="star-30" name="rating" value="3">
+                    <input type="radio" id="star-30" name="RATING" value="3">
                     <label for="star-30" title="Оценка «3»"></label>
-                    <input type="radio" id="star-20" name="rating" value="2">
+                    <input type="radio" id="star-20" name="RATING" value="2">
                     <label for="star-20" title="Оценка «2»"></label>
-                    <input type="radio" id="star-10" name="rating" value="1">
+                    <input type="radio" id="star-10" name="RATING" value="1">
                     <label for="star-10" title="Оценка «1»"></label>
                 </div>
             </div>
             <div class="form-group">
                 <label class="popUp-form-label">Комментарий к оценке:*</label>
                 <label>
-                    <textarea placeholder="Текст сообщения."></textarea>
+                    <textarea name="COMMENT" placeholder="Текст сообщения."></textarea>
                 </label>
             </div>
             <div class="form-group">
