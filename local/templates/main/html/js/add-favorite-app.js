@@ -26,13 +26,13 @@ FavoriteManager.prototype.getUserFavoriteGoods = function () {
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: new URLSearchParams({'favorite': 'y', 'method': this.settings.getFavoriteMethod})
     }).then(function(response) {
-        return response.text()
-    }).then(function(text) {
-        if (text) {
-            _this.setFavoriteGoodsOnPage(text);
+        return response.json()
+    }).then(function(json) {
+        if (json) {
+            _this.setFavoriteGoodsOnPage(json);
         }
     }).catch(error => {
-        console.log(error);
+        // console.log(error);
     });
 }
 
@@ -79,9 +79,9 @@ FavoriteManager.prototype.sendData = function (data) {
     });
 }
 
-FavoriteManager.prototype.setFavoriteGoodsOnPage = function (text) {
+FavoriteManager.prototype.setFavoriteGoodsOnPage = function (json) {
     const _this = this;
-    this.$arFavorites = JSON.parse(text);
+    this.$arFavorites = json;
     this.$arAllbtns.forEach((favoriteBtn) => {
         let itemId = Number(favoriteBtn.getAttribute(_this.settings.itemIdAttrName));
         if (_this.$arFavorites.includes(itemId)) {
