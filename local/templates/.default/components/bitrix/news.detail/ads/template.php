@@ -17,7 +17,7 @@ $this->setFrameMode(true);
         <div class="page-card__item page-card__item--slider">
 
             <div class="card-slider">
-                <span class="favorite-card"></span>
+                <span data-item="<?=$arResult['ID']?>" class="favorite-card"></span>
                 <?if (!empty($arResult['IMAGES'])):?>
                     <div class="card-slider-main">
                         <?foreach ($arResult['IMAGES']['BIG_SLIDER'] as $arImg):?>

@@ -43,8 +43,10 @@ for($index = 0; $index < $itemSize; $index++)
 	{
 		$strReturn .= '<li class="bread-crumbs-list__item"><span>'.$title.'</span></li>';
 	}
-    $strReturn .= '<li class="bread-crumbs-list__item mobile">Jgf</li>';
 }
+
+if ($itemSize > 2) $strReturn .= '<li class="bread-crumbs-list__item mobile">'.
+    '<a href="'.$arResult[$itemSize-2]["LINK"].'" title="'.$arResult[$itemSize-2]["TITLE"].'" itemprop="item">'.$arResult[$itemSize-2]["TITLE"].'</a></li>';
 
 $strReturn .= '</ul></div></div>';
 
