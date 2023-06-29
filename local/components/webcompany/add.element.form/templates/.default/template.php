@@ -32,15 +32,31 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 Загружено <span class="dropzone_count__loaded">0</span> из 9
             </div>
         </div>
-        <div class="dropzone__content">
-
-        </div>
+        <div class="dropzone__content"></div>
+        <?if (!empty($arResult['ERRORS']['IMAGES'])):?>
+            <div class="component-errors">
+                <ul>
+                    <?foreach ($arResult['ERRORS']['IMAGES'] as $errorMessage):?>
+                        <li><?=$errorMessage?></li>
+                    <?endforeach;?>
+                </ul>
+            </div>
+        <?endif;?>
     </div>
     <div class="product-name">
         <div class="form-group">
             <label for="productName" class="data-user__label">Название товара*</label>
             <input type="text" name="NAME" placeholder="Например, телевизор Horizont" id="productName" required>
         </div>
+        <?if (!empty($arResult['ERRORS']['NAME'])):?>
+            <div class="component-errors">
+                <ul>
+                    <?foreach ($arResult['ERRORS']['NAME'] as $errorMessage):?>
+                        <li><?=$errorMessage?></li>
+                    <?endforeach;?>
+                </ul>
+            </div>
+        <?endif;?>
     </div>
     <div class="form-wrapper" id="categorySelection">
         <?if (!empty($arResult['SECTIONS_LVL'])):?>
@@ -108,6 +124,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     </div>
                 </div>
             </div>
+            <?if (!empty($arResult['ERRORS']['IBLOCK_SECTION_ID'])):?>
+                <div class="component-errors">
+                    <ul>
+                        <?foreach ($arResult['ERRORS']['IBLOCK_SECTION_ID'] as $errorMessage):?>
+                            <li><?=$errorMessage?></li>
+                        <?endforeach;?>
+                    </ul>
+                </div>
+            <?endif;?>
         <?endif;?>
         <div class="category-selection-ready">
             <h3 class="title-block title-block--left">Выбор категории*</h3>
@@ -133,6 +158,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     </div>
                 </div>
             </div>
+            <?if (!empty($arResult['ERRORS']['DETAIL_TEXT'])):?>
+                <div class="component-errors">
+                    <ul>
+                        <?foreach ($arResult['ERRORS']['DETAIL_TEXT'] as $errorMessage):?>
+                            <li><?=$errorMessage?></li>
+                        <?endforeach;?>
+                    </ul>
+                </div>
+            <?endif;?>
         </div>
         <?if (!empty($arResult['SELECTS'])):?>
             <div class="from-person-location">
@@ -148,6 +182,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             <?endforeach;?>
                         </select>
                     </div>
+                    <?if (!empty($arResult['ERRORS']['REGION'])):?>
+                        <div class="component-errors">
+                            <ul>
+                                <?foreach ($arResult['ERRORS']['REGION'] as $errorMessage):?>
+                                    <li><?=$errorMessage?></li>
+                                <?endforeach;?>
+                            </ul>
+                        </div>
+                    <?endif;?>
                     <div class="form-group">
                         <label for="CITY" class="data-user__label">Город / Район*</label>
                         <select name="CITY" class="custom-select new-select" id="CITY" required>
@@ -158,6 +201,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             <?endforeach;?>
                         </select>
                     </div>
+                    <?if (!empty($arResult['ERRORS']['CITY'])):?>
+                        <div class="component-errors">
+                            <ul>
+                                <?foreach ($arResult['ERRORS']['CITY'] as $errorMessage):?>
+                                    <li><?=$errorMessage?></li>
+                                <?endforeach;?>
+                            </ul>
+                        </div>
+                    <?endif;?>
                 </div>
             </div>
         <?endif;?>
@@ -168,6 +220,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     <label for="personName" class="data-user__label">Имя*</label>
                     <input type="text" name="OWNER_NAME" placeholder="Введите ваше имя для объявления" id="personName" required>
                 </div>
+                <?if (!empty($arResult['ERRORS']['OWNER_NAME'])):?>
+                    <div class="component-errors">
+                        <ul>
+                            <?foreach ($arResult['ERRORS']['OWNER_NAME'] as $errorMessage):?>
+                                <li><?=$errorMessage?></li>
+                            <?endforeach;?>
+                        </ul>
+                    </div>
+                <?endif;?>
                 <div class="form-tel-container">
                     <div class="form-group form-group--tel">
                         <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
@@ -180,6 +241,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     </span>
                     <div class="add-new-phone-text">Добавить телефон</div>
                 </div>
+                <?if (!empty($arResult['ERRORS']['OWNER_PHONE'])):?>
+                    <div class="component-errors">
+                        <ul>
+                            <?foreach ($arResult['ERRORS']['OWNER_PHONE'] as $errorMessage):?>
+                                <li><?=$errorMessage?></li>
+                            <?endforeach;?>
+                        </ul>
+                    </div>
+                <?endif;?>
             </div>
         </div>
         <button type="submit" class="btn btn--form <?=empty($arResult['USER']['NAME']) ? 'btn--no-name-error' : ''?>">

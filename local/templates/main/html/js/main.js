@@ -264,9 +264,10 @@ if (categoryForm) {
 
             if(target.closest(".category-selection-list__item")){
                 $(".category-selection-list__item").removeClass("active");
-                let chosenSection = target.closest(".category-selection-list__item");
-                let text = chosenSection.innerText;
-                let sectionId = chosenSection.getAttribute("data-section-id");
+                let sectionOne = document.querySelector('ul.category-list--selection > li.is-active > a > img').getAttribute('title');
+                let sectionTwo = target.closest(".category-selection-list__item");
+                let chosenSection = sectionTwo.innerText;
+                let sectionId = sectionTwo.getAttribute("data-section-id");
                 target.classList.add("active");
                 if (document.querySelector('div[data-parent-id="'+sectionId+'"]')) {
                     $(".category-selection-subcategory-3").show(600)
@@ -280,7 +281,7 @@ if (categoryForm) {
                         scrollTop: $("#categorySelection").offset().top - 120
                     }, 1000);
                     categorySelectionReady.classList.add("active")
-                    formCategorySelectedItem.innerText = text;
+                    formCategorySelectedItem.innerText = sectionOne + " / " + chosenSection;
                     inputSectionId.value = sectionId;
                 }
             }
@@ -293,15 +294,17 @@ if (categoryForm) {
             let target = event.target;
 
             if(target.closest(".category-selection-list__item")){
-                let chosenSection = target.closest(".category-selection-list__item");
-                let text = chosenSection.innerText;
-                let sectionId = chosenSection.getAttribute("data-section-id");
+                let sectionOne = document.querySelector('ul.category-list--selection > li.is-active > a > img').getAttribute('title');
+                let sectionTwo = document.querySelector(".category-selection-subcategory  div.is-active  li.is-active").innerHTML;
+                let sectionThree = target.closest(".category-selection-list__item");
+                let chosenSection = sectionThree.innerText;
+                let sectionId = sectionThree.getAttribute("data-section-id");
                 $(".category-selection").hide(600)
                 $('html, body').animate({
                     scrollTop: $("#categorySelection").offset().top - 120
                 }, 1000);
                 categorySelectionReady.classList.add("active")
-                formCategorySelectedItem.innerText = text;
+                formCategorySelectedItem.innerText = sectionOne + " / " + sectionTwo + " / " + chosenSection;
                 inputSectionId.value = sectionId;
                 target.classList.add("active");
             }

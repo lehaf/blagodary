@@ -1,0 +1,13 @@
+.component-errors {
+    margin-top: 10px;
+    border-radius: 5px;
+    background: #f5cdc6;
+    padding: 10px 15px;
+    font-size: 13px;
+}
+
+.component-errors ul li {
+    margin-left: 10px;
+    color: #6a2112;
+    list-style-type: disc;
+}

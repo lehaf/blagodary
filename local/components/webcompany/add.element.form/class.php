@@ -9,6 +9,7 @@ use Bitrix\Iblock\ElementTable;
 class AddElementForm extends \CBitrixComponent
 {
     private string $errorLogTitle = 'Ошибка создания объявления!';
+    private string $successRedirectPath = '/personal/my-ads/';
     private string $errorLogDesc = "В компоненте webcompany:add.element.form при создании нового объявления возникли следующие ошибки:";
     private array $arNeedsUserInfo = ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY'];
     private array $arPostValidFields = [
@@ -311,7 +312,7 @@ class AddElementForm extends \CBitrixComponent
             $obRes = $obNewElement->save();
 
             if ($obRes->isSuccess()) {
-                echo json_encode(["OK" => "Элемент успешно добавлен"]);
+                LocalRedirect($this->successRedirectPath);
             } else {
                 $this->processErrors($obRes->getErrorMessages());
             }
@@ -333,8 +334,7 @@ class AddElementForm extends \CBitrixComponent
             if ($this->checkPostFields() && $this->checkPostImages()) {
                 $this->createNewUserAds();
             } else {
-                pr($this->arErrors);
-//                echo $this->arErrors;
+                $this->arResult['ERRORS'] = $this->arErrors;
             }
         }
         $this->includeComponentTemplate();
