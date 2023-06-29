@@ -74,7 +74,7 @@ $this->setFrameMode(true);
                     </button>
                 <?endif;?>
                 <div class="card-info">
-                    <?if (!empty($arResult['OWNER'])):?>
+                    <?if (!empty($arResult['OWNER']['ID']) && !empty($arResult['PROPERTIES']['OWNER_NAME']['VALUE'])):?>
                         <div class="card-info__item card-info__item--contact">
                             <div class="card-info__item-container">
                                 <h4 class="card-info-title">Контактная информация</h4>
@@ -83,7 +83,7 @@ $this->setFrameMode(true);
                                         <svg>
                                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#person"></use>
                                         </svg>
-                                        <?=$arResult['OWNER']['NAME']?>
+                                        <?=$arResult['PROPERTIES']['OWNER_NAME']['VALUE']?>
                                     </div>
                                     <div class="card-info-rating">
                                         <div class="rating-result-text">4,0</div>
@@ -104,7 +104,7 @@ $this->setFrameMode(true);
                                         <span class="card-info-announcements__num">2</span>
                                     </a>
                                 </div>
-                                <?if (!empty($arResult['OWNER']['UF_PHONES']) && $curUserId !== $arResult['OWNER']['ID']):?>
+                                <?if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']) && $curUserId !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
                                         <button data-ads-id="<?=$arResult['ID']?>"
                                                 class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>"
@@ -117,7 +117,7 @@ $this->setFrameMode(true);
                                         </button>
                                         <?if ($isUserAuthorized):?>
                                             <ul class="phone-list">
-                                                <?foreach ($arResult['OWNER']['UF_PHONES'] as $phone):?>
+                                                <?foreach ($arResult['PROPERTIES']['OWNER_PHONE']['VALUE'] as $phone):?>
                                                     <li class="phone-list__item">
                                                         <svg>
                                                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
