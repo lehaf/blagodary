@@ -499,11 +499,11 @@ $('.contact-support').on('click', function () {
     $('.substrate').addClass("active")
 });
 
-$('.del-ed').on('click', function () {
-    event.preventDefault()
-    $('.popUp-rate').addClass("active")
-    $('.substrate').addClass("active")
-});
+// $('.del-ed').on('click', function () {
+//     event.preventDefault()
+//     $('.popUp-rate').addClass("active")
+//     $('.substrate').addClass("active")
+// });
 
 const subscriptionSwitch = document.querySelector(".subscription-switch")
 

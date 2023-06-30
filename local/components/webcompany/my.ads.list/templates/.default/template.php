@@ -21,46 +21,48 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
         <h4 class="title-block"><span>Ваши объявления не показываются. Необходимо оформить подписку.</span></h4>
         <a href="/personal/subscription/" class="btn-bg">Подписаться</a>
     </div>
-    <div class="user-list-ads">
-        <?foreach ($arResult['ITEMS'] as $arItem):?>
-            <?
-            // Добавляем эрмитаж
-            $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
-            $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"],
-                array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
-            ?>
-            <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-list__item">
-                <div class="announcements-img announcements-img--profile">
-                    <img src="<?=$arItem['IMG']['src']?>"
-                         title="<?=$arItem['NAME']?>"
-                         alt="<?=$arItem['NAME']?>"
-                    >
-                </div>
-                <div class="announcements-description announcements-description-profile">
-                    <div class="announcements-description__cart">
-                        <h3><?=$arItem['NAME']?></h3>
-                        <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
-                        <button class="edit-ed">
-                            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
-                            <span>Редактировать объявление</span>
-                        </button>
+    <div class="loader-container">
+        <div class="user-list-ads">
+            <?foreach ($arResult['ITEMS'] as $arItem):?>
+                <?
+                // Добавляем эрмитаж
+                $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
+                $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"],
+                    array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+                ?>
+                <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-list__item">
+                    <div class="announcements-img announcements-img--profile">
+                        <img src="<?=$arItem['IMG']['src']?>"
+                             title="<?=$arItem['NAME']?>"
+                             alt="<?=$arItem['NAME']?>"
+                        >
                     </div>
-                    <div class="announcements-description__del">
-                        <button class="del-ed">
-                            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
-                            <span class="deactivate-btn" data-item-id="<?=$arItem['ID']?>"> Деактивировать</span>
-                        </button>
-                        <span class="day-active-cart">Товар будет удален автоматически через N дней</span>
+                    <div class="announcements-description announcements-description-profile">
+                        <div class="announcements-description__cart">
+                            <h3><?=$arItem['NAME']?></h3>
+                            <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
+                            <button class="edit-ed">
+                                <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
+                                <span>Редактировать объявление</span>
+                            </button>
+                        </div>
+                        <div class="announcements-description__del">
+                            <button class="del-ed">
+                                <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
+                                <span class="deactivate-btn" data-item-id="<?=$arItem['ID']?>"> Деактивировать</span>
+                            </button>
+                            <span class="day-active-cart">Товар будет удален автоматически через N дней</span>
+                        </div>
                     </div>
-                </div>
-            </a>
-        <?endforeach;?>
-        <?if($arParams["DISPLAY_BOTTOM_PAGER"]):?>
-            <br><?=$arResult["NAV_STRING"]?>
-        <?endif;?>
+                </a>
+            <?endforeach;?>
+            <?if($arParams["DISPLAY_BOTTOM_PAGER"]):?>
+                <br><?=$arResult["NAV_STRING"]?>
+            <?endif;?>
+        </div>
     </div>
     <?// Форма деактивации объявления?>
-    <div class="popUp popUp-rate">
+    <div id="popUp-rate" class="popUp popUp-rate">
         <h5 class="popUp__title">Выставить оценку</h5>
         <p class="popUp__subtitle">
             Выберите пользователя из списка ниже, с тем, с кем вы созванивались.

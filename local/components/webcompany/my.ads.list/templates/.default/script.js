@@ -1,33 +1,42 @@
 const DeactivateItemApp = function () {
     this.settings = {
-        'action':'setUserRating',
         'deactivateBtnClass':'.deactivate-btn',
         'rateFormId':'#rate-form',
-        'containerInputErrorClass':'error',
-        'errorClass':'error-block',
-        'componentName':'webcompany:my.ads.list',
-        'componentActionGetUsers':'getAdsWantTakeListUsers',
-        'componentActionDeactivate':'setUserRatingAndDeactivate',
         'usersLiClass':'.grade-list-person',
         'itemIdAttr':'data-item-id',
         'userIdAttr':'data-user-id',
+        'popUpUsersContainerSelector':'.popUp-rate ul.person-list-list',
+        'ajaxResAdsContainerClass':'.user-list-ads'
+    }
+
+    this.component = {
+        'name':'webcompany:my.ads.list',
+        'actionGetUsers':'getAdsWantTakeListUsers',
+        'actionDeactivate':'setUserRatingAndDeactivate',
+        'actionOnlyDeactivate':'deactivate'
+    }
+
+    this.loader = {
         'loaderClassName':'lds-heart',
         'blurClass':'blur',
-        'popUpUsersContainerSelector':'.popUp-rate ul.person-list-list',
-        'loaderContainerClass':'.person-list-container',
-        'blurContainerClass':'.person-list-list',
+        'blurUserContainerClass':'.person-list-list',
         'elementsClass':'.announcements-content__item',
+        'loaderContainerClass':'.person-list-container',
+        'loaderItemContainerClass':'.loader-container',
         'elementsContainerClass':'.announcements-content'
     }
 
     this.errors = {
         'borderErrorClass':'valid-error',
-        'ratingMessage':'Выставьте оценку!',
+        'errorClass':'error-block',
+        'containerInputErrorClass':'error',
+        'ratingMessage':'Выставьте оценку!'
     }
 
+    this.$popUp = document.querySelector('#popUp-rate');
+    this.$popUpBack = document.querySelector('.substrate');
     this.$usersContainer = document.querySelector(this.settings.popUpUsersContainerSelector);
     this.$rateForm = document.querySelector(this.settings.rateFormId);
-    this.$loaderContainer = document.querySelector(this.settings.loaderContainerClass);
     this.init();
 }
 
@@ -42,19 +51,22 @@ DeactivateItemApp.prototype.setEventListener = function () {
 
     if (this.$deactivateButns.length > 0) {
         this.$deactivateButns.forEach((btn) => {
-            btn.onclick = () => {
-                this.$rateForm.reset();
-                this.clearErrors();
-                let adsId = btn.getAttribute(this.settings.itemIdAttr);
-                if (adsId && this.$requestAdsId != adsId) {
-                    this.$requestAdsId = adsId;
-                    _this.setLoader();
+            btn.onclick = (e) => {
+                e.preventDefault();
+                let adsId = btn.getAttribute(_this.settings.itemIdAttr);
+                if (adsId && _this.$requestAdsId !== adsId) {
+                    _this.$requestAdsId = adsId;
+                    _this.setLoader(_this.loader.blurUserContainerClass,_this.loader.loaderContainerClass);
                     let data = {
-                        'component': _this.settings.componentName,
-                        'action': _this.settings.componentActionGetUsers,
+                        'component': _this.component.name,
+                        'action': _this.component.actionGetUsers,
                         'ads_id': adsId,
                     }
                     _this.getUserData(data);
+                } else {
+                    if (_this.$formShowed === true) {
+                        _this.showModal();
+                    }
                 }
             }
         });
@@ -68,12 +80,28 @@ DeactivateItemApp.prototype.setEventListener = function () {
                 if (this.$formUserId) {
                     formData.set('user_id',_this.$formUserId);
                     formData.set('ads_id',_this.$requestAdsId);
-                    formData.set('component',_this.settings.componentName);
-                    formData.set('action',_this.settings.componentActionDeactivate);
+                    formData.set('component',_this.component.name);
+                    formData.set('action',_this.component.actionDeactivate);
+                    _this.setLoader(_this.settings.ajaxResAdsContainerClass,_this.loader.loaderItemContainerClass);
+                    _this.hideModal();
                     _this.sendData(formData);
                 }
             }
         }
+    }
+}
+
+DeactivateItemApp.prototype.showModal = function () {
+    if (this.$popUp && this.$popUpBack){
+        this.$popUp.classList.add('active');
+        this.$popUpBack.classList.add('active');
+    }
+}
+
+DeactivateItemApp.prototype.hideModal = function () {
+    if (this.$popUp && this.$popUpBack){
+        this.$popUp.classList.remove('active');
+        this.$popUpBack.classList.remove('active');
     }
 }
 
@@ -160,14 +188,14 @@ DeactivateItemApp.prototype.createUser = function (user) {
 
 DeactivateItemApp.prototype.createInputErrorMessage = function (container,errorMessage) {
     let errorDiv = document.createElement('div');
-    errorDiv.classList.add(this.settings.errorClass);
+    errorDiv.classList.add(this.errors.errorClass);
     errorDiv.innerHTML = errorMessage;
 
-    if (!container.classList.contains(this.settings.containerInputErrorClass)) {
-        container.classList.add(this.settings.containerInputErrorClass);
+    if (!container.classList.contains(this.errors.containerInputErrorClass)) {
+        container.classList.add(this.errors.containerInputErrorClass);
     }
 
-    let errorContainer = container.querySelector('.'+this.settings.errorClass);
+    let errorContainer = container.querySelector('.'+this.errors.errorClass);
     if (!errorContainer) {
         container.append(errorDiv);
     } else {
@@ -177,11 +205,11 @@ DeactivateItemApp.prototype.createInputErrorMessage = function (container,errorM
 
 DeactivateItemApp.prototype.deleteInputErrorMessage = function (container) {
 
-    if (container.classList.contains(this.settings.containerInputErrorClass)) {
-        container.classList.remove(this.settings.containerInputErrorClass);
+    if (container.classList.contains(this.errors.containerInputErrorClass)) {
+        container.classList.remove(this.errors.containerInputErrorClass);
     }
 
-    let errorContainer = container.querySelector('.'+this.settings.errorClass);
+    let errorContainer = container.querySelector('.'+this.errors.errorClass);
     if (errorContainer) {
         errorContainer.remove();
     }
@@ -189,28 +217,41 @@ DeactivateItemApp.prototype.deleteInputErrorMessage = function (container) {
 
 DeactivateItemApp.prototype.createLoader = function () {
     const loader = document.createElement('div');
-    loader.classList.add(this.settings.loaderClassName);
+    loader.classList.add(this.loader.loaderClassName);
     const innerDiv = document.createElement('div');
     loader.prepend(innerDiv);
     this.$loader = loader;
 }
 
-DeactivateItemApp.prototype.setLoader = function () {
-    this.$blurContainer = document.querySelector(this.settings.blurContainerClass);
+DeactivateItemApp.prototype.setLoader = function (blurContainer, loaderContainer) {
+    if (this.$blurContainer) {
+        this.deleteLoader();
+    }
+    this.$blurContainer = document.querySelector(blurContainer);
+    this.$loaderContainer = document.querySelector(loaderContainer);
     if (this.$loader && this.$loaderContainer && this.$blurContainer) {
-        this.$blurContainer.classList.add(this.settings.blurClass);
+        this.$blurContainer.classList.add(this.loader.blurClass);
         this.$loaderContainer.prepend(this.$loader);
     }
 }
 
 DeactivateItemApp.prototype.deleteLoader = function () {
-    this.$blurContainer.classList.remove(this.settings.blurClass);
-    document.querySelector('.'+this.settings.loaderClassName).remove();
+    if (this.$blurContainer) {
+        this.$blurContainer.classList.remove(this.loader.blurClass);
+        let loader = document.querySelector('.'+this.loader.loaderClassName);
+        if (loader) loader.remove();
+    }
 }
 
-DeactivateItemApp.prototype.insertEmptyMessage = function () {
-    let message = `<div class="empty-mess">Пользователи еще не интересовались объявлением</div>`;
-    this.$usersContainer.insertAdjacentHTML('beforeend',message);
+DeactivateItemApp.prototype.onlyDeactivateItem = function () {
+    if (this.$requestAdsId) {
+        let data = {
+            'component': this.component.name,
+            'action': this.component.actionOnlyDeactivate,
+            'ads_id': this.$requestAdsId,
+        }
+        this.sendData(data);
+    }
 }
 
 DeactivateItemApp.prototype.getUserData = function (data) {
@@ -226,17 +267,28 @@ DeactivateItemApp.prototype.getUserData = function (data) {
         _this.$usersContainer.innerHTML = '';
         if (json.length > 0) {
             _this.addUsers(json);
+            _this.$rateForm.reset();
+            _this.clearErrors();
+            _this.showModal();
+            _this.$formShowed = true;
+            setTimeout(() => {
+                _this.deleteLoader();
+                _this.setEventListener();
+            },300);
         } else {
-            _this.insertEmptyMessage();
+            _this.setLoader(_this.settings.ajaxResAdsContainerClass,_this.loader.loaderItemContainerClass);
+            _this.onlyDeactivateItem();
+            _this.$formShowed = false;
         }
-        setTimeout(() => {
-            _this.deleteLoader();
-            _this.setEventListener();
-        },300);
     }).catch(error => {
         _this.deleteLoader();
         console.log(error);
     });
+}
+
+DeactivateItemApp.prototype.getDomElementsFromString = function (string) {
+    let obDomParser = new DOMParser();
+    return obDomParser.parseFromString(string, "text/html");
 }
 
 DeactivateItemApp.prototype.sendData = function (data) {
@@ -250,13 +302,18 @@ DeactivateItemApp.prototype.sendData = function (data) {
         return response.text()
     }).then(function(text) {
         let response = _this.getDomElementsFromString(text);
-        let nextElementsContainer = response.querySelector(_this.settings.elementsContainerClass);
-        let curContainer = document.querySelector(_this.settings.elementsContainerClass);
+        let nextElementsContainer = response.querySelector(_this.settings.ajaxResAdsContainerClass);
+        let curContainer = document.querySelector(_this.settings.ajaxResAdsContainerClass);
         setTimeout(() => {
+            if (!nextElementsContainer) {
+                let emptyItemsDiv = response.querySelector('.no-ads');
+                curContainer.parentNode.append(emptyItemsDiv);
+                curContainer.remove();
+            } else {
+                curContainer.innerHTML = nextElementsContainer.innerHTML;
+            }
             _this.deleteLoader();
-            curContainer.innerHTML = nextElementsContainer.innerHTML;
             _this.setEventListener();
-            window.FavoriteManager.init();
         },300);
 
     }).catch(error => {

@@ -5,6 +5,7 @@ namespace WebCompany;
 use Bitrix\Iblock\ORM\PropertyValue;
 use Bitrix\Main\UserTable;
 use Bitrix\Main\Type\DateTime;
+
 class AddElementForm extends \CBitrixComponent
 {
     private string $erAdUserWantListTitle = 'Ошибка добавления пользователя в свойство!';
@@ -56,6 +57,11 @@ class AddElementForm extends \CBitrixComponent
             case 'setUserRatingAndDeactivate':
                 if (!empty($_POST['ads_id']) && !empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
                     $this->setUserRating($_POST['user_id'],$_POST['RATING'],$_POST['COMMENT']);
+                    $this->deactivateAds($_POST['ads_id']);
+                }
+                break;
+            case 'deactivate':
+                if (!empty($_POST['ads_id'])) {
                     $this->deactivateAds($_POST['ads_id']);
                 }
                 break;
@@ -259,10 +265,10 @@ class AddElementForm extends \CBitrixComponent
 
     public function executeComponent() : void
     {
+        if ($this->isPostRequest() && !empty($_POST['action'])) {
+            $this->executeAction($_POST['action']);
+        }
         $this->prepareResult();
-            if ($this->isPostRequest() && !empty($_POST['action'])) {
-                $this->executeAction($_POST['action']);
-            }
         $this->includeComponentTemplate();
     }
 }

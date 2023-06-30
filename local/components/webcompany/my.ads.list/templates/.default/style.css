@@ -25,3 +25,7 @@ ul.person-list-list li.active {
 .valid-error {
     border: solid 1px #ee1d52 !important;
 }
+
+.loader-container {
+    position: relative;
+}
