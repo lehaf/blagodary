@@ -14,7 +14,6 @@
 $this->setFrameMode(true);
 $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#location';
 $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
-$this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
 ?>
 <?if (!empty($arResult['ITEMS'])):?>
     <div class="no-ads no-ads--active">
@@ -49,7 +48,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                         <div class="announcements-description__del">
                             <button class="del-ed">
                                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
-                                <span class="deactivate-btn" data-item-id="<?=$arItem['ID']?>"> Деактивировать</span>
+                                <span class="deactivate-btn" data-item-name="<?=$arItem['NAME']?>" data-item-id="<?=$arItem['ID']?>"> Деактивировать</span>
                             </button>
                             <span class="day-active-cart">Товар будет удален автоматически через N дней</span>
                         </div>

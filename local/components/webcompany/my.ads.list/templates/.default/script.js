@@ -3,6 +3,7 @@ const DeactivateItemApp = function () {
         'deactivateBtnClass':'.deactivate-btn',
         'rateFormId':'#rate-form',
         'usersLiClass':'.grade-list-person',
+        'itemNameAttr':'data-item-name',
         'itemIdAttr':'data-item-id',
         'userIdAttr':'data-user-id',
         'popUpUsersContainerSelector':'.popUp-rate ul.person-list-list',
@@ -54,6 +55,7 @@ DeactivateItemApp.prototype.setEventListener = function () {
             btn.onclick = (e) => {
                 e.preventDefault();
                 let adsId = btn.getAttribute(_this.settings.itemIdAttr);
+                _this.$requestAdsName = btn.getAttribute(_this.settings.itemNameAttr);
                 if (adsId && _this.$requestAdsId !== adsId) {
                     _this.$requestAdsId = adsId;
                     _this.setLoader(_this.loader.blurUserContainerClass,_this.loader.loaderContainerClass);
@@ -80,6 +82,7 @@ DeactivateItemApp.prototype.setEventListener = function () {
                 if (this.$formUserId) {
                     formData.set('user_id',_this.$formUserId);
                     formData.set('ads_id',_this.$requestAdsId);
+                    formData.set('ads_name',_this.$requestAdsName );
                     formData.set('component',_this.component.name);
                     formData.set('action',_this.component.actionDeactivate);
                     _this.setLoader(_this.settings.ajaxResAdsContainerClass,_this.loader.loaderItemContainerClass);
