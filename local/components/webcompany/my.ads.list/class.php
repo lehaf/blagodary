@@ -2,7 +2,6 @@
 
 namespace WebCompany;
 
-use Bitrix\Iblock\ORM\PropertyValue;
 use Bitrix\Main\UserTable;
 use Bitrix\Main\Type\DateTime;
 
@@ -65,6 +64,11 @@ class AddElementForm extends \CBitrixComponent
                     $this->deactivateAds($_POST['ads_id']);
                 }
                 break;
+            case 'setUserRating':
+                if (!empty($_POST['ads_name']) &&!empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
+//                    $this->setUserRating($_POST['user_id'], $_POST['ads_name'], $_POST['RATING'], $_POST['COMMENT']);
+                }
+                break;
         }
     }
 
@@ -108,7 +112,6 @@ class AddElementForm extends \CBitrixComponent
                 $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
                 $obUserReview = $ratingElementsEntity::createObject();
                 if (!empty($obUserReview) && !empty($arSection['ID'])) {
-                    $arCurUserInfo = $this->getUserInfo($this->curUserId,['ID','NAME']);
                     $obUserReview->setName(htmlspecialchars($adsName));
                     $obUserReview->setIblockSectionId($arSection['ID']);
                     $obUserReview->setDetailText($comment);
@@ -159,7 +162,7 @@ class AddElementForm extends \CBitrixComponent
                     foreach ($obAllUsers as $obValue) {
                         $arUsersId[] = $obValue->getValue();
                     }
-                    $arUsersInfo = \Bitrix\Main\UserTable::getList(array(
+                    $arUsersInfo = UserTable::getList(array(
                         'select' => ['ID', 'NAME','UF_PHONES'],
                         'filter' => ['ID' => $arUsersId],
                     ))->fetchAll();
@@ -200,37 +203,69 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
-    private function getUserReviews(int $userId) : void
+    private function getUserReviews(int $userId) : bool
     {
-        $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
-        $arSection = $ratingSectionEntity::getList(array(
-            "filter" => array("UF_USER_ID" => $userId),
-            "select" => array("ID"),
-        ))->fetch();
-        if (!empty($arSection['ID'])) {
-            $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
-            $obAds = $ratingElementsEntity::getList(array(
-                'select' => array('ID','NAME',),
-                'filter' => array(
-                    'IBLOCK_SECTION_ID' => $arSection['ID'],
-                    '=ACTIVE' => 'N',
-                    'ID' => $userId
-                )
-            ))->fetchCollection();
-
-            if (!empty($this->curUserId)) {
-                if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
-                    foreach ($obAllUsers as $obValue) {
-                        if ($obValue->getValue() == $this->curUserId) exit;
+        if (\Bitrix\Main\Loader::includeModule('iblock')) {
+            $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
+            $arSection = $ratingSectionEntity::getList(array(
+                "filter" => array("UF_USER_ID" => $userId),
+                "select" => array("ID"),
+                "cache" => [
+                    'ttl' => 360000,
+                    'cache_joins' => true
+                ]
+            ))->fetch();
+            if (!empty($arSection['ID'])) {
+                $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
+                $obReviews = $ratingElementsEntity::getList(array(
+                    'select' => array('ID','NAME','DETAIL_TEXT','USER','RATING'),
+                    'filter' => array(
+                        'IBLOCK_SECTION_ID' => $arSection['ID'],
+                        '=ACTIVE' => 'N',
+                    ),
+                    "cache" => [
+                        'ttl' => 360000,
+                        'cache_joins' => true
+                    ]
+                ))->fetchCollection();
+                $arUserId = [];
+                $arReviews = [];
+                foreach ($obReviews as $obReview) {
+                    if ($obReview->getUser()) {
+                        $usrId = $obReview->getUser()->getValue();
+                        $arUserId[] = $usrId;
+                        $arReviews[$usrId] = [
+                          'NAME' => $obReview->getName(),
+                          'RATING' => !empty($obReview->getRating()) ? $obReview->getRating()->getValue() : '',
+                          'COMMENT' => $obReview->getDetailText(),
+                        ];
                     }
                 }
-                $obAds->addToWhoWantTake($this->curUserId);
-                $res = $obAds->save();
-                if (!$res->isSuccess()) {
-                    $this->processErrors($res->getErrorMessages(),$this->erAdUserWantListTitle, $this->erAdUserWantListDesc);
+
+                if (!empty($arUserId)) {
+                    $arUsersData = UserTable::getList(array(
+                        'select' => ['ID','NAME'],
+                        'filter' => ['ID' => $arUserId],
+                        "cache" => [
+                            'ttl' => 360000,
+                            'cache_joins' => true
+                        ]
+                    ))->fetchAll();
+
+                    foreach ($arUsersData as $arUser) {
+                        if (!empty($arReviews[$arUser['ID']])) {
+                            $arReviews[$arUser['ID']]['USER_NAME'] = $arUser['NAME'];
+                        }
+                    }
+
+                    if (!empty($arReviews)) {
+                        $this->arResult['REVIEWS'] = $arReviews;
+                        return true;
+                    }
                 }
             }
         }
+        return false;
     }
 
     public function getHermitageButtons(int $itemId, int $iblockId) : array
@@ -303,7 +338,8 @@ class AddElementForm extends \CBitrixComponent
         if ($this->isPostRequest() && !empty($_POST['action'])) {
             $this->executeAction($_POST['action']);
         }
-        $this->includeComponentTemplate('', '/local/components/webcompany/my.ads.list/templates/review');
+        if ($this->getUserReviews($this->curUserId)) $this->includeComponentTemplate('review');
+        $this->includeComponentTemplate('blocked');
         $this->prepareResult();
         $this->includeComponentTemplate();
     }

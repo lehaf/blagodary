@@ -128,8 +128,8 @@ DeactivateItemApp.prototype.checkRatingForm = function () {
         textarea.classList.remove(this.errors.borderErrorClass);
     }
 
-    if (document.querySelector('input[name="RATING"]')) {
-        let allRatingStars = document.querySelectorAll('input[name="RATING"]');
+    if (this.$rateForm.querySelector('input[name="RATING"]')) {
+        let allRatingStars = this.$rateForm.querySelectorAll('input[name="RATING"]');
         if (allRatingStars) {
             let oneChecked = false;
             allRatingStars.forEach((starBtn) => {
