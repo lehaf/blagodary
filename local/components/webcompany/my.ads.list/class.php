@@ -3,11 +3,19 @@
 namespace WebCompany;
 
 use Bitrix\Iblock\ORM\PropertyValue;
+use Bitrix\Main\UserTable;
+use Bitrix\Main\Type\DateTime;
 class AddElementForm extends \CBitrixComponent
 {
-    private string $errorLogTitle = 'Ошибка добавления пользователя в свойство!';
-    private string $errorLogDesc = "В компоненте webcompany:my.ads.list при добавлении в свойство WHO_WANT_TAKE
+    private string $erAdUserWantListTitle = 'Ошибка добавления пользователя в свойство!';
+    private string $erAdUserWantListDesc = "В компоненте webcompany:my.ads.list при добавлении в свойство WHO_WANT_TAKE
      нового пользователя возникли следующие ошибки:";
+    private string $erCreateRatingSectTitle = 'Ошибка создания раздела для рейтинга!';
+    private string $erCreateRatingSectDesc = "В компоненте webcompany:my.ads.list при создании раздела для 
+    нового пользователя возникли следующие ошибки:";
+    private string $erCreateRatingReviewTitle = 'Ошибка создания элемента отзыва!';
+    private string $erCreateRatingReviewDesc = "В компоненте webcompany:my.ads.list при создании элемента для 
+    отзыва в инфоблоке 'Рейтинг' возникли следующие ошибки:";
     private ?int $curUserId;
 
 
@@ -21,6 +29,15 @@ class AddElementForm extends \CBitrixComponent
     {
         if (!empty($_POST) && $_POST['component'] === $this->getName()) return true;
         return false;
+    }
+
+    private function getUserInfo(int $userId, array $arSelect) : array
+    {
+        return UserTable::getList(array(
+            'select' => $arSelect,
+            'filter' => ['ID' => $userId],
+            'limit' => 1
+        ))->fetch();
     }
 
     private function executeAction(string $action) : void
@@ -39,21 +56,21 @@ class AddElementForm extends \CBitrixComponent
             case 'setUserRatingAndDeactivate':
                 if (!empty($_POST['ads_id']) && !empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
                     $this->setUserRating($_POST['user_id'],$_POST['RATING'],$_POST['COMMENT']);
-//                    $this->deactivateAds($_POST['ads_id']);
+                    $this->deactivateAds($_POST['ads_id']);
                 }
                 break;
         }
     }
 
-    private function processErrors(array $arErrorsMessages) : void
+    private function processErrors(array $arErrorsMessages, string $errorTitle, string $errorDesc) : void
     {
-        if (!empty($arErrorsMessages)) {
+        if (!empty($arErrorsMessages) && !empty($errorDesc) && !empty($errorTitle)) {
             \CEventLog::Add(array(
                 "SEVERITY" => "SECURITY",
-                "AUDIT_TYPE_ID" => $this->errorLogTitle,
+                "AUDIT_TYPE_ID" => $errorTitle,
                 "MODULE_ID" => $this->__name,
                 "ITEM_ID" => NULL,
-                "DESCRIPTION" => $this->errorLogDesc." ".implode('<br>',$arErrorsMessages)
+                "DESCRIPTION" => $errorDesc." ".implode('<br>',$arErrorsMessages)
             ));
         }
     }
@@ -61,43 +78,54 @@ class AddElementForm extends \CBitrixComponent
     private function setUserRating(int $userId, int $rating, string $comment) : void
     {
         if (!empty($userId) && !empty($rating) && !empty($comment)) {
-            if (\Bitrix\Main\Loader::includeModule('iblock')) {
-
-                $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
-                $arSection = $entity::getList(array(
+            if (\Bitrix\Main\Loader::includeModule('iblock') && defined('RATING_IBLOCK_ID')) {
+                $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
+                $arSection = $ratingSectionEntity::getList(array(
                     "filter" => array("UF_USER_ID" => $userId),
                     "select" => array("ID"),
                 ))->fetch();
-                $className = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
-                $obUser = $className::createObject();
-                ob_end_clean();
-                ob_start();
-                if (!empty($obUser)) {
-                    $arUserInfo = \Bitrix\Main\UserTable::getList(array(
-                        'select' => ['ID', 'NAME'],
-                        'filter' => ['ID' => $this->curUserId],
-                        'limit' => 1
-                    ))->fetch();
-                    $obUser->setName($arUserInfo['NAME']);
-                    $obUser->setIblockSectionId($arSection['ID']);
-                    $obUser->addToRating(new PropertyValue($this->curUserId,$rating));
-                    $obUser->save();
+                if (empty($arSection['ID'])) {
+                    $arUserInfo = $this->getUserInfo($userId, ['ID','LOGIN']);
+                    $objDateTime = DateTime::createFromTimestamp(time());
+                    $newUserSection = $ratingSectionEntity::createObject();
+                    $newUserSection->setTimestampX($objDateTime);
+                    $newUserSection->setIblockId(RATING_IBLOCK_ID);
+                    $newUserSection->setName($arUserInfo['LOGIN']);
+                    $newUserSection->setUfUserId($arUserInfo['ID']);
+                    $res = $newUserSection->save();
+                    if ($res->isSuccess()) {
+                        $arSection['ID'] = $res->getId();
+                    } else {
+                        $this->processErrors($res->getErrorMessages(),$this->erCreateRatingSectTitle,$this->erCreateRatingSectDesc);
+                    }
                 }
-//                if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
-//                    $arUsersId = [];
-//                    foreach ($obAllUsers as $obValue) {
-//                        $arUsersId[] = $obValue->getValue();
-//                    }
-//                    $arUsersInfo = \Bitrix\Main\UserTable::getList(array(
-//                        'select' => ['ID', 'NAME','UF_PHONES'],
-//                        'filter' => ['ID' => $arUsersId],
-//                    ))->fetchAll();
-//
-//                    echo json_encode(!empty($arUsersInfo) ? $arUsersInfo : []);
-//                } else {
-//                    echo '[]';
-//                }
-                die();
+                $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
+                $obUser = $ratingElementsEntity::createObject();
+                if (!empty($obUser) && !empty($arSection['ID'])) {
+                    $arCurUserInfo = $this->getUserInfo($this->curUserId, ['ID','NAME']);
+                    $obUser->setName($arCurUserInfo['NAME']);
+                    $obUser->setIblockSectionId($arSection['ID']);
+                    $obUser->setDetailText($comment);
+                    $obUser->addToRating(new PropertyValue($this->curUserId,$rating));
+                    $res = $obUser->save();
+                    if (!$res->isSuccess()) {
+                        $this->processErrors($res->getErrorMessages(),$this->erCreateRatingReviewTitle,$this->erCreateRatingReviewDesc);
+                    }
+                }
+            }
+        }
+    }
+
+    private function deactivateAds(int $adsId) : void
+    {
+        if (!empty($adsId) && defined('ADS_IBLOCK_ID')) {
+            if (\Bitrix\Main\Loader::includeModule('iblock')) {
+                $adsElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+                $obAds = $adsElementsEntity::getList(array(
+                    'filter' => array('=ACTIVE' => 'Y', 'ID' => $adsId)
+                ))->fetchObject();
+                $obAds->setActive(false);
+                $obAds->save();
             }
         }
     }
@@ -110,7 +138,6 @@ class AddElementForm extends \CBitrixComponent
                 $obAds = $className::getList(array(
                     'select' => array('ID', 'WHO_WANT_TAKE'),
                     'filter' => array('=ACTIVE' => 'Y', 'ID' => $adsId),
-                    'limit' => 1,
                     'cache' => [
                         'ttl' => 360000,
                         'cache_joins' => true
@@ -158,7 +185,7 @@ class AddElementForm extends \CBitrixComponent
                     $obAds->addToWhoWantTake($this->curUserId);
                     $res = $obAds->save();
                     if (!$res->isSuccess()) {
-                        $this->processErrors($res->getErrorMessages());
+                        $this->processErrors($res->getErrorMessages(),$this->erAdUserWantListTitle, $this->erAdUserWantListDesc);
                     }
                 }
             }

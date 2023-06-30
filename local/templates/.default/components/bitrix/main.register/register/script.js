@@ -87,6 +87,7 @@ RegisterAjax.prototype.checkFormFields = function () {
                     break;
             }
             let errorMessage = errors.join('<br>');
+            console.log(errorMessage);
             if (errorMessage) {
                 testPassed = false;
                 if (input.getAttribute('data-validate') === 'n') {
@@ -96,6 +97,8 @@ RegisterAjax.prototype.checkFormFields = function () {
                 } else {
                     _this.createInputErrorMessage(input,errorMessage);
                 }
+            } else {
+                _this.deleteInputErrorMessage(input);
             }
         });
         return testPassed;

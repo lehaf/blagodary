@@ -11,7 +11,7 @@ class AddElementForm extends \CBitrixComponent
     private string $errorLogTitle = 'Ошибка создания объявления!';
     private string $errorLogDesc = "В компоненте webcompany:add.element.form при создании нового объявления возникли следующие ошибки:";
     private string $successRedirectPath = '/personal/my-ads/';
-    private array $arNeedsUserInfo = ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY'];
+    private array $arNeedsUserInfo = ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY', 'UF_PHONES'];
     private array $arPostValidFields = [
         'NAME' => 'Название товара',
         'IBLOCK_SECTION_ID' => 'Выбор категории',

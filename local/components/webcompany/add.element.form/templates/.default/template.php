@@ -218,7 +218,13 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
             <div class="data-user-container data-user-container--tel">
                 <div class="form-group">
                     <label for="personName" class="data-user__label">Имя*</label>
-                    <input type="text" name="OWNER_NAME" placeholder="Введите ваше имя для объявления" id="personName" required>
+                    <input type="text"
+                           name="OWNER_NAME"
+                           value="<?=!empty($arResult['USER']['NAME']) ? $arResult['USER']['NAME'] : ''?>"
+                           placeholder="Введите ваше имя для объявления"
+                           id="personName"
+                           required
+                    >
                 </div>
                 <?if (!empty($arResult['ERRORS']['OWNER_NAME'])):?>
                     <div class="component-errors">
@@ -230,10 +236,26 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     </div>
                 <?endif;?>
                 <div class="form-tel-container">
-                    <div class="form-group form-group--tel">
-                        <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
-                        <input type="tel" name="OWNER_PHONE[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" id="dataUserTel" required>
-                    </div>
+                    <?if (!empty($arResult['USER']['UF_PHONES'])):?>
+                        <?foreach ($arResult['USER']['UF_PHONES'] as $phone):?>
+                            <div class="form-group form-group--tel">
+                                <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
+                                <input type="tel"
+                                       name="OWNER_PHONE[]"
+                                       placeholder="+375 (xx) xxx-xx-xx"
+                                       class="dataUserTel"
+                                       id="dataUserTel"
+                                       value="<?=$phone?>"
+                                       required
+                                >
+                            </div>
+                        <?endforeach;?>
+                    <?else:?>
+                        <div class="form-group form-group--tel">
+                            <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
+                            <input type="tel" name="OWNER_PHONE[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" id="dataUserTel" required>
+                        </div>
+                    <?endif;?>
                 </div>
                 <div class="add-new-phone">
                     <span class="add-new-phone-btn">
