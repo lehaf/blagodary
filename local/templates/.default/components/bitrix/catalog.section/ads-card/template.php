@@ -37,7 +37,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                                 <?=$arItem['PLACE']?>
                             <?endif;?>
                         </div>
-                        <span class="viewed-slider__item-data"><?=$arItem['TIMESTAMP_X']?></span>
+                        <span class="viewed-slider__item-data"><?=$arItem['DATE_CREATE']?></span>
                     </span>
                     <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                 </a>

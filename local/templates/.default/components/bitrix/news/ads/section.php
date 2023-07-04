@@ -13,8 +13,11 @@ use WebCompany\YouWatchBefore;
 /** @var string $templateFolder */
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
-$this->setFrameMode(true);
+/** @global  array $BLOCKED */
 
+global $BLOCKED;
+
+$this->setFrameMode(true);
 $isAjax = $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 
 $isNotFirstPage = strpos(implode('',array_keys($_GET)),'PAGEN');
@@ -127,6 +130,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             global $arFilterAds, $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
+                '!=PROPERTY_OWNER' => $BLOCKED,
                 ...$arrFilter
             ];
 
@@ -197,7 +201,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
             global $arViewedGoodsFilter;
-            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId];
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId, '!=PROPERTY_OWNER' => $BLOCKED];
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 "you-watch-before",

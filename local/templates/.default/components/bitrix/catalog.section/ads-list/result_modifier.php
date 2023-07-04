@@ -3,8 +3,8 @@
 if (!empty($arResult['ITEMS'])) {
     foreach ($arResult['ITEMS'] as &$arItem) {
         // Приводим время в нужный формат
-        $unixTime = strtotime($arItem['TIMESTAMP_X']);
-        $arItem['TIMESTAMP_X'] = date('d.m.Y в H:i',$unixTime);
+        $unixTime = strtotime($arItem['DATE_CREATE']);
+        $arItem['DATE_CREATE'] = date('d.m.Y в H:i',$unixTime);
 
         if (!empty($arItem['PROPERTIES']['REGION']['VALUE'])) {
             $arItem['PLACE'] = $arItem['PROPERTIES']['REGION']['VALUE'];

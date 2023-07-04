@@ -1,9 +1,12 @@
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
 /** @global object $APPLICATION */
+/** @global array $BLOCKED */
 /** @const string  SITE_TEMPLATE_PATH */
 use WebCompany\YouWatchBefore;
 use Bitrix\Main\Page\Asset;
+
+global $BLOCKED;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.formstyler.min.js");
@@ -173,7 +176,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
             global $arViewedGoodsFilter;
-            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId];
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId, '!=PROPERTY_OWNER' => $BLOCKED];
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 "you-watch-before",
@@ -318,6 +321,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             </div>
             <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
             <? global $arrFilter;
+                $arrFilter['!=PROPERTY_OWNER'] = $BLOCKED;
             $APPLICATION->IncludeComponent(
 	"bitrix:catalog.section",
                 $typeOfView,

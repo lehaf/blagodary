@@ -183,12 +183,30 @@ function getSectionsTree($iblockId, $ttl = 360000, $cacheId = 'sections_tree') :
 
 function getUserData($userId) : ?array
 {
-
     $arUserInfo = \Bitrix\Main\UserTable::getList(array(
         'select' => ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY', 'UF_PHONES'],
         'filter' => ['ID' => $userId],
-        'limit' => 1
+        'limit' => 1,
+        'cache' => [
+            'ttl' => 360000,
+            'cache_joins' => true
+        ]
     ))->fetch();
 
     return $arUserInfo ?? NULL;
 }
+
+function getUserBlockedList() : array
+{
+    $arUsersBlocked = \Bitrix\Main\UserTable::getList(array(
+        'select' => ['ID'],
+        'filter' => ['BLOCKED' => 'Y'],
+        'cache' => [
+            'ttl' => 360000,
+            'cache_joins' => true
+        ]
+    ))->fetch();
+
+    return $arUsersBlocked ?? [];
+}
+

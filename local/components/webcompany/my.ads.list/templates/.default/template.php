@@ -16,10 +16,12 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
 $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 ?>
 <?if (!empty($arResult['ITEMS'])):?>
-    <div class="no-ads no-ads--active">
-        <h4 class="title-block"><span>Ваши объявления не показываются. Необходимо оформить подписку.</span></h4>
-        <a href="/personal/subscription/" class="btn-bg">Подписаться</a>
-    </div>
+    <?if (empty($arResult['BLOCKED'])):?>
+        <div class="no-ads no-ads--active">
+            <h4 class="title-block"><span>Ваши объявления не показываются. Необходимо оформить подписку.</span></h4>
+            <a href="/personal/subscription/" class="btn-bg">Подписаться</a>
+        </div>
+    <?endif;?>
     <div class="loader-container">
         <div class="user-list-ads">
             <?foreach ($arResult['ITEMS'] as $arItem):?>
@@ -102,13 +104,13 @@ $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
         </form>
     </div>
 <?else:?>
-    <div class="no-ads">
-        <?if (empty($arResult['BLOCKED'])):?>
+    <?if (empty($arResult['BLOCKED'])):?>
+        <div class="no-ads">
             <h4 class="title-block">У вас пока нет объявлений.</h4>
             <a href="/personal/my-ads/add-ads/" class="btn-bg">
                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
                 Подать объявление
             </a>
-        <?endif;?>
-    </div>
+        </div>
+    <?endif;?>
 <?endif;?>

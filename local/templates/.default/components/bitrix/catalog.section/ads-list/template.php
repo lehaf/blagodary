@@ -47,7 +47,7 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                                     <?=$arItem['PLACE']?>
                                 <?endif;?>
                             </div>
-                            <div class="announcements-data"><?=$arItem['TIMESTAMP_X']?></div>
+                            <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
                         </div>
                     </div>
                 </a>

@@ -13,6 +13,10 @@ use WebCompany\YouWatchBefore;
 /** @var string $templateFolder */
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
+/** @global array $BLOCKED */
+
+global $BLOCKED;
+
 $this->setFrameMode(false);
 $APPLICATION->SetTitle("Найденные объявления");
 $APPLICATION->AddChainItem('Поиск', '/ads/search/');
@@ -133,7 +137,8 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
             <? if ($arFinedElementsId) {
                 global $arFilterAds;
                 $arFilterAds = [
-                    'ID' => $arFinedElementsId
+                    'ID' => $arFinedElementsId,
+                    '!=PROPERTY_OWNER' => $BLOCKED,
                 ];
                 $APPLICATION->IncludeComponent(
                     "bitrix:catalog.section",
@@ -197,7 +202,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
             global $arViewedGoodsFilter;
-            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId];
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId, '!=PROPERTY_OWNER' => $BLOCKED,];
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 "you-watch-before",
@@ -206,10 +211,10 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",
                     "ADD_SECTIONS_CHAIN" => "N",
-                    "CACHE_FILTER" => "Y",
-                    "CACHE_GROUPS" => "Y",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "A",
+                    "CACHE_TYPE" => $arParams["CACHE_TYPE"],
+                    "CACHE_TIME" => $arParams["CACHE_TIME"],
+                    "CACHE_FILTER" => $arParams["CACHE_FILTER"],
+                    "CACHE_GROUPS" => $arParams["CACHE_GROUPS"],
                     "COMPATIBLE_MODE" => "N",
                     "CONVERT_CURRENCY" => "Y",
                     "CURRENCY_ID" => "RUB",

@@ -31,7 +31,7 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
                     </span>
                     <span class="viewed-slider__item-description">
                         <span class="viewed-slider__item-title"><?=$arItem['NAME']?></span>
-                            <span class="viewed-slider__item-data"><?=$arItem['TIMESTAMP_X']?></span>
+                            <span class="viewed-slider__item-data"><?=$arItem['DATE_CREATE']?></span>
                         </span>
                     <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                 </a>

@@ -33,8 +33,6 @@ $this->setFrameMode(true);
     <?endif;?>
 </div>
 
-    <form action="#" class="popUp-form"></form>
-
 <?$APPLICATION->IncludeComponent("bitrix:form", "support", Array(
     "AJAX_MODE" => "N",	// Включить режим AJAX
     "SEF_MODE" => "N",	// Включить поддержку ЧПУ

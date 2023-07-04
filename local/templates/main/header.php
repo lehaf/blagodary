@@ -1,12 +1,17 @@
 <?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-IncludeTemplateLangFile(__FILE__);
+
 use Bitrix\Main\Page\Asset;
 
-/** @global $APPLICATION */
+/** @global object $APPLICATION */
+/** @global object $USER */
+
+global $BLOCKED;
+$BLOCKED = getUserBlockedList();
 $curPage = $APPLICATION->GetCurPage();
 $isMainPage = $curPage === '/';
 $isAddAdsPage = $curPage === '/personal/my-ads/add-ads/';
 $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
+$bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
 ?>
 <html>
 <head>
@@ -76,19 +81,33 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                     false
                 );?>
                 <div class="header-account">
-                    <?if ($USER->IsAuthorized()) :?>
-                        <?if (!$isAddAdsPage):?>
-                            <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad">
-                                <svg>
-                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                                </svg>
-                                Подать объявление
-                            </a>
-                            <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad submit-an-ad--mobile">
-                                <svg>
-                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                                </svg>
-                            </a>
+                    <?if (!$bUserIsBlocked):?>
+                        <?if ($USER->IsAuthorized()) :?>
+                            <?if (!$isAddAdsPage):?>
+                                <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad">
+                                    <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                    </svg>
+                                    Подать объявление
+                                </a>
+                                <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad submit-an-ad--mobile">
+                                    <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                    </svg>
+                                </a>
+                            <?else:?>
+                                <button class="btn submit-an-ad sign-in sign-in-modal">
+                                    <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                    </svg>
+                                    Подать объявление
+                                </button>
+                                <button class="btn submit-an-ad submit-an-ad--mobile sign-in-modal">
+                                    <svg>
+                                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                    </svg>
+                                </button>
+                            <?endif;?>
                         <?else:?>
                             <button class="btn submit-an-ad sign-in sign-in-modal">
                                 <svg>
@@ -102,18 +121,6 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
                                 </svg>
                             </button>
                         <?endif;?>
-                    <?else:?>
-                        <button class="btn submit-an-ad sign-in sign-in-modal">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                            </svg>
-                            Подать объявление
-                        </button>
-                        <button class="btn submit-an-ad submit-an-ad--mobile sign-in-modal">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
-                            </svg>
-                        </button>
                     <?endif;?>
                     <?if ($USER->IsAuthorized()) :?>
                         <div class="header-account-menu">
@@ -180,6 +187,5 @@ $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
         )
     );?>
 <?endif;?>
-
 <div class="page <?=!empty($pageSpecialClass) ? $pageSpecialClass : ''?>">
     <div class="wrapper">
