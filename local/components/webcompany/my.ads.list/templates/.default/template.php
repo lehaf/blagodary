@@ -103,10 +103,12 @@ $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
     </div>
 <?else:?>
     <div class="no-ads">
-        <h4 class="title-block">У вас пока нет объявлений.</h4>
-        <a href="/personal/my-ads/add-ads/" class="btn-bg">
-            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
-            Подать объявление
-        </a>
+        <?if (empty($arResult['BLOCKED'])):?>
+            <h4 class="title-block">У вас пока нет объявлений.</h4>
+            <a href="/personal/my-ads/add-ads/" class="btn-bg">
+                <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg>
+                Подать объявление
+            </a>
+        <?endif;?>
     </div>
 <?endif;?>

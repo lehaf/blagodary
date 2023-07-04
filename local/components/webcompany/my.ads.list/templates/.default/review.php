@@ -47,7 +47,11 @@ $this->addExternalJs($this->GetFolder().'/review.js');
                     <h5>Комментарий к оценке:</h5>
                     <p><?=$arReview['COMMENT']?></p>
                 </div>
-                <button class="btn-bg ads-ratings-btn" data-item-name="<?=$arReview['NAME']?>" data-user-id="<?=$userId?>">Выставить оценку</button>
+                <button class="btn-bg ads-ratings-btn"
+                        data-item-name="<?=$arReview['NAME']?>"
+                        data-user-id="<?=$userId?>"
+                        data-review-id="<?=$arReview['REVIEW_ID']?>"
+                >Выставить оценку</button>
             </div>
         <?endforeach;?>
     </div>
@@ -78,7 +82,7 @@ $this->addExternalJs($this->GetFolder().'/review.js');
             <div class="form-group">
                 <label class="popUp-form-label">Комментарий к оценке:*</label>
                 <label>
-                    <textarea placeholder="Текст сообщения."></textarea>
+                    <textarea name="COMMENT" placeholder="Текст сообщения."></textarea>
                 </label>
             </div>
             <div class="form-group">

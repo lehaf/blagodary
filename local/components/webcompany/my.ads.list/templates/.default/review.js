@@ -4,6 +4,7 @@ const SendReview = function () {
         'rateFormId':'#popUp-review',
         'itemNameAttr':'data-item-name',
         'userIdAttr':'data-user-id',
+        'reviewIdAttr':'data-review-id',
     }
 
     this.component = {
@@ -35,6 +36,7 @@ SendReview.prototype.setEventListener = function () {
             btn.onclick = (e) => {
                 _this.$adsName = btn.getAttribute(_this.settings.itemNameAttr);
                 _this.$userId = btn.getAttribute(_this.settings.userIdAttr);
+                _this.$reviewId = btn.getAttribute(_this.settings.reviewIdAttr);
             }
         });
     }
@@ -46,6 +48,7 @@ SendReview.prototype.setEventListener = function () {
                 let formData = new FormData(_this.$rateForm);
                 if (_this.$userId && _this.$adsName) {
                     formData.set('user_id',_this.$userId);
+                    formData.set('review_id',_this.$reviewId);
                     formData.set('ads_name',_this.$adsName );
                     formData.set('component',_this.component.name);
                     formData.set('action',_this.component.actionSetRating);
@@ -127,6 +130,8 @@ SendReview.prototype.sendData = function (data) {
         cache: 'no-cache',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: new URLSearchParams(data)
+    }).then(function(json) {
+        location.reload();
     }).catch(error => {
         // console.log(error);
     });

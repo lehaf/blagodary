@@ -36,8 +36,25 @@ class AddElementForm extends \CBitrixComponent
         return UserTable::getList(array(
             'select' => $arSelect,
             'filter' => ['ID' => $userId],
-            'limit' => 1
+            'limit' => 1,
+            'cache' => [
+                'ttl' => 360000,
+                'cache_joins' => true
+            ]
         ))->fetch();
+    }
+
+    private function userIsBlocked() : bool
+    {
+        $arUserInfo = $this->getUserInfo($this->curUserId,['BLOCKED','ADMIN_NOTES']);
+
+        if ($arUserInfo['BLOCKED'] === 'Y') {
+            $this->arResult['BLOCKED'] = $arUserInfo['BLOCKED'];
+            $this->arResult['BLOCKED_TEXT'] = $arUserInfo['ADMIN_NOTES'];
+            return true;
+        }
+
+        return false;
     }
 
     private function executeAction(string $action) : void
@@ -65,8 +82,14 @@ class AddElementForm extends \CBitrixComponent
                 }
                 break;
             case 'setUserRating':
-                if (!empty($_POST['ads_name']) &&!empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
-//                    $this->setUserRating($_POST['user_id'], $_POST['ads_name'], $_POST['RATING'], $_POST['COMMENT']);
+                if (!empty($_POST['ads_name']) && !empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
+                    $this->setUserRating(
+                        $_POST['user_id'],
+                        $_POST['ads_name'],
+                        $_POST['RATING'],
+                        $_POST['COMMENT'],
+                        $_POST['review_id']
+                    );
                 }
                 break;
         }
@@ -85,15 +108,17 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
-    private function setUserRating(int $userId, string $adsName, int $rating, string $comment) : void
+    private function setUserRating(int $userId, string $adsName, int $rating, string $comment, ?int $review_id = NULL) : void
     {
         if (!empty($userId) && !empty($rating) && !empty($comment)) {
             if (\Bitrix\Main\Loader::includeModule('iblock') && defined('RATING_IBLOCK_ID')) {
+                // Получаем раздел отзывов пользователя
                 $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
                 $arSection = $ratingSectionEntity::getList(array(
                     "filter" => array("UF_USER_ID" => $userId),
                     "select" => array("ID"),
                 ))->fetch();
+                // Если раздела нет - создаем
                 if (empty($arSection['ID'])) {
                     $arUserInfo = $this->getUserInfo($userId, ['ID','LOGIN']);
                     $objDateTime = DateTime::createFromTimestamp(time());
@@ -109,18 +134,27 @@ class AddElementForm extends \CBitrixComponent
                         $this->processErrors($res->getErrorMessages(),$this->erCreateRatingSectTitle,$this->erCreateRatingSectDesc);
                     }
                 }
+                // Создаем сам отзыв
                 $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
-                $obUserReview = $ratingElementsEntity::createObject();
-                if (!empty($obUserReview) && !empty($arSection['ID'])) {
-                    $obUserReview->setName(htmlspecialchars($adsName));
-                    $obUserReview->setIblockSectionId($arSection['ID']);
-                    $obUserReview->setDetailText($comment);
-                    $obUserReview->setActive(false);
-                    $obUserReview->setUser($this->curUserId);
-                    if (0 < $rating && $rating < 6) $obUserReview->setRating($rating);
-                    $res = $obUserReview->save();
+                $obNewReview = $ratingElementsEntity::createObject();
+                if (!empty($obNewReview) && !empty($arSection['ID'])) {
+                    $obNewReview->setName(htmlspecialchars($adsName));
+                    $obNewReview->setIblockSectionId($arSection['ID']);
+                    $obNewReview->setDetailText($comment);
+                    $obNewReview->setActive(is_int($review_id));
+                    $obNewReview->setUser($this->curUserId);
+                    if (0 < $rating && $rating < 6) $obNewReview->setRating($rating);
+                    $res = $obNewReview->save();
                     if (!$res->isSuccess()) {
                         $this->processErrors($res->getErrorMessages(),$this->erCreateRatingReviewTitle,$this->erCreateRatingReviewDesc);
+                    }
+                }
+                // Если пришел ответ на отзыв то активируем его
+                if (!empty($review_id)) {
+                    $obUserReview = $ratingElementsEntity::getByPrimary($review_id)->fetchObject();
+                    if (is_object($obUserReview)) {
+                        $obUserReview->setActive(true);
+                        $obUserReview->save();
                     }
                 }
             }
@@ -235,6 +269,7 @@ class AddElementForm extends \CBitrixComponent
                         $usrId = $obReview->getUser()->getValue();
                         $arUserId[] = $usrId;
                         $arReviews[$usrId] = [
+                          'REVIEW_ID' => $obReview->getId(),
                           'NAME' => $obReview->getName(),
                           'RATING' => !empty($obReview->getRating()) ? $obReview->getRating()->getValue() : '',
                           'COMMENT' => $obReview->getDetailText(),
@@ -335,12 +370,13 @@ class AddElementForm extends \CBitrixComponent
 
     public function executeComponent() : void
     {
+        if ($this->userIsBlocked()) $this->includeComponentTemplate('blocked');
+        if ($this->getUserReviews($this->curUserId)) $this->includeComponentTemplate('review');
         if ($this->isPostRequest() && !empty($_POST['action'])) {
             $this->executeAction($_POST['action']);
         }
-        if ($this->getUserReviews($this->curUserId)) $this->includeComponentTemplate('review');
-        $this->includeComponentTemplate('blocked');
         $this->prepareResult();
         $this->includeComponentTemplate();
     }
+
 }
