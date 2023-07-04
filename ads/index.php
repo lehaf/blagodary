@@ -90,7 +90,7 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"MESSAGE_404" => "",
 		"META_DESCRIPTION" => "-",
 		"META_KEYWORDS" => "-",
-		"NEWS_COUNT" => "2",
+		"NEWS_COUNT" => "12",
 		"NUM_DAYS" => "30",
 		"NUM_NEWS" => "20",
 		"PAGER_BASE_LINK" => "",
