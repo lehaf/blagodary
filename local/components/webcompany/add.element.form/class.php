@@ -4,7 +4,7 @@ namespace WebCompany;
 
 use Bitrix\Main\Loader;
 use Bitrix\Iblock\ORM\PropertyValue;
-use Bitrix\Iblock\ElementTable;
+use \Bitrix\Main\Data\Cache;
 
 class AddElementForm extends \CBitrixComponent
 {
@@ -21,7 +21,18 @@ class AddElementForm extends \CBitrixComponent
         'OWNER_NAME' => 'Имя',
         'OWNER_PHONE' => 'Контактный телефон'
     ];
-
+    private array $arItemSelect = [
+        'ID',
+        'NAME',
+        'IBLOCK_SECTION_ID',
+        'DETAIL_TEXT',
+        'REGION',
+        'CITY',
+        'IMAGES.FILE',
+        'IMAGES',
+        'OWNER_NAME',
+        'OWNER_PHONE'
+    ];
     private array $arMultipleFields = ['OWNER_PHONE','IMAGES'];
     private string $propOwnerCode = 'OWNER';
     private string $fieldOwnerPhoneName = 'OWNER_PHONE';
@@ -319,8 +330,114 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
+    private function updateUserAds(int $adsId) : void
+    {
+        if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID') && !empty($this->arFieldsForRecord)) {
+            pr($this->arFieldsForRecord);
+            $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+            $obNewElement = $iblockClassName::getByPrimary($adsId, [
+                'select' => $this->arItemSelect
+            ])->fetchObject();
+
+            foreach ($this->arFieldsForRecord as $propName => $propValue) {
+                if (!in_array($propName, $this->arMultipleFields)) {
+                    if ($obNewElement->get($propName) != $propValue) {
+                        $obNewElement->set($propName,$propValue);
+                    }
+                } else {
+                    $obNewElement->removeAll($propName);
+                    foreach ($propValue as $value) {
+                        $obNewElement->addTo($propName, $value);
+                    }
+                }
+            }
+
+            foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
+                $obNewElement->removeAll($this->postImagesArrayName);
+                $arImage['MODULE_ID'] = 'iblock';
+                $fileId = \CFile::SaveFile($arImage,'iblock');
+                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
+            }
+
+            $obRes = $obNewElement->save();
+
+            if ($obRes->isSuccess()) {
+                LocalRedirect($this->successRedirectPath);
+            } else {
+                $this->processErrors($obRes->getErrorMessages());
+            }
+        }
+    }
+
+    private function getSectionTreePath(int $sectionId) : ?array
+    {
+        $cache = Cache::createInstance();
+        if ($cache->initCache(360000, "ads_section_tree_".$sectionId)) {
+            $arCacheRes = $cache->getVars();
+        } elseif ($cache->startDataCache()) {
+            $arSectionTree = \CIBlockSection::GetNavChain(ADS_IBLOCK_ID, $sectionId, array('ID','NAME','DEPTH_LEVEL'), true);
+            $arCacheRes = [];
+            foreach ($arSectionTree as $arSect) {
+                $arCacheRes['PATH_NAME'][] = $arSect['NAME'];
+                $arCacheRes['TREE'][$arSect['DEPTH_LEVEL']] = $arSect['ID'];
+            }
+            $arCacheRes['PATH_NAME'] = implode(' / ',$arCacheRes['PATH_NAME']);
+            $cache->endDataCache($arCacheRes);
+        }
+
+        return $arCacheRes ?? NULL;
+    }
+
+    private function getEditItem(int $itemId) : array
+    {
+        if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID')) {
+            $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+            $obElement = $iblockClassName::getByPrimary($itemId, [
+                'select' => $this->arItemSelect,
+                'filter' => ['OWNER.VALUE' => $this->curUserId]
+            ])->fetchObject();
+
+            if (!empty($obElement)) {
+                $arItem = [
+                    'ID' => $obElement->getId(),
+                    'NAME' => $obElement->getName(),
+                    'IBLOCK_SECTION_ID' => $obElement->getIblockSectionId(),
+                    'DETAIL_TEXT' => $obElement->getDetailText(),
+                    'REGION' => $obElement->getRegion()->getValue(),
+                    'CITY' => $obElement->getCity()->getValue(),
+                    'OWNER_NAME' => $obElement->getOwnerName()->getValue(),
+                ];
+
+                if ($arAllPhones = $obElement->getOwnerPhone()->getAll()) {
+                    foreach ($arAllPhones as $obPhone) {
+                        $arItem['OWNER_PHONE'][] = $obPhone->getValue();
+                    }
+                }
+
+                if ($arAllImages = $obElement->getImages()->getAll()) {
+                    $arImgJson = [];
+                    foreach ($arAllImages as $obImg) {
+                        $imgPath = '/upload/' . $obImg->getFile()->getSubdir().'/'.$obImg->getFile()->getFileName();
+                        $arItem['IMAGES'][] = [
+                            'NAME' => $obImg->getFile()->getFileName(),
+                            'SRC' => $imgPath
+                        ];
+                        $arImgJson[] = $imgPath;
+                    }
+                    $arItem['IMAGES_JSON'] = json_encode($arImgJson);
+                }
+
+                $arItem['SECTIONS'] = $this->getSectionTreePath($obElement->getIblockSectionId());
+
+                return $arItem;
+            }
+        }
+        return [];
+    }
+
     private function prepareResult() : void
     {
+        if (!empty($_GET['item']) && is_int(intval($_GET['item']))) $arResult['ITEM'] = $this->getEditItem($_GET['item']);
         $arResult['USER'] = $this->getUserInfo();
         $arResult['SECTIONS_LVL'] = $this->getSectionsLvlTree();
         $arResult['SELECTS'] = $this->getRegionsAndCitiesProps();
@@ -331,10 +448,16 @@ class AddElementForm extends \CBitrixComponent
     {
         $this->prepareResult();
         if ($this->isPostFormData()) {
-            if ($this->checkPostFields() && $this->checkPostImages()) {
-                $this->createNewUserAds();
+            if (!empty($_POST['ITEM_ID'])) {
+                if ($this->checkPostFields() && $this->checkPostImages()) {
+                    $this->updateUserAds($_POST['ITEM_ID']);
+                }
             } else {
-                $this->arResult['ERRORS'] = $this->arErrors;
+                if ($this->checkPostFields() && $this->checkPostImages()) {
+                    $this->createNewUserAds();
+                } else {
+                    $this->arResult['ERRORS'] = $this->arErrors;
+                }
             }
         }
         $this->includeComponentTemplate();

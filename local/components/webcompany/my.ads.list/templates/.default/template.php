@@ -44,7 +44,7 @@ $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
                             <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
                             <button class="edit-ed">
                                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
-                                <span>Редактировать объявление</span>
+                                <span class="edit-link" data-edit-link="<?=$arItem['EDIT_PAGE_URL']?>">Редактировать объявление</span>
                             </button>
                         </div>
                         <div class="announcements-description__del">

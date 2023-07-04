@@ -596,103 +596,103 @@ $('.password-control').on('click', function () {
 
 
 
-// Загрузка фото в объявлении
-
-let templateImg = (img,name) => {
-    return `
-            <div class="preview-img">
-                <img src="${img}" alt="img">
-                <span class="preview-remove" data-file="${name}">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6.33594 7.71732L9.8652 11.2466L10.0066 11.1052L9.86521 11.2466C10.2473 11.6287 10.8669 11.6289 11.2492 11.2466C11.6315 10.8645 11.6315 10.2448 11.2492 9.86258L7.71996 6.33329L11.2492 2.80403C11.2492 2.80402 11.2492 2.80401 11.2492 2.80399C11.6315 2.42184 11.6315 1.80221 11.2492 1.41996C10.8671 1.03765 10.2474 1.03772 9.8652 1.41996L10.0066 1.56138L9.8652 1.41996L6.33594 4.94925L2.80671 1.42C2.42458 1.03766 1.80494 1.0377 1.42268 1.41992L6.33594 7.71732ZM6.33594 7.71732L2.80667 11.2466L2.80663 11.2467C2.42438 11.6287 1.80478 11.6287 1.42265 11.2466L1.42264 11.2466C1.0404 10.8644 1.04033 10.2447 1.42264 9.86258C1.42266 9.86257 1.42267 9.86255 1.42268 9.86254L4.95191 6.33329L1.42264 2.80399C1.0404 2.42175 1.04034 1.80211 1.42264 1.41996L6.33594 7.71732Z"  stroke="#8E8E8E" stroke-width="0.4"/>
-</svg></span>
-            </div>
-            `
-}
-
-let fileListImg = [];
-
-let loadedImg = ()=>{
-    $(".dropzone_count__loaded").text(fileListImg.length)
-}
-
-function readerImgFile(imgList){
-
-    if (imgList.length !== 0) {
-        imgList.forEach((file)=>{
-
-            let reader = new FileReader();
-            reader.readAsDataURL(file);
-
-            reader.onload = function () {
-                if(fileListImg.length < 9){
-                    $(".dropzone__content").append(templateImg(reader.result, file.name))
-                    fileListImg.push(file);
-                    loadedImg()
-                }else{
-                    alert("Больше нельзя добавлять")
-                }
-            }
-
-        })
-    }
-
-}
-
-$("#inputFile").on("change", function () {
-    let imgList = Array.from(this.files);
-    readerImgFile(imgList);
-})
-
-
-$(".dropzone__content").on("click", ()=>{
-    let target = event.target
-    if(target.closest(".preview-remove")){
-        let dataName = target.closest(".preview-remove").getAttribute("data-file")
-
-        let removeItemImg = fileListImg.find(file => file.name === dataName)
-
-        fileListImg = fileListImg.filter(file => file !== removeItemImg)
-
-        const itemPreview = document.querySelector(`[data-file="${dataName}"]`).closest(".preview-img")
-        itemPreview.classList.add("remove")
-
-        setTimeout(()=>{
-            itemPreview.remove()
-        },300)
-
-    }else{
-        return false
-    }
-    loadedImg()
-})
-
-function highlightDropZone(event){
-    event.preventDefault()
-    this.classList.add("drop")
-}
-
-function unHighlightDropZone(event){
-    event.preventDefault()
-    this.classList.remove("drop")
-}
-
-const dropzone = document.querySelector(".dropzone")
-
-if(dropzone){
-
-    dropzone.addEventListener("dragover", highlightDropZone)
-    dropzone.addEventListener("dragenter", highlightDropZone)
-    dropzone.addEventListener("dragleave", unHighlightDropZone)
-    dropzone.addEventListener("drop", (event)=>{
-        let dt = event.dataTransfer.files[0]
-        let dtListImg = Array.from(event.dataTransfer.files)
-
-        unHighlightDropZone.call(dropzone, event)
-        readerImgFile(dtListImg)
-    })
-}
-// enf loaded photo
+// // Загрузка фото в объявлении
+//
+// let templateImg = (img,name) => {
+//     return `
+//             <div class="preview-img">
+//                 <img src="${img}" alt="img">
+//                 <span class="preview-remove" data-file="${name}">
+//                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+// <path d="M6.33594 7.71732L9.8652 11.2466L10.0066 11.1052L9.86521 11.2466C10.2473 11.6287 10.8669 11.6289 11.2492 11.2466C11.6315 10.8645 11.6315 10.2448 11.2492 9.86258L7.71996 6.33329L11.2492 2.80403C11.2492 2.80402 11.2492 2.80401 11.2492 2.80399C11.6315 2.42184 11.6315 1.80221 11.2492 1.41996C10.8671 1.03765 10.2474 1.03772 9.8652 1.41996L10.0066 1.56138L9.8652 1.41996L6.33594 4.94925L2.80671 1.42C2.42458 1.03766 1.80494 1.0377 1.42268 1.41992L6.33594 7.71732ZM6.33594 7.71732L2.80667 11.2466L2.80663 11.2467C2.42438 11.6287 1.80478 11.6287 1.42265 11.2466L1.42264 11.2466C1.0404 10.8644 1.04033 10.2447 1.42264 9.86258C1.42266 9.86257 1.42267 9.86255 1.42268 9.86254L4.95191 6.33329L1.42264 2.80399C1.0404 2.42175 1.04034 1.80211 1.42264 1.41996L6.33594 7.71732Z"  stroke="#8E8E8E" stroke-width="0.4"/>
+// </svg></span>
+//             </div>
+//             `
+// }
+//
+// let fileListImg = [];
+//
+// let loadedImg = ()=>{
+//     $(".dropzone_count__loaded").text(fileListImg.length)
+// }
+//
+// function readerImgFile(imgList){
+//
+//     if (imgList.length !== 0) {
+//         imgList.forEach((file)=>{
+//
+//             let reader = new FileReader();
+//             reader.readAsDataURL(file);
+//
+//             reader.onload = function () {
+//                 if(fileListImg.length < 9){
+//                     $(".dropzone__content").append(templateImg(reader.result, file.name))
+//                     fileListImg.push(file);
+//                     loadedImg()
+//                 }else{
+//                     alert("Больше нельзя добавлять")
+//                 }
+//             }
+//
+//         })
+//     }
+//
+// }
+//
+// $("#inputFile").on("change", function () {
+//     let imgList = Array.from(this.files);
+//     readerImgFile(imgList);
+// })
+//
+//
+// $(".dropzone__content").on("click", ()=>{
+//     let target = event.target
+//     if(target.closest(".preview-remove")){
+//         let dataName = target.closest(".preview-remove").getAttribute("data-file")
+//
+//         let removeItemImg = fileListImg.find(file => file.name === dataName)
+//
+//         fileListImg = fileListImg.filter(file => file !== removeItemImg)
+//
+//         const itemPreview = document.querySelector(`[data-file="${dataName}"]`).closest(".preview-img")
+//         itemPreview.classList.add("remove")
+//
+//         setTimeout(()=>{
+//             itemPreview.remove()
+//         },300)
+//
+//     }else{
+//         return false
+//     }
+//     loadedImg()
+// })
+//
+// function highlightDropZone(event){
+//     event.preventDefault()
+//     this.classList.add("drop")
+// }
+//
+// function unHighlightDropZone(event){
+//     event.preventDefault()
+//     this.classList.remove("drop")
+// }
+//
+// const dropzone = document.querySelector(".dropzone")
+//
+// if(dropzone){
+//
+//     dropzone.addEventListener("dragover", highlightDropZone)
+//     dropzone.addEventListener("dragenter", highlightDropZone)
+//     dropzone.addEventListener("dragleave", unHighlightDropZone)
+//     dropzone.addEventListener("drop", (event)=>{
+//         let dt = event.dataTransfer.files[0]
+//         let dtListImg = Array.from(event.dataTransfer.files)
+//
+//         unHighlightDropZone.call(dropzone, event)
+//         readerImgFile(dtListImg)
+//     })
+// }
+// // enf loaded photo
 
 
 $("#announcementTextarea").on("input", function () {

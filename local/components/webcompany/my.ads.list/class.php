@@ -357,6 +357,7 @@ class AddElementForm extends \CBitrixComponent
                     'DATE_CREATE' => $dateCreate,
                     'IMG' => $arResizeFirstImg,
                     'DETAIL_PAGE_URL' => $detailPageUrl,
+                    'EDIT_PAGE_URL' => '/personal/my-ads/add-ads/?item='.$obItem->getId(),
                     ...$arButtons
                 ];
             }

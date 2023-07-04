@@ -6,6 +6,8 @@ const DeactivateItemApp = function () {
         'itemNameAttr':'data-item-name',
         'itemIdAttr':'data-item-id',
         'userIdAttr':'data-user-id',
+        'editLinkAttr':'data-edit-link',
+        'editLinkClass':'.edit-link',
         'popUpUsersContainerSelector':'.popUp-rate ul.person-list-list',
         'ajaxResAdsContainerClass':'.user-list-ads'
     }
@@ -49,6 +51,7 @@ DeactivateItemApp.prototype.init = function () {
 DeactivateItemApp.prototype.setEventListener = function () {
     const _this = this;
     this.$deactivateButns = document.querySelectorAll(this.settings.deactivateBtnClass);
+    this.$editLinks = document.querySelectorAll(this.settings.editLinkClass);
 
     if (this.$deactivateButns.length > 0) {
         this.$deactivateButns.forEach((btn) => {
@@ -91,6 +94,18 @@ DeactivateItemApp.prototype.setEventListener = function () {
                 }
             }
         }
+    }
+
+    if (this.$editLinks.length > 0) {
+        this.$editLinks.forEach((editLink) => {
+            editLink.onclick = (e) => {
+                e.preventDefault();
+                let itemEditLink = editLink.getAttribute(_this.settings.editLinkAttr);
+                if (itemEditLink) {
+                    location.href = location.origin + itemEditLink;
+                }
+            }
+        });
     }
 }
 

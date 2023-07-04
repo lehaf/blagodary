@@ -41,7 +41,11 @@
             </label>
         </div>
         <div class="form-group">
-            <input class="btn-bg popUp-complain-btn" type="submit" name="web_form_submit" value="<?=htmlspecialcharsbx(trim($arResult["arForm"]["BUTTON"]) == '' ? GetMessage("FORM_ADD") : $arResult["arForm"]["BUTTON"]);?>" />
+            <input class="btn-bg popUp-complain-btn"
+                   type="submit"
+                   name="web_form_submit"
+                   value="<?=htmlspecialcharsbx(trim($arResult["arForm"]["BUTTON"]) == '' ? GetMessage("FORM_ADD") : $arResult["arForm"]["BUTTON"]);?>"
+            >
         </div>
     <?=$arResult["FORM_FOOTER"]?>
 </div>

@@ -96,13 +96,13 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                     </svg>
                                 </a>
                             <?else:?>
-                                <button class="btn submit-an-ad sign-in sign-in-modal">
+                                <button class="btn submit-an-ad sign-in">
                                     <svg>
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                                     </svg>
                                     Подать объявление
                                 </button>
-                                <button class="btn submit-an-ad submit-an-ad--mobile sign-in-modal">
+                                <button class="btn submit-an-ad submit-an-ad--mobile">
                                     <svg>
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                                     </svg>
