@@ -54,7 +54,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             </button>
         </div>
         <div class="aside__item aside__item-category ">
-            <?php #TODO Поправить хлебные крошки
+            <?php
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
                 "main-category-tree",

@@ -104,7 +104,7 @@ $this->setFrameMode(true);
                                         </div>
                                     <?endif;?>
                                     <?if (!empty($arResult['OWNER']['ADS_COUNT'])):?>
-                                        <a href="#" class="card-info-announcements">
+                                        <a href="/ads/user/?user_id=<?=$arResult['OWNER']['ID']?>" class="card-info-announcements">
                                             <span class="card-info-announcements__text">Объявлений:</span>
                                             <span class="card-info-announcements__num"><?=$arResult['OWNER']['ADS_COUNT']?></span>
                                         </a>
@@ -253,11 +253,11 @@ $this->setFrameMode(true);
                                 <div class="card-info-rating">
                                     <div class="rating-name-user"><?=$arUser['NAME']?></div>
                                     <div class="rating-result">
-                                        <span class="<?=$arUser['RATTING'] >= 1 ? 'active' : ''?>"></span>
-                                        <span class="<?=$arUser['RATTING'] >= 2 ? 'active' : ''?>"></span>
-                                        <span class="<?=$arUser['RATTING'] >= 3 ? 'active' : ''?>"></span>
-                                        <span class="<?=$arUser['RATTING'] >= 4 ? 'active' : ''?>"></span>
-                                        <span class="<?=$arUser['RATTING'] >= 5 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATING'] >= 1 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATING'] >= 2 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATING'] >= 3 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATING'] >= 4 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATING'] >= 5 ? 'active' : ''?>"></span>
                                     </div>
                                 </div>
                                 <div class="rating-data"><?=$arUser['DATE']?></div>

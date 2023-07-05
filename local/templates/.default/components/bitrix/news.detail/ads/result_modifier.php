@@ -42,62 +42,14 @@ if (!empty($arResult)) {
             ))->fetchCollection()->count();
         }
 
-        if (defined('RATING_IBLOCK_ID') && !empty($arResult['OWNER']['ID'])) {
+        if (!empty($arResult['OWNER']['ID'])) {
             $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
             $userRatingSectionId = $ratingSectionEntity::getList(array(
                 "filter" => array("UF_USER_ID" => $arResult['OWNER']['ID']),
                 "select" => array("ID"),
             ))->fetch()['ID'];
 
-            if (!empty($userRatingSectionId)) {
-                $className = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
-                $obCollection = $className::getList(array(
-                    'select' => array('ID', 'USER', 'RATING', 'DATE_CREATE'),
-                    'filter' => array('IBLOCK_SECTION_ID' => $userRatingSectionId),
-                    'cache' => array(
-                        'ttl' => 360000,
-                        'cache_joins' => true
-                    )
-                ))->fetchCollection();
-
-                $totalRatting = 0;
-                $arUsersId = [];
-                foreach ($obCollection as $obReview) {
-                    $userId = $obReview->getUser()->getValue();
-                    $unixTime = strtotime($obReview->getDateCreate());
-                    $date = date('d.m.Y',$unixTime);
-                    $arUsersId[] = $userId;
-                    $arResult['RATING']['LIST'][$userId] = [
-                        'DATE' => $date,
-                        'RATTING' => $obReview->getRating()->getValue()
-                    ];
-                    $totalRatting += $obReview->getRating()->getValue();
-                }
-
-                if (!empty($arResult['RATING']['LIST']))
-                    $arResult['RATING']['REVIEWS_COUNT'] = count($arResult['RATING']['LIST']);
-
-                if ($totalRatting !== 0) {
-                    $arResult['RATING']['TOTAL'] = round($totalRatting / $obCollection->count(),1);
-                    if (strlen($arResult['RATING']['TOTAL']) == 1) $arResult['RATING']['TOTAL'] = $arResult['RATING']['TOTAL'].'.0';
-                }
-
-                $arUsers = \Bitrix\Main\UserTable::getList(array(
-                    'select' => ['ID', 'NAME'],
-                    'filter' => ['ID' => $arUsersId],
-                    'cache' => [
-                        'ttl' => 360000,
-                        'cache_joins' => true
-                    ]
-                ))->fetchAll();
-
-                if (!empty($arUsers)) {
-                    foreach ($arUsers as $arUser) {
-                        if (is_array($arResult['RATING']['LIST'][$arUser['ID']]))
-                            $arResult['RATING']['LIST'][$arUser['ID']]['NAME'] = $arUser['NAME'];
-                    }
-                }
-            }
+            $arResult['RATING'] = getUserRatingData($arResult['OWNER']['ID']);
         }
     }
 

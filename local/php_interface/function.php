@@ -181,10 +181,12 @@ function getSectionsTree($iblockId, $ttl = 360000, $cacheId = 'sections_tree') :
     return $sectionTree ?? NULL;
 }
 
-function getUserData($userId) : ?array
+function getUserData($userId, $arSelect = []) : ?array
 {
+    if (empty($arSelect))
+    $arSelect = ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY', 'UF_PHONES'];
     $arUserInfo = \Bitrix\Main\UserTable::getList(array(
-        'select' => ['ID', 'NAME', 'REGION' => 'PERSONAL_STATE', 'CITY' => 'PERSONAL_CITY', 'UF_PHONES'],
+        'select' => $arSelect,
         'filter' => ['ID' => $userId],
         'limit' => 1,
         'cache' => [
@@ -210,3 +212,96 @@ function getUserBlockedList() : array
     return $arUsersBlocked ?? [];
 }
 
+function getUserRatingData(int $userId) : array
+{
+    $ttl = 360000;
+    $arRating = [];
+
+    if (defined('RATING_IBLOCK_ID') && !empty($userId)) {
+        $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
+        $userRatingSectionId = $ratingSectionEntity::getList(array(
+            "filter" => array("UF_USER_ID" => $userId),
+            "select" => array("ID"),
+            'cache' => array(
+                'ttl' => $ttl,
+                'cache_joins' => true
+            )
+        ))->fetch()['ID'];
+
+        if (!empty($userRatingSectionId)) {
+            $className = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
+            $obCollection = $className::getList(array(
+                'select' => array('ID', 'USER', 'RATING', 'DATE_CREATE'),
+                'filter' => array('IBLOCK_SECTION_ID' => $userRatingSectionId),
+                'cache' => array(
+                    'ttl' => $ttl,
+                    'cache_joins' => true
+                )
+            ))->fetchCollection();
+
+            $totalRatting = 0;
+            $arUsersId = [];
+            foreach ($obCollection as $obReview) {
+                $uId = $obReview->getUser()->getValue();
+                $unixTime = strtotime($obReview->getDateCreate());
+                $date = date('d.m.Y',$unixTime);
+                $arUsersId[] = $uId;
+                $arRating['LIST'][$uId] = [
+                    'DATE' => $date,
+                    'RATING' => $obReview->getRating()->getValue()
+                ];
+                $totalRatting += $obReview->getRating()->getValue();
+            }
+
+            if (!empty($arRating['LIST']))
+                $arRating['REVIEWS_COUNT'] = count($arRating['LIST']);
+
+            if ($totalRatting !== 0) {
+                $arRating['TOTAL'] = round($totalRatting / $obCollection->count(),1);
+                if (strlen($arRating['TOTAL']) == 1) $arRating['TOTAL'] = $arRating['TOTAL'].'.0';
+            }
+
+            $arUsers = \Bitrix\Main\UserTable::getList(array(
+                'select' => ['ID', 'NAME'],
+                'filter' => ['ID' => $arUsersId],
+                'cache' => [
+                    'ttl' => $ttl,
+                    'cache_joins' => true
+                ]
+            ))->fetchAll();
+
+            if (!empty($arUsers)) {
+                foreach ($arUsers as $arUser) {
+                    if (is_array($arRating['LIST'][$arUser['ID']]))
+                        $arRating['LIST'][$arUser['ID']]['NAME'] = $arUser['NAME'];
+                }
+            }
+        }
+    }
+
+    return $arRating;
+}
+
+function formateRegisterDate (string $registerDate) : string
+{
+    $arMonth = [
+        'января',
+        'февраля',
+        'марта',
+        'апреля',
+        'майя',
+        'июня',
+        'июля',
+        'августа',
+        'сентября',
+        'октября',
+        'ноября',
+        'декабря'
+    ];
+
+    $unixTime = strtotime($registerDate);
+    $year = date('Y',$unixTime);
+    $month = date('n',$unixTime) - 1;
+    return $arMonth[$month].' '.$year;
+
+}
