@@ -147,7 +147,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                 <ul class="category-selection-list">
                                     <?foreach ($arSections as $arSectLvl3):?>
                                         <li class="category-selection-list__item <?=$arResult['ITEM']['SECTIONS']['TREE'][3] == $arSectLvl3['ID'] ? 'active'  : ''?>"
-                                            data-section-id="<?=$arSectLvl2['ID']?>"
+                                            data-section-id="<?=$arSectLvl3['ID']?>"
                                         ><?=$arSectLvl3['NAME']?></li>
                                     <?endforeach;?>
                                 </ul>
@@ -288,7 +288,8 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 <?endif;?>
                 <div class="form-tel-container">
                     <?if (!empty($arResult['ITEM']['OWNER_PHONE'])):?>
-                        <?foreach ($arResult['ITEM']['OWNER_PHONE'] as $phone):?>
+                        <?$firstKey = array_key_first($arResult['ITEM']['OWNER_PHONE'])?>
+                        <?foreach ($arResult['ITEM']['OWNER_PHONE'] as $key => $phone):?>
                             <div class="form-group form-group--tel">
                                 <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
                                 <input type="tel"
@@ -297,13 +298,21 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                        class="dataUserTel"
                                        id="dataUserTel"
                                        value="<?=$phone?>"
-                                       required
+                                       <?=$firstKey === $key ? 'required' : ''?>
                                 >
+                                <?if ($firstKey !== $key):?>
+                                    <span class="remove_phone">
+                                        <svg>
+                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                        </svg>
+                                    </span>
+                                <?endif;?>
                             </div>
                         <?endforeach;?>
                     <?else:?>
                         <?if (!empty($arResult['USER']['UF_PHONES'])):?>
-                            <?foreach ($arResult['USER']['UF_PHONES'] as $phone):?>
+                            <?$firstKey = array_key_first($arResult['USER']['UF_PHONES'])?>
+                            <?foreach ($arResult['USER']['UF_PHONES'] as $key => $phone):?>
                                 <div class="form-group form-group--tel">
                                     <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
                                     <input type="tel"
@@ -312,8 +321,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                            class="dataUserTel"
                                            id="dataUserTel"
                                            value="<?=$phone?>"
-                                           required
+                                           <?=$firstKey === $key ? 'required' : ''?>
                                     >
+                                    <?if ($firstKey !== $key):?>
+                                        <span class="remove_phone">
+                                            <svg>
+                                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                            </svg>
+                                        </span>
+                                    <?endif;?>
                                 </div>
                             <?endforeach;?>
                         <?else:?>

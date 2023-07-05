@@ -8,7 +8,11 @@ const CreateAdsApp = function () {
         'imgFileAttr':'data-file',
         'dropZoneActiveClass':'drop',
         'deleteImgBtnClass':'.preview-remove',
-        'imgContainerClass':'.preview-img'
+        'imgContainerClass':'.preview-img',
+        'addNewPhoneBtnClass':'.add-new-phone',
+        'phonesContainerClass':'.form-tel-container',
+        'removePhoneClass':'.remove_phone',
+        'maxImagesLimit': 10,
     }
 
     this.$dropZone = document.querySelector(".dropzone");
@@ -35,11 +39,11 @@ CreateAdsApp.prototype.unHighlightDropZone = function () {
 CreateAdsApp.prototype.setMaskPhone = function () {
     $(".dataUserTel").mask("+375 (99) 999-99-99");
 }
-CreateAdsApp.prototype.getTemplateImg = function (img,name,index) {
+CreateAdsApp.prototype.getTemplateImg = function (img,name) {
     return `
             <div class="preview-img">
                 <img src="${img}" alt="img">
-                <span class="preview-remove" data-index="${index}" data-file="${name}">
+                <span class="preview-remove" data-file="${name}">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M6.33594 7.71732L9.8652 11.2466L10.0066 11.1052L9.86521 11.2466C10.2473 11.6287 10.8669
                          11.6289 11.2492 11.2466C11.6315 10.8645 11.6315 10.2448 11.2492 9.86258L7.71996 6.33329L11.2492 
@@ -63,18 +67,30 @@ CreateAdsApp.prototype.init = function () {
 CreateAdsApp.prototype.setEventListener = function () {
     this.setInputFileEvent();
     this.setPhoneEvent();
+    this.setDeletePhoneEvent();
     this.setDeleteUploadedImgEvent();
     this.setDropzoneEvents();
 }
 
+CreateAdsApp.prototype.setDeletePhoneEvent = function () {
+    const _this = this;
+    let deletePhonesBtn = document.querySelectorAll(this.settings.removePhoneClass);
+    if (deletePhonesBtn) {
+        deletePhonesBtn.forEach((removeBtn) => {
+            removeBtn.onclick = () => {
+                removeBtn.parentElement.remove();
+            }
+        });
+    }
+}
+
+
 CreateAdsApp.prototype.setPhoneEvent = function () {
     const _this = this;
-    document.querySelector('.add-new-phone').onclick = () => {
-        $('.form-tel-container').append(_this.$templatePhone);
+    document.querySelector(this.settings.addNewPhoneBtnClass).onclick = () => {
+        document.querySelector(_this.settings.phonesContainerClass).insertAdjacentHTML('beforeend',_this.$templatePhone);
         _this.setMaskPhone();
-        $(".remove_phone").on("click",function(event){
-            this.parentElement.remove();
-        });
+        _this.setDeletePhoneEvent();
     }
 }
 
@@ -82,11 +98,12 @@ CreateAdsApp.prototype.setInputFileEvent = function () {
     const _this = this;
     this.$inputFile.onchange = () => {
         let images = _this.$dropZone.querySelectorAll(this.settings.imgContainerClass);
-        images.forEach((img) => {
-            img.remove();
-        });
-        _this.$imgList = Array.from(this.$inputFile.files);
-        _this.addImgFile(_this.$imgList, false);
+        if (_this.$inputFile.files.length > 0 && images.length > 0) {
+            images.forEach((img) => {
+                img.remove();
+            });
+        }
+        _this.uploadImgFromBtn();
     }
 }
 
@@ -157,35 +174,71 @@ CreateAdsApp.prototype.removeFile = function (fileName) {
 CreateAdsApp.prototype.addFile = function (img) {
     const dt  = new DataTransfer();
     for (let i = 0; i < this.$inputFile.files.length; i++) {
-        const file = this.$inputFile.files[i];
-        dt.items.add(file);
+        if (i <= this.settings.maxImagesLimit-1) {
+            const file = this.$inputFile.files[i];
+            dt.items.add(file);
+        }
     }
-    dt.items.add(img);
-    this.$inputFile.files = dt.files;
 
+    if (dt.files.length < this.settings.maxImagesLimit) {
+        dt.items.add(img);
+        this.$inputFile.files = dt.files;
+    } else {
+        alert(`Превышен лимит картинок! Картинка ${img.name} не загружена!`);
+        return false;
+    }
+
+    return true;
 }
 
-CreateAdsApp.prototype.addImgFile = function (newImg, addFile = true) {
+CreateAdsApp.prototype.uploadImgFromBtn = function () {
     const _this = this;
-    if (newImg.length !== 0) {
-        newImg.forEach((img)=>{
-            let reader = new FileReader();
-            reader.readAsDataURL(img);
-            reader.onload = function () {
-                if (_this.$inputFile.files.length <= 9){
-                    if (addFile) {
-                        _this.addFile(img);
-                    }
-                    _this.$counter.innerHTML = _this.$inputFile.files.length;
-                    let templateImg = _this.getTemplateImg(reader.result, img.name,_this.$inputFile.files.length - 1);
-                    document.querySelector(".dropzone__content").insertAdjacentHTML('beforeEnd',templateImg);
-                    _this.setDeleteUploadedImgEvent();
-                }else{
-                    alert("Больше нельзя добавлять")
-                }
-            }
+    const dt  = new DataTransfer();
 
-        })
+    for (let i = 0; i < this.$inputFile.files.length; i++) {
+        const file = this.$inputFile.files[i];
+        if (i <= 9) {
+            dt.items.add(file);
+        } else {
+            alert(`Превышен лимит картинок! Картинка ${file.name} не загружена!`)
+        }
+    }
+    this.$inputFile.files = dt.files;
+    let imgList = Array.from(this.$inputFile.files);
+    imgList.forEach((img, index) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(img);
+        reader.onload = function () {
+            if (index <= _this.settings.maxImagesLimit-1) {
+                _this.$counter.innerHTML = _this.$inputFile.files.length;
+                let templateImg = _this.getTemplateImg(reader.result, img.name);
+                _this.$dropZoneContent.insertAdjacentHTML('beforeEnd', templateImg);
+                _this.setDeleteUploadedImgEvent();
+            }
+        }
+    })
+}
+
+CreateAdsApp.prototype.addImgFile = function (newImages, addToFiles = true) {
+    const _this = this;
+    if (newImages.length > 0) {
+        if (_this.$inputFile.files.length <= _this.settings.maxImagesLimit-1) {
+            newImages.forEach((img) => {
+                let reader = new FileReader();
+                reader.readAsDataURL(img);
+                reader.onload = function () {
+                    if (_this.$inputFile.files.length < _this.settings.maxImagesLimit) {
+                        let templateImg = _this.getTemplateImg(reader.result, img.name);
+                        _this.$dropZoneContent.insertAdjacentHTML('beforeEnd', templateImg);
+                        _this.setDeleteUploadedImgEvent();
+                    }
+                    if (addToFiles) _this.addFile(img);
+                    _this.$counter.innerHTML = _this.$inputFile.files.length;
+                }
+            })
+        } else {
+            alert('Вы загрузили максимальное колличество картинок!')
+        }
     }
 }
 

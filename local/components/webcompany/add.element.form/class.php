@@ -17,6 +17,7 @@ class AddElementForm extends \CBitrixComponent
         'IBLOCK_SECTION_ID' => 'Выбор категории',
         'DETAIL_TEXT' => 'Описание',
         'REGION' => 'Область',
+        'IMAGES' => 'Фотографии',
         'CITY' => 'Город / Район',
         'OWNER_NAME' => 'Имя',
         'OWNER_PHONE' => 'Контактный телефон'
@@ -217,6 +218,12 @@ class AddElementForm extends \CBitrixComponent
             $arImagesData = [];
             $countFiles = 0;
             for($i = 0; $i < count($arImages['name']); $i++) {
+                // Проверяем на пустоту
+                if (empty($arImages['name'][$i])) {
+                    $this->arErrors[$this->postImagesArrayName][] = "Поле '".$this->arPostValidFields[$this->postImagesArrayName]."' обязательно для заполнения!";
+                    continue;
+                }
+
                 $type = pathinfo($arImages['name'][$i], PATHINFO_EXTENSION); // Получаем тип файла
                  // Проверяем, является ли файл изображением исключительно типов PNG, JPG, JPEG
                 if (!in_array($type, $this->arValidImgFormat)) {
@@ -333,12 +340,10 @@ class AddElementForm extends \CBitrixComponent
     private function updateUserAds(int $adsId) : void
     {
         if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID') && !empty($this->arFieldsForRecord)) {
-            pr($this->arFieldsForRecord);
             $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obNewElement = $iblockClassName::getByPrimary($adsId, [
                 'select' => $this->arItemSelect
             ])->fetchObject();
-
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
                 if (!in_array($propName, $this->arMultipleFields)) {
                     if ($obNewElement->get($propName) != $propValue) {
@@ -352,11 +357,29 @@ class AddElementForm extends \CBitrixComponent
                 }
             }
 
+            $arAllImg = $obNewElement->get($this->postImagesArrayName)->getAll();
+            $arCurImg = [];
+            foreach ($arAllImg as $obImg) {
+                $arCurImg[] = $obImg->getFile()->getFileName();
+            }
+            $arNewImg = [];
+            foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImg) {
+                $arNewImg[] = $arImg['name'];
+            }
+            $arImgNotDelete = array_intersect($arNewImg, $arCurImg);
+            foreach ($arAllImg as $obImg) {
+                if (!in_array($obImg->getFile()->getFileName(),$arImgNotDelete)) {
+                    $obNewElement->removeFrom($this->postImagesArrayName,$obImg->getFile()->getId());
+                    \CFile::Delete($obImg->getFile()->getId());
+                }
+            }
+
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
-                $obNewElement->removeAll($this->postImagesArrayName);
-                $arImage['MODULE_ID'] = 'iblock';
-                $fileId = \CFile::SaveFile($arImage,'iblock');
-                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
+                if (!in_array($arImage['name'],$arImgNotDelete)) {
+                    $arImage['MODULE_ID'] = 'iblock';
+                    $fileId = \CFile::SaveFile($arImage,'iblock');
+                    $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
+                }
             }
 
             $obRes = $obNewElement->save();
@@ -455,11 +478,10 @@ class AddElementForm extends \CBitrixComponent
             } else {
                 if ($this->checkPostFields() && $this->checkPostImages()) {
                     $this->createNewUserAds();
-                } else {
-                    $this->arResult['ERRORS'] = $this->arErrors;
                 }
             }
         }
+        $this->arResult['ERRORS'] = $this->arErrors;
         $this->includeComponentTemplate();
     }
 }
