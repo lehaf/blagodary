@@ -65,13 +65,13 @@ $this->setFrameMode(true);
                     <span data-item="<?=$arResult['ID']?>" class="favorite-card favorite-card--page"></span>
                 </div>
                 <?if ($curUserId === $arResult['OWNER']['ID']):?>
-                    <button class="edit-card">
+                    <a href="/personal/my-ads/add-ads/?item=<?=$arResult['ID']?>" class="edit-card">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#edit-card">
                             </use>
                         </svg>
                         Редактировать объявление
-                    </button>
+                    </a>
                 <?endif;?>
                 <div class="card-info">
                     <?if (!empty($arResult['OWNER']['ID']) && !empty($arResult['PROPERTIES']['OWNER_NAME']['VALUE'])):?>
@@ -85,24 +85,30 @@ $this->setFrameMode(true);
                                         </svg>
                                         <?=$arResult['PROPERTIES']['OWNER_NAME']['VALUE']?>
                                     </div>
-                                    <div class="card-info-rating">
-                                        <div class="rating-result-text">4,0</div>
-                                        <div class="rating-result">
-                                            <span class="active"></span>
-                                            <span class="active"></span>
-                                            <span class="active"></span>
-                                            <span class="active"></span>
-                                            <span></span>
+                                    <?if (!empty($arResult['RATING']['TOTAL'])):?>
+                                        <div class="card-info-rating">
+                                            <div class="rating-result-text"><?=$arResult['RATING']['TOTAL']?></div>
+                                            <div class="rating-result">
+                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 1 ? 'active' : ''?>"></span>
+                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 2 ? 'active' : ''?>"></span>
+                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 3 ? 'active' : ''?>"></span>
+                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 4 ? 'active' : ''?>"></span>
+                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 5 ? 'active' : ''?>"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="total-rating">
-                                        <span class="total-rating__text">Оценок:</span>
-                                        <span class="total-rating__num">76</span>
-                                    </div>
-                                    <a href="#" class="card-info-announcements">
-                                        <span class="card-info-announcements__text">Объявлений:</span>
-                                        <span class="card-info-announcements__num">2</span>
-                                    </a>
+                                    <?endif;?>
+                                    <?if (!empty($arResult['RATING']['REVIEWS_COUNT'])):?>
+                                        <div class="total-rating">
+                                            <span class="total-rating__text">Оценок:</span>
+                                            <span class="total-rating__num"><?=$arResult['RATING']['REVIEWS_COUNT']?></span>
+                                        </div>
+                                    <?endif;?>
+                                    <?if (!empty($arResult['OWNER']['ADS_COUNT'])):?>
+                                        <a href="#" class="card-info-announcements">
+                                            <span class="card-info-announcements__text">Объявлений:</span>
+                                            <span class="card-info-announcements__num"><?=$arResult['OWNER']['ADS_COUNT']?></span>
+                                        </a>
+                                    <?endif;?>
                                 </div>
                                 <?if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']) && $curUserId !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
@@ -204,182 +210,65 @@ $this->setFrameMode(true);
     </div>
 <?endif;?>
 
-
-<div class="popUp popUp-grade">
-    <h5 class="popUp__title">Оценка</h5>
-    <span class="modal-cross">
-            <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-        </span>
-    <p class="popUp-grade__description">
-        Рейтинг пользователя складывается из оценок тех, кто забирает вещи и тех, кто отдает
-    </p>
-    <div class="popUp-grade-content">
-        <div class="popUp-grade-result">
-            <div class="card-info-rating">
-                <div class="rating-result-text">4,0</div>
-                <div class="rating-result">
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span class="active"></span>
-                    <span></span>
+<?if (!empty($arResult['RATING'])):?>
+    <div class="popUp popUp-grade">
+        <h5 class="popUp__title">Оценки пользователей</h5>
+        <span class="modal-cross">
+                <svg>
+                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+                </svg>
+            </span>
+        <p class="popUp-grade__description">
+            Рейтинг пользователя складывается из оценок тех, кто забирает вещи и тех, кто отдает
+        </p>
+        <div class="popUp-grade-content">
+            <div class="popUp-grade-result">
+                <div class="card-info-rating">
+                    <div class="rating-result-text"><?=$arResult['RATING']['TOTAL']?></div>
+                    <div class="rating-result">
+                        <span class="<?=$arResult['RATING']['TOTAL'] >= 1 ? 'active' : ''?>"></span>
+                        <span class="<?=$arResult['RATING']['TOTAL'] >= 2 ? 'active' : ''?>"></span>
+                        <span class="<?=$arResult['RATING']['TOTAL'] >= 3 ? 'active' : ''?>"></span>
+                        <span class="<?=$arResult['RATING']['TOTAL'] >= 4 ? 'active' : ''?>"></span>
+                        <span class="<?=$arResult['RATING']['TOTAL'] >= 5 ? 'active' : ''?>"></span>
+                    </div>
+                </div>
+                <div class="popUp-grade-result-text">
+                    Средняя оценка пользователя
+                </div>
+                <div class="total-reviews">
+                    <div class="total-reviews__text">
+                        Всего отзывов:
+                    </div>
+                    <div class="total-reviews__score">
+                        <?=$arResult['RATING']['REVIEWS_COUNT']?>
+                    </div>
                 </div>
             </div>
-            <div class="popUp-grade-result-text">
-                Средняя оценка пользователя
-            </div>
-            <div class="total-reviews">
-                <div class="total-reviews__text">
-                    Всего отзывов:
+            <?if (!empty($arResult['RATING']['LIST'])):?>
+                <div class="grade-list-container">
+                    <ul class="grade-list">
+                        <?foreach ($arResult['RATING']['LIST'] as $arUser):?>
+                            <li class="grade-list__item">
+                                <div class="card-info-rating">
+                                    <div class="rating-name-user"><?=$arUser['NAME']?></div>
+                                    <div class="rating-result">
+                                        <span class="<?=$arUser['RATTING'] >= 1 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATTING'] >= 2 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATTING'] >= 3 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATTING'] >= 4 ? 'active' : ''?>"></span>
+                                        <span class="<?=$arUser['RATTING'] >= 5 ? 'active' : ''?>"></span>
+                                    </div>
+                                </div>
+                                <div class="rating-data"><?=$arUser['DATE']?></div>
+                            </li>
+                        <?endforeach;?>
+                    </ul>
                 </div>
-                <div class="total-reviews__score">
-                    76
-                </div>
-            </div>
-        </div>
-        <div class="grade-list-container">
-            <ul class="grade-list">
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Константин</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Анна</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Константин</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-                <li class="grade-list__item">
-                    <div class="card-info-rating">
-                        <div class="rating-name-user">Олег</div>
-                        <div class="rating-result">
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span class="active"></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="rating-data">
-                        06.12.2022
-                    </div>
-                </li>
-            </ul>
+            <?endif;?>
         </div>
     </div>
-</div>
+<?endif;?>
 
 <div class="popUp popUp-complain">
     <h5 class="popUp__title">Пожаловаться на пользователя</h5>

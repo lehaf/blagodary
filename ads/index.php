@@ -148,11 +148,10 @@ $APPLICATION->SetTitle("Все объявления");?>
 		"YANDEX" => "Y",
 		"COMPONENT_TEMPLATE" => "ads",
 		"SEF_URL_TEMPLATES" => array(
-			"news" => "",
 			"section" => "#SECTION_CODE_PATH#/",
 			"detail" => "#ELEMENT_CODE#/",
 			"search" => "search/",
-
+			"user" => "user/",
 		)
 	),
 	false
