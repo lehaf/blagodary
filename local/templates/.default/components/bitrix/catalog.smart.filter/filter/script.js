@@ -36,29 +36,86 @@ AjaxFilter.prototype.setupListener = function ()
 AjaxFilter.prototype.setFilterEvent = function () {
 	const _this = this;
 	if (this.$filterForm && this.$filterSubmitBtn) {
-		this.$filterSubmitBtn.onclick = () => {
-			event.preventDefault();
+		this.$filterSubmitBtn.onclick = (e) => {
+			e.preventDefault();
+			let getParams = _this.getParamsToArray();
 			let formData = new FormData(this.$filterForm);
-			let getParams = '';
-			for(let [key, value] of formData.entries()) {
-				if (key && value) {
-					if (value === 'on') value = 'Y';
-					getParams += key+'='+value+'&';
-				}
-			}
-
-			if (getParams.length > 0) {
-				getParams += 'set_filter=y';
+			getParams = _this.fillGetParamsValues(getParams, formData);
+			let getParamsStr = _this.createGetString(getParams);
+			if (getParamsStr.length > 0 && _this.filterParamsExist(getParams)) {
 				_this.setLoader();
-				_this.sendData(_this.prepareLinkForAjax(getParams));
-			} else {
-				if (location.href.includes('set_filter')) {
+				_this.sendData(_this.prepareLinkForAjax(getParamsStr));
+			} /*else {
+				console.log(_this.filterParamsExist(getParams));
+				if (location.href.includes('set_filter') && Object.keys(getParams).length > 1 && _this.filterParamsExist(getParams)) {
 					_this.setLoader();
 					_this.sendData(_this.prepareLinkForAjax());
 				}
-			}
+			}*/
 		}
 	}
+}
+
+AjaxFilter.prototype.filterParamsExist = function (getParams)
+{
+	for(let key in getParams) {
+		if (key.includes('arrFilter')) return true;
+	}
+	return false;
+}
+
+AjaxFilter.prototype.deleteFilterParams = function (getParams)
+{
+	for(let key in getParams) {
+		if (key.includes('arrFilter')) delete getParams[key];
+	}
+	delete getParams['set_filter'];
+	return this.createGetString(getParams);
+}
+
+AjaxFilter.prototype.fillGetParamsValues = function (getParams, formData)
+{
+	for(let [key, value] of formData.entries()) {
+		if (key && value) {
+			if (value === 'on') getParams[key] = 'Y';
+			getParams[key] = value;
+		}
+	}
+	getParams['set_filter'] = 'y';
+	return getParams;
+}
+
+AjaxFilter.prototype.createGetString = function (getParams)
+{
+	let getParamsArray = [];
+	for(let key in getParams) {
+		if (key && getParams[key]) {
+			getParamsArray.push(key+'='+getParams[key]);
+		}
+	}
+
+	if (getParamsArray.length > 0) {
+		return '?'+getParamsArray.join('&');
+	} else {
+		return '';
+	}
+}
+
+AjaxFilter.prototype.getParamsToArray = function ()
+{
+	return window
+		.location
+		.search
+		.replace('?','')
+		.split('&')
+		.reduce(
+			function(p,e){
+				var a = e.split('=');
+				p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+				return p;
+			},
+			{}
+		);
 }
 
 AjaxFilter.prototype.clearForm = function (oForm) {
@@ -104,8 +161,10 @@ AjaxFilter.prototype.setResetFilterEvent = function () {
 	if (this.$filterResetBtn) {
 		this.$filterResetBtn.onclick = () => {
 			if (location.href.includes('set_filter')) {
+				let getParams = _this.getParamsToArray();
 				_this.setLoader();
-				_this.sendData(_this.prepareLinkForAjax());
+				getParams = _this.deleteFilterParams(getParams);
+				_this.sendData(_this.prepareLinkForAjax(getParams));
 				_this.clearForm(_this.$filterForm);
 			}
 		}
@@ -171,9 +230,8 @@ AjaxFilter.prototype.scrollToElement = function (element) {
 	observer.observe(element);
 }
 
-AjaxFilter.prototype.prepareLinkForAjax = function (getParams = '') {
-	getParams = getParams.length > 0 ? '?' + getParams : getParams;
-	return  location.origin + location.pathname + getParams;
+AjaxFilter.prototype.prepareLinkForAjax = function (getParamsStr = '') {
+	return location.pathname + getParamsStr;
 }
 
 AjaxFilter.prototype.sendData = function (link = '') {
