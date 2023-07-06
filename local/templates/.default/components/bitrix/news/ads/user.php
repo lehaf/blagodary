@@ -17,14 +17,18 @@ use WebCompany\YouWatchBefore;
 
 global $BLOCKED;
 $isAjax = $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+$APPLICATION->AddChainItem('Объявления пользователя','/ads/user/');
 
 if (!empty($_GET['user_id'])) {
     $userId = (int)$_GET['user_id'];
     $arRating = getUserRatingData($userId);
+    $userAdsCount = getCountUserAds($userId);
     $arUser = getUserData($userId,['NAME','DATE_REGISTER']);
     $dateRegister = formateRegisterDate($arUser['DATE_REGISTER']);
+} else {
+//    \CHTTP::setStatus("404 Not Found");
+//    LocalRedirect('/404.php');
 }
-
 ?>
 
 <?if (!empty($arUser) && !empty($arRating)):?>
@@ -153,7 +157,7 @@ if (!empty($_GET['user_id'])) {
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section">
-                    Товаров: 2
+                    <?=!empty($userAdsCount) && $userAdsCount > 0 ? 'Товаров: '.$userAdsCount : 'У пользователя нет объявлений'?>
                 </h2>
                 <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>

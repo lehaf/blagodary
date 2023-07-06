@@ -31,24 +31,8 @@ if (!empty($arResult)) {
     if ($arResult['PROPERTIES']['OWNER']['VALUE']) {
         $arResult['OWNER'] = getUserData($arResult['PROPERTIES']['OWNER']['VALUE']);
 
-        if (!empty($arResult['OWNER']['ID']) && defined('ADS_IBLOCK_ID')) {
-            $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
-            $arResult['OWNER']['ADS_COUNT'] = $className::getList(array(
-                'filter' => array('OWNER.VALUE' => $arResult['OWNER']['ID']),
-                'cache' => array(
-                    'ttl' => 360000,
-                    'cache_joins' => true
-                )
-            ))->fetchCollection()->count();
-        }
-
         if (!empty($arResult['OWNER']['ID'])) {
-            $ratingSectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(RATING_IBLOCK_ID);
-            $userRatingSectionId = $ratingSectionEntity::getList(array(
-                "filter" => array("UF_USER_ID" => $arResult['OWNER']['ID']),
-                "select" => array("ID"),
-            ))->fetch()['ID'];
-
+            $arResult['OWNER']['ADS_COUNT'] = getCountUserAds($arResult['OWNER']['ID']);
             $arResult['RATING'] = getUserRatingData($arResult['OWNER']['ID']);
         }
     }

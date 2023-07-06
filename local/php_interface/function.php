@@ -282,6 +282,21 @@ function getUserRatingData(int $userId) : array
     return $arRating;
 }
 
+function getCountUserAds(int $userId) : ?int
+{
+    if (!empty($userId) && defined('ADS_IBLOCK_ID')) {
+        $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+        $count =  $className::getList(array(
+            'filter' => array('OWNER.VALUE' => $userId, 'ACTIVE' => 'Y'),
+            'cache' => array(
+                'ttl' => 360000,
+                'cache_joins' => true
+            )
+        ))->fetchCollection()->count();
+    }
+
+    return $count ?? NULL;
+}
 function formateRegisterDate (string $registerDate) : string
 {
     $arMonth = [
