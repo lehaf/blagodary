@@ -24,10 +24,10 @@ if (!empty($_GET['user_id'])) {
     $arRating = getUserRatingData($userId);
     $userAdsCount = getCountUserAds($userId);
     $arUser = getUserData($userId,['NAME','DATE_REGISTER']);
-    $dateRegister = formateRegisterDate($arUser['DATE_REGISTER']);
+    if (empty($arUser)) redirectTo404();
+    $dateRegister = !empty($arUser['DATE_REGISTER']) ? formateRegisterDate($arUser['DATE_REGISTER']) : NULL;
 } else {
-//    \CHTTP::setStatus("404 Not Found");
-//    LocalRedirect('/404.php');
+    redirectTo404();
 }
 ?>
 

@@ -195,7 +195,7 @@ function getUserData($userId, $arSelect = []) : ?array
         ]
     ))->fetch();
 
-    return $arUserInfo ?? NULL;
+    return is_array($arUserInfo) ? $arUserInfo : NULL;
 }
 
 function getUserBlockedList() : array
@@ -319,4 +319,10 @@ function formateRegisterDate (string $registerDate) : string
     $month = date('n',$unixTime) - 1;
     return $arMonth[$month].' '.$year;
 
+}
+
+function redirectTo404 () : void
+{
+    \CHTTP::setStatus("404 Not Found");
+    LocalRedirect('/404.php');
 }
