@@ -27,3 +27,21 @@ if ($isAjax) die();
     </div>
     <button type="submit" class="btn-bg">Войти</button>
 </form>
+
+
+<?if($arResult["AUTH_SERVICES"]):?>
+    <?$this->SetViewTarget('auth_socials');?>
+        <? $APPLICATION->IncludeComponent(
+            "bitrix:socserv.auth.form",
+            "socials",
+            array(
+                "AUTH_SERVICES"=>$arResult["AUTH_SERVICES"],
+                "CURRENT_SERVICE"=>$arResult["CURRENT_SERVICE"],
+                "AUTH_URL"=>$arResult["AUTH_URL"],
+                "POST"=>$arResult["POST"],
+            ),
+            false,
+            array("HIDE_ICONS"=>"Y")
+        ); ?>
+    <?$this->EndViewTarget();?>
+<?endif?>

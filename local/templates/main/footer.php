@@ -359,14 +359,7 @@ global $USER;
             <button class="login-btn-list__item registration-btn">Регистрация</button>
         </div>
         <div class="login-services">
-            <span class="login-services__title">Войдите через сервисы:</span>
-            <div class="login-services-content">
-                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#vk-popup"></use></svg></a></div>
-                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#fb"></use></svg></a></div>
-                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#google"></use></svg></a></div>
-                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#yandex"></use></svg></a></div>
-                <div class="login-services__item"><a href="#"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#mymir"></use></svg></a></div>
-            </div>
+            <?$APPLICATION->ShowViewContent('auth_socials');?>
         </div>
         <div class="popUp-login-content">
             <div class="login-content active">
