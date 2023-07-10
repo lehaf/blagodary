@@ -329,7 +329,8 @@ global $USER;
                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-17"></use>
                     </svg>
                     Прочее
-                </a></li>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

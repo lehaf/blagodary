@@ -75,7 +75,7 @@ $this->setFrameMode(true);
 $component,
 ['HIDE_ICONS' => 'Y']
 );?>
-<?if (!empty($curUserId)):?>
+<?if (!empty($curUserId) && $GLOBALS['OWNER_ID'] != $curUserId):?>
     <?php $APPLICATION->IncludeComponent(
         "bitrix:form.result.new",
         "complain",

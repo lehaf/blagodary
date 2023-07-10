@@ -155,8 +155,10 @@ $this->setFrameMode(true);
                     <?endif;?>
                 </div>
                 <div class="complain <?=!empty($curUserId) ? 'complaint-modal' : 'sign-in-modal'?>">
-                    <span class="complain-warning"></span>
-                    <span class="complain__text">Пожаловаться на пользователя</span>
+                    <?if ($curUserId != $arResult['OWNER']['ID']):?>
+                        <span class="complain-warning"></span>
+                        <span class="complain__text">Пожаловаться на пользователя</span>
+                    <?endif;?>
                 </div>
                 <div class="card-description">
                     <h4 class="card-description__title">Характеристики</h4>
