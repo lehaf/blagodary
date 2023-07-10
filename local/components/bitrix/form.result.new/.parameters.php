@@ -84,6 +84,20 @@ $arComponentParameters = array(
 			"PARENT" => "VISUAL",
 		),
 
+        "FORM_TITLE" => array(
+            "NAME" => 'Заголовок формы',
+            "TYPE" => "TEXT",
+            "DEFAULT" => "Форма обратной связи",
+            "PARENT" => "VISUAL",
+        ),
+
+        "FORM_CLASS" => array(
+            "NAME" => 'Класс тега form',
+            "TYPE" => "TEXT",
+            "DEFAULT" => "",
+            "PARENT" => "VISUAL",
+        ),
+
 		"CACHE_TIME" => array("DEFAULT" => "3600"),
 	),
 );

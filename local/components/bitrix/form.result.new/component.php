@@ -426,16 +426,15 @@ if (CModule::IncludeModule("form"))
 
 		if ($arResult["arForm"]["USE_CAPTCHA"] == "Y") $arResult["CAPTCHACode"] = $APPLICATION->CaptchaGetCode();
 
-		// define variables to assign
+		$formClassAttr = !empty($arParams["FORM_CLASS"]) ? "class='$arParams[FORM_CLASS]'" : '';
 		$arResult = array_merge(
 			$arResult,
 			array(
 				"isFormNote"			=> $arResult["FORM_NOTE"] <> ''? "Y" : "N", // flag "is there a form note"
 				"isAccessFormParams"	=> $arResult["F_RIGHT"] >= 25 ? "Y" : "N", // flag "does current user have access to form params"
 				"isStatisticIncluded"	=> CModule::IncludeModule('statistic') ? "Y" : "N", // flag "is statistic module included"
-
 				"FORM_HEADER" => sprintf( // form header (<form> tag and hidden inputs)
-					"<form class='popUp-form' name=\"%s\" action=\"%s\" method=\"%s\" enctype=\"multipart/form-data\">",
+					"<form $formClassAttr name=\"%s\" action=\"%s\" method=\"%s\" enctype=\"multipart/form-data\">",
 					$arResult["arForm"]["SID"], POST_FORM_ACTION_URI, "POST"
 				).$res .= bitrix_sessid_post().'<input type="hidden" name="WEB_FORM_ID" value="'.$arParams['WEB_FORM_ID'].'" />',
 

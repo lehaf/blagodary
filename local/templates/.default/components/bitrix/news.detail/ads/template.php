@@ -154,7 +154,7 @@ $this->setFrameMode(true);
                         </div>
                     <?endif;?>
                 </div>
-                <div class="complain">
+                <div class="complain <?=!empty($curUserId) ? 'complaint-modal' : 'sign-in-modal'?>">
                     <span class="complain-warning"></span>
                     <span class="complain__text">Пожаловаться на пользователя</span>
                 </div>
@@ -269,41 +269,3 @@ $this->setFrameMode(true);
         </div>
     </div>
 <?endif;?>
-
-<div class="popUp popUp-complain">
-    <h5 class="popUp__title">Пожаловаться на пользователя</h5>
-    <span class="modal-cross">
-            <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-        </span>
-    <form action="#" class="complain-form">
-        <div class="form-group">
-            <label class="complain-form-label">Причина жалобы:</label>
-            <div class="form-group-wrapper">
-                <div class="form-group__item radio-btn">
-                    <label for="value-1">Вариант 1</label>
-                    <input type="radio" name="complain" checked id="value-1">
-                </div>
-                <div class="form-group__item radio-btn">
-                    <label for="value-2">Вариант 2 с длинным названием причины жалобы на пользователя
-                        в две или три строки</label>
-                    <input type="radio" name="complain" id="value-2">
-                </div>
-                <div class="form-group__item radio-btn">
-                    <label for="value-3">Вариант 3</label>
-                    <input type="radio" name="complain" id="value-3">
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="complain-form-label">Сообщение:</label>
-            <label>
-                <textarea placeholder="Текст сообщения."></textarea>
-            </label>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn-bg popUp-complain-btn">Отправить</button>
-        </div>
-    </form>
-</div>

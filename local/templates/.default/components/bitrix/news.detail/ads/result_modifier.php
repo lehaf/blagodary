@@ -61,4 +61,7 @@ if (!empty($arResult)) {
 
     $obViewedGoods = new YouWatchBefore();
     $obViewedGoods->setCookie($arResult['ID']);
+
+
+    $this->getComponent()->setResultCacheKeys(['OWNER']);
 }

@@ -39,7 +39,7 @@ $this->setFrameMode(true);
     Array(
         "AJAX_MODE" => "N",	// Включить режим AJAX
         "SEF_MODE" => "N",	// Включить поддержку ЧПУ
-        "WEB_FORM_ID" => "1",	// ID веб-формы
+        "WEB_FORM_ID" => "SUPPORT",	// ID веб-формы
         "RESULT_ID" => "",	// ID результата
         "START_PAGE" => "new",	// Начальная страница
         "SHOW_LIST_PAGE" => "N",	// Показывать страницу со списком результатов
@@ -66,6 +66,8 @@ $this->setFrameMode(true);
         "COMPONENT_TEMPLATE" => ".default",
         "AJAX_OPTION_ADDITIONAL" => "",	// Дополнительный идентификатор
         "NAME_TEMPLATE" => "",
+        "FORM_CLASS" => "popUp-form",
+        "FORM_TITLE" => "Вам выставлена оценка. Оцените пользователя",
         "VARIABLE_ALIASES" => array(
             "action" => "action",
         )

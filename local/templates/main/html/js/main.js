@@ -469,7 +469,7 @@ $('.total-rating').on('click', function () {
     $('.popUp-grade').addClass("active")
 });
 
-$('.complain').on('click', function () {
+$('.complaint-modal').on('click', function () {
     $('.substrate').addClass("active")
     $('.popUp-complain').addClass("active")
 });

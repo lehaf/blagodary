@@ -15,7 +15,7 @@ $this->setFrameMode(true);
 $this->addExternalJs($this->GetFolder().'/review.js');
 ?>
 <?if (!empty($arResult['REVIEWS'])):?>
-    <p class="subtitle">Вам выставлена оценка. Оцените пользователя:</p>
+    <p class="subtitle"><?=!empty($arParams['FORM_TITLE']) ? $arParams['FORM_TITLE'] : ''?>:</p>
     <div class="ads-ratings">
         <?foreach ($arResult['REVIEWS'] as $userId => $arReview):?>
             <div class="ads-ratings__item">
