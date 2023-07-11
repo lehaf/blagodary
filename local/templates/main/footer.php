@@ -143,198 +143,31 @@ global $USER;
             </svg>
         </span>
         </div>
-        <ul>
-            <li class="category-list__item active"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
-                    </svg>
-                    Все категории
-                </a></li>
-            <li class="category-list__item">
-                <a href="#" class="parent">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-2"></use>
-                    </svg>
-                    Бытовая техника</a>
-                <ul>
-                    <li><a href="#" class="back">Назад
-                            <span class="popUp-cross mobile_menu__cross">
-            <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-        </span>
-                        </a></li>
-                    <li class="category-list__item-active"><a href="#">Все объявления категории</a></li>
-                    <li>
-                        <div class="menu-subcategory">Комплектующие</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">SSD Блоки питания</a>
-                            <a href="#">Аккумуляторы</a>
-                            <a href="#">Видеокарты</a>
-                            <a href="#">Кулеры</a>
-                            <a href="#">Материнские платы</a>
-                            <a href="#">Оперативная память</a>
-                            <a href="#">Оптические приводы</a>
-                            <a href="#">Процессоры</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="menu-subcategory">Компьютеры / системные блоки</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">Компьютеры</a>
-                            <a href="#">Микрокомпьютеры</a>
-                            <a href="#">Моноблоки</a>
-                            <a href="#">Мониторы</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="menu-subcategory">Периферия и аксессуары</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">IP-камеры</a>
-                            <a href="#">USB Flash</a>
-                            <a href="#">USB-хабы</a>
-                            <a href="#">Боксы для жестких дисков</a>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="category-list__item">
-                <a href="#" class="parent">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-3"></use>
-                    </svg>
-                    Компьютерная техника
-                </a>
-                <ul>
-                    <li><a href="#" class="back">Назад
-                            <span class="popUp-cross mobile_menu__cross">
-                             <svg>
-                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
-            </svg>
-                        </span>
-                        </a></li>
-                    <li class="category-list__item-active"><a href="#">Все объявления категории</a></li>
-                    <li>
-                        <div class="menu-subcategory">Комплектующие</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">SSD Блоки питания</a>
-                            <a href="#">Аккумуляторы</a>
-                            <a href="#">Видеокарты</a>
-                            <a href="#">Кулеры</a>
-                            <a href="#">Материнские платы</a>
-                            <a href="#">Оперативная память</a>
-                            <a href="#">Оптические приводы</a>
-                            <a href="#">Процессоры</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="menu-subcategory">Компьютеры / системные блоки</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">Компьютеры</a>
-                            <a href="#">Микрокомпьютеры</a>
-                            <a href="#">Моноблоки</a>
-                            <a href="#">Мониторы</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="menu-subcategory">Периферия и аксессуары</div>
-                        <div class="menu-subcategory-content">
-                            <a href="#">IP-камеры</a>
-                            <a href="#">USB Flash</a>
-                            <a href="#">USB-хабы</a>
-                            <a href="#">Боксы для жестких дисков</a>
-                        </div>
-                    </li>
-                </ul>
-            </li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-4"></use>
-                    </svg>
-                    Телефоны и планшеты
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-5"></use>
-                    </svg>
-                    Электроника
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-6"></use>
-                    </svg>
-                    Женский гардероб
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-7"></use>
-                    </svg>
-                    Мужской гардероб
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-8"></use>
-                    </svg>
-                    Красота и здоровье
-                </a></li>
-            <li class="category-list__item no-fill"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-9"></use>
-                    </svg>
-                    Все для детей и мам
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-10"></use>
-                    </svg>
-                    Мебель
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-11"></use>
-                    </svg>
-                    Все для дома
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-12"></use>
-                    </svg>
-                    Ремонт и стройка
-                </a></li>
-            <li class="category-list__item no-fill"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-13"></use>
-                    </svg>
-                    Сад и огород</a></li>
-            <li class="category-list__item no-fill"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-14"></use>
-                    </svg>
-                    Хобби, спорт и туризм
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-15"></use>
-                    </svg>
-                    Свадьба и праздники
-                </a></li>
-            <li class="category-list__item no-fill"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-16"></use>
-                    </svg>
-                    Животные
-                </a></li>
-            <li class="category-list__item"><a href="#">
-                    <svg>
-                        <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-17"></use>
-                    </svg>
-                    Прочее
-                </a>
-            </li>
-        </ul>
+        <? $APPLICATION->IncludeComponent(
+            "bitrix:catalog.section.list",
+            "all-menu-mobile",
+            Array(
+                "VIEW_MODE" => "TEXT",
+                "SHOW_PARENT_NAME" => "Y",
+                "IBLOCK_TYPE" => "products",
+                "IBLOCK_ID" => ADS_IBLOCK_ID,
+                "SECTION_URL" => "",
+                "COUNT_ELEMENTS" => "Y",
+                "TOP_DEPTH" => "3",
+                "SECTION_FIELDS" => "",
+                "SECTION_USER_FIELDS" => "",
+                "ADD_SECTIONS_CHAIN" => "Y",
+                "CACHE_TYPE" => "A",
+                "CACHE_TIME" => "36000000",
+                "CACHE_NOTES" => "Y",
+                "CACHE_GROUPS" => "Y",
+                "CACHE_FILTER" => "Y",
+                "ALL_CATEGORIES_LINK" => "/"
+            )
+        );?>
+
     </div>
 </div>
-
 <div class="mobile_menu_overlay"></div>
 
 <div class="popUp popUp-reset-mail">
@@ -377,8 +210,8 @@ global $USER;
             </div>
             <div class="registration-content">
                 <?$APPLICATION->IncludeComponent(
-	"bitrix:main.register", 
-	"register", 
+	"bitrix:main.register",
+	"register",
                 array(
                     "AUTH" => "Y",
                     "REQUIRED_FIELDS" => array(

@@ -1,0 +1,9 @@
+/*.mobile_menu_container ul li a.active {
+    background: white;
+    color: #059ea3 !important;
+    font-weight: bold;
+}*/
+
+.mobile_menu__cross {
+    cursor: pointer;
+}
