@@ -51,7 +51,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                             <div class="profile-error__message">
                                 <h4 class="title-block">
                                 <span>У вас нет подписки.<br>
-Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
+                                Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
                                 </h4>
                             </div>
                             <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
@@ -62,7 +62,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                         <h4 class="title-block">Текущая подписка действительна до 26.09.2022 16:50 и будет
                             продлена автоматически 27.09.2022 в 16:50</h4>
                         <a href="#" class="btn btn-red">
-                            <svg><use xlink:href="assets/img/sprites/sprite.svg#cross-cart"></use></svg>
+                            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
                             Отменить подписку</a>
                     </div>
                     <div class="subscription-content-active">
@@ -84,7 +84,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                         </div>
                         <h4 class="title-block">Платная подписка будет продлена автоматически 27.09.2022 16:50</h4>
                         <a href="#" class="btn btn-red">
-                            <svg><use xlink:href="assets/img/sprites/sprite.svg#cross-cart"></use></svg>
+                            <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-cart"></use></svg>
                             Отменить подписку</a>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                     <div class="pagination">
                         <div class="pagination-arrow-left">
                             <svg>
-                                <use xlink:href="assets/img/sprites/sprite.svg#arrow-prev"></use>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
                             </svg>
                         </div>
                         <ul class="pagination-list">
@@ -149,7 +149,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                         </ul>
                         <div class="pagination-arrow-right active">
                             <svg>
-                                <use xlink:href="assets/img/sprites/sprite.svg#arrow-next"></use>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
                             </svg>
                         </div>
                     </div>

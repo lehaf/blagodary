@@ -42,9 +42,14 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
             <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
             <div class="referral-program">
                 <div class="referral-program__description">Ваша реферальная сылка</div>
-                <input type="text" class="referral-program__link" placeholder="site.by/jsevneoiveroivneovnrvevev63424213738AAAAA" value="site.by/jsevneoiveroivneovnrvevev63424213738AAAAA" disabled>
+                <input type="text"
+                       class="referral-program__link"
+                       placeholder="site.by/jsevneoiveroivneovnrvevev63424213738AAAAA"
+                       value="site.by/jsevneoiveroivneovnrvevev63424213738AAAAA"
+                       disabled
+                >
                 <button class="btn-bg referral-link-btn">Скопировать ссылку
-                    <svg><use xlink:href="assets/img/sprites/sprite.svg#referral-link"></use></svg>
+                    <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#referral-link"></use></svg>
                 </button>
             </div>
             <div class="description-referral-program">
