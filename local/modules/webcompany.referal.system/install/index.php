@@ -4,6 +4,10 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
 class webcompany_referal_system extends CModule
 {
+    public string $componentNameSpace = 'webcompany';
+    public array $arModuleComponents = [
+        "subscription"
+    ];
     public function __construct()
     {
         $this->MODULE_VERSION = '1.0.0';
@@ -18,11 +22,21 @@ class webcompany_referal_system extends CModule
 
     public function doInstall()
     {
+        CopyDirFiles($_SERVER['DOCUMENT_ROOT']."/local/modules/$this->MODULE_ID/install/components",
+            $_SERVER['DOCUMENT_ROOT']."/local/components",
+            true,
+            true
+        );
         ModuleManager::registerModule($this->MODULE_ID);
     }
 
     public function doUninstall()
     {
+        foreach ($this->arModuleComponents as $componentName) {
+            if (strlen($componentName) > 0) {
+                DeleteDirFilesEx("/local/components/".$this->componentNameSpace.'/'.$componentName.'/');
+            }
+        }
         ModuleManager::unRegisterModule($this->MODULE_ID);
     }
 
