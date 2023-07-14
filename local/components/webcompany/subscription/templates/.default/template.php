@@ -19,48 +19,57 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
 </div>
 <div class="subscription-content">
     <div class="profile-current-subscription active">
-        <div class="subscription-content-active">
-            <div class="no-subscription">
-                <div class="profile-error__message">
-                    <h4 class="title-block">
-                        <span>У вас нет подписки.<br>
-                        Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
-                    </h4>
+        <?if ($arResult['SUBSCRIPTION']['ACTIVE'] === true):?>
+            <?if ($arResult['SUBSCRIPTION']['FREE'] === true):?>
+                <div class="current-subscription p-30">
+                    <h4 class="title-block">Текущая подписка действительна до 26.09.2022 16:50 и будет
+                        продлена автоматически 27.09.2022 в 16:50</h4>
+                    <button id="subscriptionAction" data-action="unsubscribe" class="btn btn-red">
+                        <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
+                        Отменить подписку
+                    </button>
                 </div>
-                <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
-                <a href="?subscription=true" class="btn-bg">Оформить подписку</a>
-            </div>
-        </div>
-        <div class="current-subscription p-30">
-            <h4 class="title-block">Текущая подписка действительна до 26.09.2022 16:50 и будет
-                продлена автоматически 27.09.2022 в 16:50</h4>
-            <a href="#" class="btn btn-red">
-                <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
-                Отменить подписку
-            </a>
-        </div>
-        <div class="subscription-content-active">
-            <div class="no-subscription">
-                <div class="profile-error__message">
-                    <h4 class="title-block">
-                        Текущая подписка действительна до 26.09.2022 16:50.
-                    </h4>
+            <?else:?>
+                <div class="current-subscription">
+                    <div class="profile-error__message">
+                        <h4 class="title-block">
+                            Текущая Подписка Бесплатная (по реферальной программе) до 26.09.2022 16:50
+                        </h4>
+                    </div>
+                    <h4 class="title-block">Платная подписка будет продлена автоматически 27.09.2022 16:50</h4>
+                    <button id="subscriptionAction" data-action="unsubscribe" class="btn btn-red">
+                        <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
+                        Отменить подписку</button>
                 </div>
-                <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
-                <a href="#" class="btn-bg">Оформить подписку</a>
-            </div>
-        </div>
-        <div class="current-subscription">
-            <div class="profile-error__message">
-                <h4 class="title-block">
-                    Текущая Подписка Бесплатная (по реферальной программе) до 26.09.2022 16:50
-                </h4>
-            </div>
-            <h4 class="title-block">Платная подписка будет продлена автоматически 27.09.2022 16:50</h4>
-            <a href="#" class="btn btn-red">
-                <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
-                Отменить подписку</a>
-        </div>
+            <?endif?>
+        <?else:?>
+            <?if ($arResult['SUBSCRIPTION']['FREE'] === true):?>
+                <div class="subscription-content-active">
+                    <div class="no-subscription">
+                        <div class="profile-error__message">
+                            <h4 class="title-block">
+                                Текущая подписка действительна до 26.09.2022 16:50.
+                            </h4>
+                        </div>
+                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                        <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
+                    </div>
+                </div>
+            <?else:?>
+                <div class="subscription-content-active">
+                    <div class="no-subscription">
+                        <div class="profile-error__message">
+                            <h4 class="title-block">
+                                <span>У вас нет подписки.<br>
+                                Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
+                            </h4>
+                        </div>
+                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                        <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
+                    </div>
+                </div>
+            <?endif?>
+        <?endif;?>
     </div>
     <div class="history-subscription">
         <ul class="history-subscription-list">

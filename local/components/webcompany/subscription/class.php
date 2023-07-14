@@ -25,7 +25,7 @@ class Subscription extends \CBitrixComponent
         parent::__construct($component);
     }
 
-    private function userSubscriptionIsActive() : bool
+    private function userSubscriptionIsActive() : void
     {
         if (!empty($this->userId)) {
             $arUser = \Bitrix\Main\UserTable::getList(array(
@@ -41,7 +41,13 @@ class Subscription extends \CBitrixComponent
             $isActive = $arUser['UF_SUBSCRIPTION'] == true;
         }
 
-        return !empty($isActive) ? $isActive : false;
+        if (!empty($isActive)) {
+            $this->arResult['SUBSCRIPTION']['ACTIVE'] = true;
+            $this->arResult['SUBSCRIPTION']['FREE'] = true;
+        } else {
+            $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
+        }
+
     }
     private function createOrder() : void
     {
@@ -84,7 +90,9 @@ class Subscription extends \CBitrixComponent
                     $token = $payResult->getPsData()['PS_INVOICE_ID'];
                     $this->userSession->set('token', $token);
                 }
-                LocalRedirect($payResult->getPaymentUrl(),true);
+                ob_end_clean();
+                echo json_encode(['redirect' => $payResult->getPaymentUrl()]); die();
+//                LocalRedirect($payResult->getPaymentUrl(),true);
             }
         }
     }
@@ -103,11 +111,10 @@ class Subscription extends \CBitrixComponent
                 $this->userSession->remove('subscriptionOrderId');
                 $user = new \CUser;
                 $fields = Array(
-                    "UF_SUBSCRIPTION" => 'Y',
-                    "NAME" => 'admin',
+                    "UF_SUBSCRIPTION" => 'Y'
                 );
                 $user->Update($this->userId, $fields);
-                LocalRedirect('/');
+                $_GET['clear_cache'] = 'Y';
             } else {
                 $this->userSession->remove('token');
                 unset($_GET['token']);
@@ -122,15 +129,35 @@ class Subscription extends \CBitrixComponent
         $this->initPaySystem();
     }
 
+    public function unsubscribeUser() : void
+    {
+        if (!empty($this->userId)) {
+            $user = new \CUser;
+            $fields = Array(
+                "UF_SUBSCRIPTION" => false
+            );
+            $user->Update($this->userId, $fields);
+            ob_end_clean();
+            echo json_encode(['reload' => true]); die();
+        }
+    }
+
+    public function prepareResult() : void
+    {
+        $this->userSubscriptionIsActive();
+    }
+
     public function executeComponent() : void
     {
-        if ($_GET['subscription'] == true) {
+        if ($_GET['token']) $this->checkPayment();
+        if ($_POST['action'] === 'subscribe') {
             $this->makePayment();
         } else {
-            if ($this->userSubscriptionIsActive()) {
-                pr(123);
+            if ($_POST['action'] === 'unsubscribe'){
+                $this->unsubscribeUser();
             }
         }
+        $this->prepareResult();
         $this->includeComponentTemplate();
     }
 }
