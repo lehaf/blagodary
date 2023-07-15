@@ -40,6 +40,7 @@ Subscription.prototype.sendData = function (data) {
         return response.json()
     }).then(function(json) {
         if (json) {
+            console.log(json);
             if (json.redirect) location = json.redirect;
             if (json.reload) location.reload();
         }

@@ -44,7 +44,9 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                 "webcompany:subscription",
                 "",
                 array(
-
+                    "COMPONENT_TEMPLATE" => ".default",
+                    "PAGE_RECORDS_COUNT" => "1",
+                    "MAX_PAGE_COUNT" => "3"
                 )
             );?>
         </div>

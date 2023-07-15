@@ -11,6 +11,7 @@ class Subscription extends \CBitrixComponent
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';
+    private string $paginationParam = 'orders_page';
     private int $paymentId = 2;
     private object $userSession;
 
@@ -47,6 +48,72 @@ class Subscription extends \CBitrixComponent
         } else {
             $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
         }
+    }
+
+    private function getUserSubscriptionHistory(int $ordersLimit, int $ordersOffset = 0, $curPage = 1) : void
+    {
+        if (!empty($this->userId)) {
+            $userOrders = \Bitrix\Sale\Order::getList([
+                'order' => ['ID' => 'DESC'],
+                'select' => ['ID','DATE_PAYED'],
+                'filter' => [
+                    "USER_ID" => $this->userId, //по пользователю
+//                    "STATUS_ID" =>$statusId, //по статусу
+                    "PAYED" => "Y", //оплаченные
+                    "CANCELED" =>"N", //не отмененные
+                ],
+                'limit' => $ordersLimit,
+                'offset' => $ordersOffset,
+                'count_total' => true,
+                'cache' => [
+                    'ttl' => 360000,
+                    'cache_joins' => true
+                ]
+            ]);
+
+            $orders = $userOrders->fetchAll();
+            if (!empty($orders)) {
+                foreach ($orders as $order) {
+                    $unixTime = strtotime($order['DATE_PAYED']);
+                    $this->arResult['ORDER_HISTORY'][] = [
+                        'DATE_PAYED' => date('d.m.Y',$unixTime),
+                        'DATE_SUBSCRIPTION_FROM' => date('d.m.Y H:i',$unixTime),
+                        'DATE_SUBSCRIPTION_TO' => date('d.m.Y H:i',$unixTime+strtotime("+7 days"))
+                    ];
+                }
+                $this->setPaginationParams($userOrders->getCount(), $ordersLimit, $curPage);
+            }
+        }
+    }
+
+    private function setPaginationParams(int $ordersCount, int $ordersLimit, int $curPage) : void
+    {
+        $countPages = round($ordersCount/$ordersLimit);
+        $maxPageLinks = $this->arParams['MAX_PAGE_COUNT'];
+        $pageOffset = floor($maxPageLinks/2);
+
+        $this->arResult['ORDER_PAGINATION'] = [
+            'CUR_PAGE' => $curPage
+        ];
+
+        if ($curPage > 1) $this->arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage-1;
+        if ($curPage < $countPages) $this->arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage+1;
+
+        if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks) {
+            $this->arResult['ORDER_PAGINATION']['PAGES'][1] = '?'.$this->paginationParam.'='.'1';
+            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages/2);
+        }
+
+        $pageStart = $curPage <= 1 ? 1 : $curPage - $pageOffset;
+        $pageEnd = $curPage == $countPages ? $countPages : $curPage + $pageOffset;
+        for ($i = $pageStart; $i <= $pageEnd; $i++) {;
+            $this->arResult['ORDER_PAGINATION']['PAGES'][$i] = '?'.$this->paginationParam.'='.$i;
+        }
+
+        if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages) {
+            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages/2);
+            $this->arResult['ORDER_PAGINATION']['PAGES'][$countPages] = '?'.$this->paginationParam.'='.$countPages;
+        }
 
     }
     private function createOrder() : void
@@ -75,6 +142,13 @@ class Subscription extends \CBitrixComponent
         }
     }
 
+    private function sendJsonResponse(array $array) : void
+    {
+        ob_end_clean();
+        echo json_encode($array);
+        die();
+    }
+
     private function initPaySystem() : void
     {
         if (!empty($this->userSession) && $this->userSession->has('subscriptionOrderId')) {
@@ -90,9 +164,7 @@ class Subscription extends \CBitrixComponent
                     $token = $payResult->getPsData()['PS_INVOICE_ID'];
                     $this->userSession->set('token', $token);
                 }
-                ob_end_clean();
-                echo json_encode(['redirect' => $payResult->getPaymentUrl()]); die();
-//                LocalRedirect($payResult->getPaymentUrl(),true);
+                $this->sendJsonResponse(['redirect' => $payResult->getPaymentUrl()]);
             }
         }
     }
@@ -137,23 +209,26 @@ class Subscription extends \CBitrixComponent
                 "UF_SUBSCRIPTION" => false
             );
             $user->Update($this->userId, $fields);
-            ob_end_clean();
-            echo json_encode(['reload' => true]); die();
+            $this->sendJsonResponse(['reload' => true]);
         }
     }
 
     public function prepareResult() : void
     {
         $this->userSubscriptionIsActive();
+
+        $curOrdersPage = !empty($_GET[$this->paginationParam]) ? $_GET[$this->paginationParam] : 1;
+        $ordersOffset = $curOrdersPage !== 0 ? $this->arParams['PAGE_RECORDS_COUNT'] * $curOrdersPage - $this->arParams['PAGE_RECORDS_COUNT'] : 0;
+        $this->getUserSubscriptionHistory($this->arParams['PAGE_RECORDS_COUNT'], $ordersOffset, $curOrdersPage);
     }
 
     public function executeComponent() : void
     {
-        if ($_GET['token']) $this->checkPayment();
-        if ($_POST['action'] === 'subscribe') {
+        if (!empty($_GET['token'])) $this->checkPayment();
+        if ($_POST['component'] === $this->getName() && $_POST['action'] === 'subscribe') {
             $this->makePayment();
         } else {
-            if ($_POST['action'] === 'unsubscribe'){
+            if ($_POST['component'] === $this->getName() && $_POST['action'] === 'unsubscribe'){
                 $this->unsubscribeUser();
             }
         }
