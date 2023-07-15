@@ -46,7 +46,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
                 array(
                     "COMPONENT_TEMPLATE" => ".default",
                     "PAGE_RECORDS_COUNT" => "1",
-                    "MAX_PAGE_COUNT" => "3"
+                    "MAX_PAGE_COUNT" => "1"
                 )
             );?>
         </div>

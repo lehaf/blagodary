@@ -90,7 +90,7 @@ class Subscription extends \CBitrixComponent
     {
         $countPages = round($ordersCount/$ordersLimit);
         $maxPageLinks = $this->arParams['MAX_PAGE_COUNT'];
-        $pageOffset = floor($maxPageLinks/2);
+        $pageOffset = $maxPageLinks != 1 ? floor($maxPageLinks/2) : $maxPageLinks;
 
         $this->arResult['ORDER_PAGINATION'] = [
             'CUR_PAGE' => $curPage
@@ -99,19 +99,21 @@ class Subscription extends \CBitrixComponent
         if ($curPage > 1) $this->arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage-1;
         if ($curPage < $countPages) $this->arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage+1;
 
-        if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks) {
+        if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks && $curPage-1 != 2) {
             $this->arResult['ORDER_PAGINATION']['PAGES'][1] = '?'.$this->paginationParam.'='.'1';
-            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages/2);
+            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.floor($curPage/2);
         }
 
-        $pageStart = $curPage <= 1 ? 1 : $curPage - $pageOffset;
+        $pageStart = ($curPage - $pageOffset) < 1 || ($curPage - $pageOffset) >= ($countPages - $maxPageLinks) ? 1 : $curPage - $pageOffset;
         $pageEnd = $curPage == $countPages ? $countPages : $curPage + $pageOffset;
-        for ($i = $pageStart; $i <= $pageEnd; $i++) {;
+        if ($pageEnd === $countPages) $pageStart = ($countPages - $maxPageLinks) <= 0 ? 1 : $countPages - $maxPageLinks;
+        if ($pageStart === 1) $pageEnd = $maxPageLinks;
+        for ($i = $pageStart; $i <= $pageEnd && $i <= $countPages; $i++) {
             $this->arResult['ORDER_PAGINATION']['PAGES'][$i] = '?'.$this->paginationParam.'='.$i;
         }
 
-        if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages) {
-            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages/2);
+        if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages && $curPage+1 != $countPages-1) {
+            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages+$curPage/2);
             $this->arResult['ORDER_PAGINATION']['PAGES'][$countPages] = '?'.$this->paginationParam.'='.$countPages;
         }
 
