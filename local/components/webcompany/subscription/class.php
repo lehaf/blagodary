@@ -30,21 +30,22 @@ class Subscription extends \CBitrixComponent
     {
         if (!empty($this->userId)) {
             $arUser = \Bitrix\Main\UserTable::getList(array(
-                'select' => ['UF_SUBSCRIPTION'],
+                'select' => ['UF_SUBSCRIPTION','UF_FREE_SUBSCRIPTION'],
                 'filter' => ['ID' => $this->userId],
                 'limit' => 1,
-                'cache' => [
-                    'ttl' => 360000,
-                    'cache_joins' => true
-                ]
+//                'cache' => [
+//                    'ttl' => 360000,
+//                    'cache_joins' => true
+//                ]
             ))->fetch();
 
-            $isActive = $arUser['UF_SUBSCRIPTION'] == true;
+            $isSubscriptionActive = $arUser['UF_SUBSCRIPTION'] == true;
+            $isSubscriptionFree = $arUser['UF_FREE_SUBSCRIPTION'] == true;
         }
 
-        if (!empty($isActive)) {
-            $this->arResult['SUBSCRIPTION']['ACTIVE'] = true;
-            $this->arResult['SUBSCRIPTION']['FREE'] = true;
+        if (!empty($isSubscriptionActive)) {
+            $this->arResult['SUBSCRIPTION']['ACTIVE'] = $isSubscriptionActive;
+            $this->arResult['SUBSCRIPTION']['FREE'] = $isSubscriptionFree;
         } else {
             $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
         }

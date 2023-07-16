@@ -525,15 +525,15 @@ if (subscriptionSwitch) {
 }
 
 
-$('.referral-link-btn').on('click', function () {
-    let copyText = document.querySelector(".referral-program__link");
-    copyText.value;
-    navigator.clipboard.writeText(copyText.value);
-    $('.referral-link-btn').addClass("copy");
-    setTimeout(()=>{
-        $('.referral-link-btn').removeClass("copy")
-    }, 1000)
-});
+// $('.referral-link-btn').on('click', function () {
+//     let copyText = document.querySelector(".referral-program__link");
+//     copyText.value;
+//     navigator.clipboard.writeText(copyText.value);
+//     $('.referral-link-btn').addClass("copy");
+//     setTimeout(()=>{
+//         $('.referral-link-btn').removeClass("copy")
+//     }, 1000)
+// });
 
 
 let dpMin, dpMax;
