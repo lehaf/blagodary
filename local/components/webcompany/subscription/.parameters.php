@@ -7,11 +7,5 @@ $arComponentParameters = array(
             "TYPE" => "NUMBER",
             "DEFAULT" => 5,
         ),
-        "MAX_PAGE_COUNT" => array(
-            "PARENT" => "VISUAL",
-            "NAME" => "Максимальное кол-во видимых ссылок-страниц",
-            "TYPE" => "NUMBER",
-            "DEFAULT" => 5,
-        ),
     ),
 );

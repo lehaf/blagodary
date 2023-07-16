@@ -88,35 +88,40 @@ class Subscription extends \CBitrixComponent
 
     private function setPaginationParams(int $ordersCount, int $ordersLimit, int $curPage) : void
     {
-        $countPages = round($ordersCount/$ordersLimit);
-        $maxPageLinks = $this->arParams['MAX_PAGE_COUNT'];
-        $pageOffset = $maxPageLinks != 1 ? floor($maxPageLinks/2) : $maxPageLinks;
+        $countPages = ceil($ordersCount/$ordersLimit);
+        if ($countPages > 1) {
+            $maxPageLinks = 5;
+            $pageOffset = floor($maxPageLinks/2);
 
-        $this->arResult['ORDER_PAGINATION'] = [
-            'CUR_PAGE' => $curPage
-        ];
+            $this->arResult['ORDER_PAGINATION'] = [
+                'CUR_PAGE' => $curPage
+            ];
 
-        if ($curPage > 1) $this->arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage-1;
-        if ($curPage < $countPages) $this->arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage+1;
+            if ($curPage > 1) $this->arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage-1;
+            if ($curPage < $countPages) $this->arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage+1;
 
-        if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks && $curPage-1 != 2) {
-            $this->arResult['ORDER_PAGINATION']['PAGES'][1] = '?'.$this->paginationParam.'='.'1';
-            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.floor($curPage/2);
+            if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks && $curPage-1 != 2) {
+                $this->arResult['ORDER_PAGINATION']['PAGES'][1] = '?'.$this->paginationParam.'='.'1';
+                $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.floor($curPage/2);
+            }
+
+            $pageStart = ($curPage - $pageOffset) < 1 || ($curPage - $pageOffset) >= ($countPages - $maxPageLinks) ? 1 : $curPage - $pageOffset;
+            if ($curPage == $countPages) {
+                $pageEnd = $countPages;
+            } else {
+                $pageEnd = $curPage + $pageOffset;
+            }
+            if ($pageEnd === $countPages) $pageStart = ($countPages - $maxPageLinks) <= 0 ? 1 : $countPages - $maxPageLinks;
+            if ($pageStart === 1 && $maxPageLinks >= $countPages) $pageEnd = $maxPageLinks;
+            for ($i = $pageStart; $i <= $pageEnd && $i <= $countPages; $i++) {
+                $this->arResult['ORDER_PAGINATION']['PAGES'][$i] = '?'.$this->paginationParam.'='.$i;
+            }
+
+            if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages && $curPage+1 != $countPages-1) {
+                $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages+$curPage/2);
+                $this->arResult['ORDER_PAGINATION']['PAGES'][$countPages] = '?'.$this->paginationParam.'='.$countPages;
+            }
         }
-
-        $pageStart = ($curPage - $pageOffset) < 1 || ($curPage - $pageOffset) >= ($countPages - $maxPageLinks) ? 1 : $curPage - $pageOffset;
-        $pageEnd = $curPage == $countPages ? $countPages : $curPage + $pageOffset;
-        if ($pageEnd === $countPages) $pageStart = ($countPages - $maxPageLinks) <= 0 ? 1 : $countPages - $maxPageLinks;
-        if ($pageStart === 1) $pageEnd = $maxPageLinks;
-        for ($i = $pageStart; $i <= $pageEnd && $i <= $countPages; $i++) {
-            $this->arResult['ORDER_PAGINATION']['PAGES'][$i] = '?'.$this->paginationParam.'='.$i;
-        }
-
-        if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages && $curPage+1 != $countPages-1) {
-            $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages+$curPage/2);
-            $this->arResult['ORDER_PAGINATION']['PAGES'][$countPages] = '?'.$this->paginationParam.'='.$countPages;
-        }
-
     }
     private function createOrder() : void
     {
@@ -235,6 +240,8 @@ class Subscription extends \CBitrixComponent
             }
         }
         $this->prepareResult();
+        if (!empty($_GET[$this->paginationParam]) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') ob_end_clean();
         $this->includeComponentTemplate();
+        if (!empty($_GET[$this->paginationParam]) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') die();
     }
 }
