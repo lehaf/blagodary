@@ -2,7 +2,8 @@
 
 namespace WebCompany;
 
-
+use Bitrix\Main\Application;
+use Bitrix\Main\Web\Cookie;
 
 class ReferralProgram extends \CBitrixComponent
 {
@@ -10,6 +11,7 @@ class ReferralProgram extends \CBitrixComponent
     private int $randomStringLength = 5;
     private string $subscriptionPagePath = '/personal/subscription/';
     private string $referralParam = 'referral';
+    private string $cookieName = 'referral_link';
 
     public function __construct($component = \null)
     {
@@ -17,6 +19,16 @@ class ReferralProgram extends \CBitrixComponent
         $this->userId = $USER->GetID();
 
         parent::__construct($component);
+    }
+
+    private function setLinkToCookie(string $cookieLink) : void
+    {
+        $context = Application::getInstance()->getContext();
+        if (empty($context->getRequest()->getCookie($this->cookieName))) {
+            $cookieLink = new Cookie($this->cookieName, $cookieLink);
+            $cookieLink->setDomain($_SERVER['SERVER_NAME']);
+            $context->getResponse()->addCookie($cookieLink);
+        }
     }
 
     public function generateRandomString( int $length = 8) : string
@@ -64,6 +76,7 @@ class ReferralProgram extends \CBitrixComponent
             }
 
             $this->arResult['REFERRAL_LINK'] = $this->getUserReferralLink($arUser['UF_REFERRAL_CODE']);
+            $this->setLinkToCookie($this->arResult['REFERRAL_LINK']);
 
             if (!empty($arUser['UF_USER_REFERRALS'])) {
                 $userReferrals = \Bitrix\Main\UserTable::getList(array(
