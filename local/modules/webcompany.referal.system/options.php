@@ -65,7 +65,7 @@ $tabControl->Begin();
                             <?elseif($arSetting['type'][0]=="text"):?>
                                 <input type="text" size="<?=$arSetting['type'][1]?>" maxlength="255" value="<?=$arSetting['default']?>" name="<?=$arSetting['id']?>">
                             <?elseif($arSetting['type'][0]=="number"):?>
-                                <input type="number" size="<?=$arSetting['type'][1]?>" maxlength="255" value="<?=$arSetting['default']?>" name="<?=$arSetting['id']?>">
+                                <input type="number" style="width:<?=$arSetting['type'][1]?>em" maxlength="255" value="<?=$arSetting['default']?>" name="<?=$arSetting['id']?>">
                             <?elseif($arSetting['type'][0]=="textarea"):?>
                                 <textarea rows="<?=$arSetting['type'][1]?>" cols="<?=$arSetting['type'][2]?>" name="<?=$arSetting['id']?>"><?=$arSetting['default']?></textarea>
                             <?elseif($arSetting['type'][0]=="selectbox"):?>
