@@ -16,7 +16,7 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
 $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 ?>
 <?if (!empty($arResult['ITEMS'])):?>
-    <?if (empty($arResult['BLOCKED'])):?>
+    <?if (empty($arResult['ACTIVE_SUBSCRIPTION'])):?>
         <div class="no-ads no-ads--active">
             <h4 class="title-block"><span>Ваши объявления не показываются. Необходимо оформить подписку.</span></h4>
             <a href="/personal/subscription/" class="btn-bg">Подписаться</a>

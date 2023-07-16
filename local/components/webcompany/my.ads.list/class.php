@@ -44,17 +44,23 @@ class AddElementForm extends \CBitrixComponent
         ))->fetch();
     }
 
-    private function userIsBlocked() : bool
+    private function checkUser() : bool
     {
-        $arUserInfo = $this->getUserInfo($this->curUserId,['BLOCKED','ADMIN_NOTES']);
+        $arUserInfo = UserTable::getList(array(
+            'select' => ['BLOCKED','ADMIN_NOTES','UF_SUBSCRIPTION'],
+            'filter' => ['ID' => $this->curUserId],
+            'limit' => 1
+        ))->fetch();
 
         if ($arUserInfo['BLOCKED'] === 'Y') {
             $this->arResult['BLOCKED'] = $arUserInfo['BLOCKED'];
             $this->arResult['BLOCKED_TEXT'] = $arUserInfo['ADMIN_NOTES'];
-            return true;
+            return false;
         }
 
-        return false;
+        if ($arUserInfo['UF_SUBSCRIPTION'] == true) $this->arResult['ACTIVE_SUBSCRIPTION'] = 'Y';
+
+        return true;
     }
 
     private function executeAction(string $action) : void
@@ -371,10 +377,13 @@ class AddElementForm extends \CBitrixComponent
 
     public function executeComponent() : void
     {
-        if ($this->userIsBlocked()) $this->includeComponentTemplate('blocked');
-        if ($this->getUserReviews($this->curUserId)) $this->includeComponentTemplate('review');
-        if ($this->isPostRequest() && !empty($_POST['action'])) {
-            $this->executeAction($_POST['action']);
+        if ($this->checkUser()) {
+            if ($this->getUserReviews($this->curUserId)) $this->includeComponentTemplate('review');
+            if ($this->isPostRequest() && !empty($_POST['action'])) {
+                $this->executeAction($_POST['action']);
+            }
+        } else {
+            $this->includeComponentTemplate('blocked');
         }
         $this->prepareResult();
         $this->includeComponentTemplate();
