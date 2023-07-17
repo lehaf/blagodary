@@ -69,8 +69,8 @@ $linkSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#referral-l
             <ul class="referral-result-list">
                 <?foreach ($arResult['REFERRAL_LIST'] as $referral):?>
                     <li class="referral-result-item">
-                        <div class="referral-result-item__data">26.09.2022</div>
-                        <div class="referral-result-item__user"><?=$referral?></div>
+                        <div class="referral-result-item__data"><?=$referral['DATE']?></div>
+                        <div class="referral-result-item__user"><?=$referral['NAME']?></div>
                     </li>
                 <?endforeach;?>
             </ul>

@@ -1,7 +1,7 @@
 <?php
-//подключаем основные классы для работы с модулем
-use Bitrix\Main\Localization\Loc;
+
 use Bitrix\Main\ModuleManager;
+
 class webcompany_referal_system extends CModule
 {
     public string $componentNameSpace = 'webcompany';
@@ -22,6 +22,17 @@ class webcompany_referal_system extends CModule
 
     public function doInstall()
     {
+        global $DB, $APPLICATION;
+        $this->errors = false;
+
+        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/local/modules/".$this->MODULE_ID."/install/db/mysql/install.sql");
+
+        if($this->errors !== false)
+        {
+            $APPLICATION->ThrowException(implode("", $this->errors));
+            return false;
+        }
+
 //        CopyDirFiles($_SERVER['DOCUMENT_ROOT']."/local/modules/$this->MODULE_ID/install/components",
 //            $_SERVER['DOCUMENT_ROOT']."/local/components",
 //            true,
@@ -32,6 +43,16 @@ class webcompany_referal_system extends CModule
 
     public function doUninstall()
     {
+        global $DB, $APPLICATION;
+        $this->errors = false;
+
+        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT']."/local/modules/".$this->MODULE_ID."/install/db/mysql/uninstall.sql");
+
+        if($this->errors !== false)
+        {
+            $APPLICATION->ThrowException(implode("", $this->errors));
+            return false;
+        }
 //        foreach ($this->arModuleComponents as $componentName) {
 //            if (strlen($componentName) > 0) {
 //                DeleteDirFilesEx("/local/components/".$this->componentNameSpace.'/'.$componentName.'/');
