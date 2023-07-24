@@ -5,6 +5,8 @@ namespace WebCompany;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Sale\PaySystem;
+use WebCompany\WReferralsTable;
+use Bitrix\Main\Type\DateTime;
 
 class Subscription extends \CBitrixComponent
 {
@@ -32,11 +34,7 @@ class Subscription extends \CBitrixComponent
             $arUser = \Bitrix\Main\UserTable::getList(array(
                 'select' => ['UF_SUBSCRIPTION','UF_FREE_SUBSCRIPTION'],
                 'filter' => ['ID' => $this->userId],
-                'limit' => 1,
-//                'cache' => [
-//                    'ttl' => 360000,
-//                    'cache_joins' => true
-//                ]
+                'limit' => 1
             ))->fetch();
 
             $isSubscriptionActive = $arUser['UF_SUBSCRIPTION'] == true;
@@ -48,6 +46,38 @@ class Subscription extends \CBitrixComponent
             $this->arResult['SUBSCRIPTION']['FREE'] = $isSubscriptionFree;
         } else {
             $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
+        }
+    }
+
+    private function checkReferralsOwner(string $referralCode) : bool
+    {
+        if (!empty($referralCode)) {
+            $ownerId = \Bitrix\Main\UserTable::getList(array(
+                'select' => ['ID'],
+                'filter' => ['UF_REFERRAL_CODE' => $referralCode],
+                'limit' => 1,
+                'cache' => [
+                    'ttl' => 360000,
+                    'cache_joins' => true
+                ]
+            ))->fetch()['ID'];
+
+            if (!empty($ownerId) && $ownerId != $this->userId) {
+                $this->userSession->set('referralOwner',$ownerId);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function addUserReferralPayment() : void
+    {
+        if (!empty($this->userId) && $this->userSession->has('referralOwner') && Loader::includeModule('webcompany.referal.system')) {
+            $newReferral = new EO_WReferrals();
+            $newReferral->setUserId($this->userSession->get('referralOwner'));
+            $newReferral->setReferralId($this->userId);
+            $newReferral->setPaydate(new DateTime());
+            $newReferral->save();
         }
     }
 
@@ -168,11 +198,14 @@ class Subscription extends \CBitrixComponent
             if (!$payResult->isSuccess()){
                 echo implode('<br>', $payResult->getErrorMessages());
             } else {
-                if (!$this->userSession->has('token')) {
-                    $token = $payResult->getPsData()['PS_INVOICE_ID'];
-                    $this->userSession->set('token', $token);
+                $token = $payResult->getPsData()['PS_INVOICE_ID'];
+                $this->userSession->set('token', $token);
+
+                if (!$this->userSession->has('referralOwner')) {
+                    $this->sendJsonResponse(['redirect' => $payResult->getPaymentUrl()]);
+                } else {
+                    LocalRedirect($payResult->getPaymentUrl(),true);
                 }
-                $this->sendJsonResponse(['redirect' => $payResult->getPaymentUrl()]);
             }
         }
     }
@@ -194,11 +227,20 @@ class Subscription extends \CBitrixComponent
                     "UF_SUBSCRIPTION" => 'Y'
                 );
                 $user->Update($this->userId, $fields);
-                $_GET['clear_cache'] = 'Y';
+                if ($this->userSession->has('referralOwner')) {
+                    $this->addUserReferralPayment();
+                    $this->userSession->remove('referralOwner');
+                    LocalRedirect('');
+                }
             } else {
                 $this->userSession->remove('token');
                 unset($_GET['token']);
             }
+        } else {
+//            echo "<pre>";
+//            var_dump($_SESSION);
+//            var_dump($_GET); die();
+//            echo "<pre>";
         }
     }
 
@@ -232,14 +274,19 @@ class Subscription extends \CBitrixComponent
 
     public function executeComponent() : void
     {
+//        $this->userSession->remove('token');
+//        $this->userSession->remove('subscriptionOrderId');
+//        $this->userSession->remove('referralOwner'); die();
         if (!empty($_GET['token'])) $this->checkPayment();
-        if ($_POST['component'] === $this->getName() && $_POST['action'] === 'subscribe') {
+        if (!empty($_GET['referral']) && $this->checkReferralsOwner($_GET['referral']) ||
+            $_POST['component'] === $this->getName() && $_POST['action'] === 'subscribe') {
             $this->makePayment();
         } else {
             if ($_POST['component'] === $this->getName() && $_POST['action'] === 'unsubscribe'){
                 $this->unsubscribeUser();
             }
         }
+
         $this->prepareResult();
         if (!empty($_GET[$this->paginationParam]) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') ob_end_clean();
         $this->includeComponentTemplate();

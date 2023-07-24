@@ -57,7 +57,7 @@ class ReferralProgram extends \CBitrixComponent
     private function getUserReferralCode(int $userId) : void
     {
         $arUser = \Bitrix\Main\UserTable::getList(array(
-            'select' => ['UF_REFERRAL_CODE'],
+            'select' => ['ID','UF_REFERRAL_CODE'],
             'filter' => ['ID' => $userId],
             'limit' => 1,
             'cache' => [

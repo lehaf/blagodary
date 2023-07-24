@@ -41,14 +41,12 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         </aside>
         <div class="page-content page-content--profile">
             <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-            <? global $arFilterAds;
-            $arFilterAds = [
-                'PROPERTY_OWNER' => $USER->GetId(),
-            ];
-
-            $APPLICATION->IncludeComponent(
+            <? $APPLICATION->IncludeComponent(
 	"webcompany:my.ads.list",
 	"",
+                [
+                    'BLOCK_TITLE' => 'Отзывы о вас'
+                ]
             ); ?>
         </div>
     </div>
