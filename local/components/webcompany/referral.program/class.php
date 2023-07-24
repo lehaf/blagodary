@@ -6,6 +6,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Web\Cookie;
 use WebCompany\WReferralsTable;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Type\DateTime;
 
 class ReferralProgram extends \CBitrixComponent
 {
@@ -53,50 +54,58 @@ class ReferralProgram extends \CBitrixComponent
         return $referralLink ?? NULL;
     }
 
-    private function getUserReferralsInfo() : void
+    private function getUserReferralCode(int $userId) : void
+    {
+        $arUser = \Bitrix\Main\UserTable::getList(array(
+            'select' => ['UF_REFERRAL_CODE'],
+            'filter' => ['ID' => $userId],
+            'limit' => 1,
+            'cache' => [
+                'ttl' => 3600000,
+                'cache_joins' => true
+            ]
+        ))->fetch();
+
+        if (empty($arUser['UF_REFERRAL_CODE'])) {
+            $hashString = md5($userId.$this->generateRandomString($this->randomStringLength));
+            $user = new \CUser;
+            $fields = Array(
+                "UF_REFERRAL_CODE" => $hashString,
+            );
+            $user->Update($userId, $fields);
+            $arUser['UF_REFERRAL_CODE'] = $hashString;
+        }
+
+        $this->arResult['REFERRAL_LINK'] = $this->getUserReferralLink($arUser['UF_REFERRAL_CODE']);
+        $this->setLinkToCookie($this->arResult['REFERRAL_LINK']);
+    }
+
+    private function getUserReferralsInfo(?int $timeMin = NULL, ?int $timeMax = NULL) : void
     {
         if (!empty($this->userId)) {
+            $this->getUserReferralCode($this->userId);
+            $refFilter = ['USER_ID' => $this->userId];
 
-            $arUser = \Bitrix\Main\UserTable::getList(array(
-                'select' => ['UF_REFERRAL_CODE'],
-                'filter' => ['ID' => $this->userId],
-                'limit' => 1,
-                'cache' => [
-                    'ttl' => 3600000,
-                    'cache_joins' => true
-                ]
-            ))->fetch();
-
-            if (empty($arUser['UF_REFERRAL_CODE'])) {
-                $hashString = md5($this->userId.$this->generateRandomString($this->randomStringLength));
-                $user = new \CUser;
-                $fields = Array(
-                    "UF_REFERRAL_CODE" => $hashString,
-                );
-                $user->Update($this->userId, $fields);
-                $arUser['UF_REFERRAL_CODE'] = $hashString;
-            }
-
-            $this->arResult['REFERRAL_LINK'] = $this->getUserReferralLink($arUser['UF_REFERRAL_CODE']);
-            $this->setLinkToCookie($this->arResult['REFERRAL_LINK']);
+            if (!empty($timeMin)) $refFilter['>PAYDATE'] = DateTime::createFromTimestamp($timeMin);
+            if (!empty($timeMax)) $refFilter['<PAYDATE'] = DateTime::createFromTimestamp($timeMax);
 
 
-            $userReferralsIds = WReferralsTable::getList([
-                'select' => ['ID','REFERRAL','PAYDATE'],
-                'filter' => ['USER_ID' => $this->userId],
+            $userReferralsInfo = WReferralsTable::getList([
+                'select' => ['ID','REFERRAL_ID','PAYDATE'],
+                'filter' => $refFilter,
                 'cache' => [
                     'ttl' => 36000,
                     'cache_joins' => true
                 ]
             ])->fetchAll();
 
-            if (!empty($userReferralsIds)) {
+            if (!empty($userReferralsInfo)) {
                 $referralsId = [];
-                $referralsListInfo = [];
-                foreach ($userReferralsIds as $referral) {
-                    $referralsId[] = $referral['REFERRAL'];
-                    $referralsListInfo[] = [
-                        'ID' => $referral['REFERRAL'],
+                $referralsList = [];
+                foreach ($userReferralsInfo as $referral) {
+                    $referralsId[] = $referral['REFERRAL_ID'];
+                    $referralsList[] = [
+                        'ID' => $referral['REFERRAL_ID'],
                         'DATE' => date('d.m.Y',strtotime($referral['PAYDATE']))
                     ];
                 }
@@ -111,7 +120,7 @@ class ReferralProgram extends \CBitrixComponent
                 ))->fetchAll();
 
 
-                if (!empty($referralsData) && !empty($referralsListInfo)) {
+                if (!empty($referralsData) && !empty($referralsList)) {
                     $referralUsersData = [];
                     foreach ($referralsData as $refUserData) {
                         $referralUsersData[$refUserData['ID']] = [
@@ -120,12 +129,12 @@ class ReferralProgram extends \CBitrixComponent
                         ];
                     }
 
-                    foreach ($referralsListInfo as &$referral) {
+                    foreach ($referralsList as &$referral) {
                         $referral['NAME'] = !empty($referralUsersData[$referral['ID']]['NAME']) ?
                             $referralUsersData[$referral['ID']]['LOGIN'].' ('.$referralUsersData[$referral['ID']]['NAME'].')' : $referralUsersData[$referral['ID']]['LOGIN'];
                     }
                     unset($referral);
-                    $this->arResult['REFERRAL_LIST'] = $referralsListInfo;
+                    $this->arResult['REFERRAL_LIST'] = $referralsList;
                 }
             }
         }
@@ -133,14 +142,20 @@ class ReferralProgram extends \CBitrixComponent
 
     public function prepareResult() : void
     {
-        $this->getUserReferralsInfo();
+        if (!empty($_POST['payDateMin']) || !empty($_POST['payDateMax'])) {
+            $dateMin = strtotime($_POST['payDateMin']);
+            $dateMax = strtotime($_POST['payDateMax']);
+            $this->getUserReferralsInfo($dateMin,$dateMax);
+        } else {
+            $this->getUserReferralsInfo();
+        }
     }
 
     public function executeComponent() : void
     {
         $this->prepareResult();
-        if (!empty($_GET[$this->paginationParam]) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') ob_end_clean();
+        if ($_POST['component'] === $this->getName() && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') ob_end_clean();
         $this->includeComponentTemplate();
-        if (!empty($_GET[$this->paginationParam]) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') die();
+        if ($_POST['component'] === $this->getName() && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') die();
     }
 }

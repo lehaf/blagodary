@@ -58,9 +58,19 @@ $linkSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#referral-l
     <div class="referral-list__head">
         <div class="referral-calendar" id="calendar">
             с
-            <input type="text" class="referral-calendar__item" id="AirDatepickerMin" placeholder="27.09.2022">
+            <input name="payDateMin"
+                   type="text"
+                   class="referral-calendar__item"
+                   id="AirDatepickerMin"
+                   placeholder="25.09.2022"
+            >
             по
-            <input type="text" class="referral-calendar__item" id="AirDatepickerMax" placeholder="27.10.2022">
+            <input name="payDateMax"
+                   type="text"
+                   class="referral-calendar__item"
+                   id="AirDatepickerMax"
+                   placeholder="27.10.2022"
+            >
         </div>
         <div class="btn-bg referral-calendar-btn">Показать</div>
     </div>

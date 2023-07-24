@@ -18,7 +18,19 @@ class WReferralsTable extends Entity\DataManager
         return [
             new Entity\IntegerField('ID', ['primary' => true, 'autocomplete' => true,]),
             new Entity\IntegerField('USER_ID', ['required' => true]),
-            new Entity\IntegerField('REFERRAL',['required' => true]),
+            new Entity\ReferenceField(
+                'USER',
+                'Bitrix\Main\UserTable',
+                ['=this.USER_ID' => 'ref.ID'],
+                ['join_type' => 'LEFT']
+            ),
+            new Entity\IntegerField('REFERRAL_ID',['required' => true]),
+            new Entity\ReferenceField(
+                'REFERRAL',
+                'Bitrix\Main\UserTable',
+                ['=this.REFERRAL_ID' => 'ref.ID'],
+                ['join_type' => 'LEFT']
+            ),
             new Entity\DateTimeField('PAYDATE', ['default_value' => new \Bitrix\Main\Type\DateTime(),]),
         ];
     }
