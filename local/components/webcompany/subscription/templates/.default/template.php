@@ -22,55 +22,63 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
 <div class="subscription-content">
     <div class="profile-current-subscription active">
         <?if ($arResult['SUBSCRIPTION']['ACTIVE'] === true):?>
-            <?if ($arResult['SUBSCRIPTION']['FREE'] === true):?>
-                <div class="current-subscription p-30">
-                    <h4 class="title-block">Текущая подписка действительна до 26.09.2022 16:50 и будет
-                        продлена автоматически 27.09.2022 в 16:50</h4>
+            <?if ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] === true):?>
+                <div class="current-subscription">
+                    <div class="profile-error__message">
+                        <h4 class="title-block">
+                            Текущая Подписка Бесплатная (по реферальной программе) до <?=$arResult['SUBSCRIPTION']['FREE_DATE']?>
+                        </h4>
+                    </div>
+                    <h4 class="title-block">Платная подписка будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?></h4>
                     <button id="subscriptionAction" data-action="unsubscribe" class="btn btn-red">
                         <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
                         Отменить подписку
                     </button>
                 </div>
-            <?else:?>
-                <div class="current-subscription">
-                    <div class="profile-error__message">
-                        <h4 class="title-block">
-                            Текущая Подписка Бесплатная (по реферальной программе) до 26.09.2022 16:50
-                        </h4>
+            <?elseif ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] !== true):?>
+                <div class="subscription-content-active">
+                    <div class="no-subscription">
+                        <div class="profile-error__message">
+                            <h4 class="title-block">
+                                Текущая Подписка Бесплатная (по реферальной программе) до <?=$arResult['SUBSCRIPTION']['FREE_DATE']?>
+                            </h4>
+                        </div>
+                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                        <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                     </div>
-                    <h4 class="title-block">Платная подписка будет продлена автоматически 27.09.2022 16:50</h4>
-                    <button id="subscriptionAction" data-action="unsubscribe" class="btn btn-red">
-                        <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
-                        Отменить подписку</button>
+                </div>
+            <?else:?>
+                <div class="current-subscription p-30">
+                    <h4 class="title-block">
+                        Текущая подписка действительна до <?=$arResult['SUBSCRIPTION']['DATE']?>
+                        <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                             и будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?>
+                        <?endif;?>
+                    </h4>
+                    <button id="subscriptionAction"
+                            data-action="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'unsubscribe' : 'subscribe'?>"
+                            class="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'btn btn-red' : 'btn-bg'?>"
+                    >
+                        <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                            <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
+                        <?endif;?>
+                        <?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'Отменить подписку' : 'Оформить подписку'?>
+                    </button>
                 </div>
             <?endif?>
         <?else:?>
-            <?if ($arResult['SUBSCRIPTION']['FREE'] === true):?>
-                <div class="subscription-content-active">
-                    <div class="no-subscription">
-                        <div class="profile-error__message">
-                            <h4 class="title-block">
-                                Текущая подписка действительна до 26.09.2022 16:50.
-                            </h4>
-                        </div>
-                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
-                        <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
+            <div class="subscription-content-active">
+                <div class="no-subscription">
+                    <div class="profile-error__message">
+                        <h4 class="title-block">
+                            <span>У вас нет подписки.<br>
+                            Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
+                        </h4>
                     </div>
+                    <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                    <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                 </div>
-            <?else:?>
-                <div class="subscription-content-active">
-                    <div class="no-subscription">
-                        <div class="profile-error__message">
-                            <h4 class="title-block">
-                                <span>У вас нет подписки.<br>
-                                Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
-                            </h4>
-                        </div>
-                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
-                        <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
-                    </div>
-                </div>
-            <?endif?>
+            </div>
         <?endif;?>
     </div>
     <?if (!empty($arResult['ORDER_HISTORY'])):?>

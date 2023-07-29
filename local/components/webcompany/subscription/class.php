@@ -10,11 +10,15 @@ use Bitrix\Main\Type\DateTime;
 
 class Subscription extends \CBitrixComponent
 {
+    private string $moduleName = 'webcompany.referal.system';
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';
     private string $paginationParam = 'orders_page';
     private int $paymentId = 2;
+    private int $oneDaySec = 86400;
+    private int $subscriptionDaysFree = 3;
+    private int $subscriptionDays = 1;
     private object $userSession;
 
     public function __construct($component = \null)
@@ -28,25 +32,48 @@ class Subscription extends \CBitrixComponent
         parent::__construct($component);
     }
 
-    private function userSubscriptionIsActive() : void
+    private function getUserSubscriptionInfo(int $userId) : ?array
     {
-        if (!empty($this->userId)) {
-            $arUser = \Bitrix\Main\UserTable::getList(array(
-                'select' => ['UF_SUBSCRIPTION','UF_FREE_SUBSCRIPTION'],
-                'filter' => ['ID' => $this->userId],
-                'limit' => 1
-            ))->fetch();
+        return \Bitrix\Main\UserTable::getList(array(
+            'select' => [
+                'UF_SUBSCRIPTION',
+                'UF_FREE_SUBSCRIPTION',
+                'UF_SUBSCRIPTION_DATE',
+                'UF_SUBSCRIPTION_FREE_DATE'
+            ],
+            'filter' => ['ID' => $userId],
+            'limit' => 1
+        ))->fetch();
+    }
 
-            $isSubscriptionActive = $arUser['UF_SUBSCRIPTION'] == true;
-            $isSubscriptionFree = $arUser['UF_FREE_SUBSCRIPTION'] == true;
-        }
+    private function userSubscriptionIsActive() : bool
+    {
+        if (!empty($this->userId) && !isset($this->arResult['SUBSCRIPTION']['ACTIVE'])) {
+            $user = $this->getUserSubscriptionInfo($this->userId);
 
-        if (!empty($isSubscriptionActive)) {
-            $this->arResult['SUBSCRIPTION']['ACTIVE'] = $isSubscriptionActive;
-            $this->arResult['SUBSCRIPTION']['FREE'] = $isSubscriptionFree;
-        } else {
-            $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
+            $isSubscriptionActive = !empty($user['UF_SUBSCRIPTION_DATE']) && time() < strtotime($user['UF_SUBSCRIPTION_DATE']);
+            $isSubscriptionFreeActive = !empty($user['UF_SUBSCRIPTION_FREE_DATE']) && time() < strtotime($user['UF_SUBSCRIPTION_FREE_DATE']);
+            $this->arResult['SUBSCRIPTION']['PAID'] = $isSubscriptionActive;
+            $this->arResult['SUBSCRIPTION']['PAID_CONFIRM'] = $user['UF_SUBSCRIPTION'] == true;
+            $this->arResult['SUBSCRIPTION']['FREE'] = $isSubscriptionFreeActive;
+            $this->arResult['SUBSCRIPTION']['FREE_CONFIRM'] = $user['UF_FREE_SUBSCRIPTION'] == true;
+
+            if ($isSubscriptionActive || $isSubscriptionFreeActive) {
+                $this->arResult['SUBSCRIPTION']['ACTIVE'] = true;
+
+                if (!empty($user['UF_SUBSCRIPTION_DATE'])) {
+                    $this->arResult['SUBSCRIPTION']['DATE'] = date('d.m.Y H:i',strtotime($user['UF_SUBSCRIPTION_DATE']));
+                }
+
+                if (!empty($user['UF_SUBSCRIPTION_FREE_DATE'])) {
+                    $this->arResult['SUBSCRIPTION']['FREE_DATE'] = date('d.m.Y H:i',strtotime($user['UF_SUBSCRIPTION_FREE_DATE']));
+                }
+                return true;
+            } else {
+                $this->arResult['SUBSCRIPTION']['ACTIVE'] = false;
+            }
         }
+        return false;
     }
 
     private function checkReferralsOwner(string $referralCode) : bool
@@ -72,7 +99,7 @@ class Subscription extends \CBitrixComponent
 
     private function addUserReferralPayment() : void
     {
-        if (!empty($this->userId) && $this->userSession->has('referralOwner') && Loader::includeModule('webcompany.referal.system')) {
+        if (!empty($this->userId) && $this->userSession->has('referralOwner') && Loader::includeModule($this->moduleName)) {
             $newReferral = new EO_WReferrals();
             $newReferral->setUserId($this->userSession->get('referralOwner'));
             $newReferral->setReferralId($this->userId);
@@ -109,7 +136,7 @@ class Subscription extends \CBitrixComponent
                     $this->arResult['ORDER_HISTORY'][] = [
                         'DATE_PAYED' => date('d.m.Y',$unixTime),
                         'DATE_SUBSCRIPTION_FROM' => date('d.m.Y H:i',$unixTime),
-                        'DATE_SUBSCRIPTION_TO' => date('d.m.Y H:i',$unixTime+strtotime("+7 days"))
+                        'DATE_SUBSCRIPTION_TO' => date('d.m.Y H:i',$unixTime+$this->oneDaySec*$this->subscriptionDays)
                     ];
                 }
                 $this->setPaginationParams($userOrders->getCount(), $ordersLimit, $curPage);
@@ -182,9 +209,11 @@ class Subscription extends \CBitrixComponent
 
     private function sendJsonResponse(array $array) : void
     {
-        ob_end_clean();
-        echo json_encode($array);
-        die();
+        if ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            ob_end_clean();
+            echo json_encode($array);
+            die();
+        }
     }
 
     private function initPaySystem() : void
@@ -210,37 +239,85 @@ class Subscription extends \CBitrixComponent
         }
     }
 
+    private function addRefOwnerFreeSubscription(\CUser $user, int $refOwnerId) : void
+    {
+        if ($refOwnerId > 0) {
+            $curTime = time();
+            $userSubscription = $this->getUserSubscriptionInfo($refOwnerId);
+            $subscriptionDate = !empty($userSubscription['UF_SUBSCRIPTION_DATE']) ? strtotime($userSubscription['UF_SUBSCRIPTION_DATE']) : time();
+            $subscriptionFreeDate = !empty($userSubscription['UF_SUBSCRIPTION_FREE_DATE']) ? strtotime($userSubscription['UF_SUBSCRIPTION_FREE_DATE']) : time();
+            $subscriptionUntilSec = $curTime >= $subscriptionDate ?
+                $curTime + $this->oneDaySec * $this->subscriptionDays : $subscriptionDate + $this->oneDaySec * $this->subscriptionDays;
+            $subscriptionFreeUntilSec = $curTime >= $subscriptionFreeDate ?
+                $curTime + $this->oneDaySec * $this->subscriptionDaysFree : $subscriptionFreeDate + $this->oneDaySec * $this->subscriptionDaysFree;
+            $fields = Array(
+                "UF_SUBSCRIPTION" => 'Y',
+                "UF_SUBSCRIPTION_DATE" => DateTime::createFromTimestamp($subscriptionUntilSec),
+                "UF_FREE_SUBSCRIPTION" => 'Y',
+                "UF_SUBSCRIPTION_FREE_DATE" => DateTime::createFromTimestamp($subscriptionFreeUntilSec)
+            );
+            $user->Update($this->userSession->get('referralOwner'), $fields);
+        }
+    }
+
+    private function activePaidSubscription() : void
+    {
+        if (!empty($this->userId)) {
+            $user = new \CUser;
+            $fields = array(
+                "UF_SUBSCRIPTION" => 'Y'
+            );
+            $user->Update($this->userId, $fields);
+            $this->sendJsonResponse(['reload' => true]);
+        }
+    }
+
+    private function setOrderPaid(int $orderId) : void
+    {
+        if (!empty($orderId)) {
+            $order = Order::load($orderId);
+            $paymentCollection = $order->getPaymentCollection();
+            $onePayment = $paymentCollection[0];
+            $onePayment->setPaid("Y"); // оплата
+            $order->setField('STATUS_ID', 'F');
+            $order->save();
+        }
+    }
+
+    private function setUserSubscription(\CUser $user) : void
+    {
+        if (!empty($this->userId)) {
+            $subscriptionDate = !empty($this->arResult['SUBSCRIPTION']['DATE']) ? strtotime($this->arResult['SUBSCRIPTION']['DATE']) : time();
+            $curTime = time();
+            $subscriptionUntilSec = $curTime >= $subscriptionDate ?
+            $curTime + $this->oneDaySec * $this->subscriptionDays : $subscriptionDate + $this->oneDaySec * $this->subscriptionDays;
+            $fields = Array(
+                "UF_SUBSCRIPTION" => 'Y',
+                "UF_SUBSCRIPTION_DATE" => DateTime::createFromTimestamp($subscriptionUntilSec)
+            );
+            $user->Update($this->userId, $fields);
+        }
+    }
+
     private function checkPayment() : void
     {
         if ($this->userSession->has('token') && isset($_GET['token']) && $this->userSession->get('token') === $_GET['token']) {
-            if ($_GET['status'] === 'successful') {
-                $order = Order::load($this->userSession->get('subscriptionOrderId'));
-                $paymentCollection = $order->getPaymentCollection();
-                $onePayment = $paymentCollection[0];
-                $onePayment->setPaid("Y"); // оплата
-                $order->setField('STATUS_ID', 'F');
-                $order->save();
+            if ($_GET['status'] === 'successful' && !empty($this->userSession->get('subscriptionOrderId'))) {
+                $this->setOrderPaid($this->userSession->get('subscriptionOrderId'));
                 $this->userSession->remove('token');
                 $this->userSession->remove('subscriptionOrderId');
                 $user = new \CUser;
-                $fields = Array(
-                    "UF_SUBSCRIPTION" => 'Y'
-                );
-                $user->Update($this->userId, $fields);
+                $this->setUserSubscription($user);
                 if ($this->userSession->has('referralOwner')) {
                     $this->addUserReferralPayment();
+                    $this->addRefOwnerFreeSubscription($user, $this->userSession->get('referralOwner'));
                     $this->userSession->remove('referralOwner');
-                    LocalRedirect('');
                 }
+                LocalRedirect('');
             } else {
                 $this->userSession->remove('token');
                 unset($_GET['token']);
             }
-        } else {
-//            echo "<pre>";
-//            var_dump($_SESSION);
-//            var_dump($_GET); die();
-//            echo "<pre>";
         }
     }
 
@@ -265,8 +342,6 @@ class Subscription extends \CBitrixComponent
 
     public function prepareResult() : void
     {
-        $this->userSubscriptionIsActive();
-
         $curOrdersPage = !empty($_GET[$this->paginationParam]) ? $_GET[$this->paginationParam] : 1;
         $ordersOffset = $curOrdersPage !== 0 ? $this->arParams['PAGE_RECORDS_COUNT'] * $curOrdersPage - $this->arParams['PAGE_RECORDS_COUNT'] : 0;
         $this->getUserSubscriptionHistory($this->arParams['PAGE_RECORDS_COUNT'], $ordersOffset, $curOrdersPage);
@@ -274,13 +349,19 @@ class Subscription extends \CBitrixComponent
 
     public function executeComponent() : void
     {
-//        $this->userSession->remove('token');
-//        $this->userSession->remove('subscriptionOrderId');
-//        $this->userSession->remove('referralOwner'); die();
+        $userSubscriptionActive = $this->userSubscriptionIsActive();
         if (!empty($_GET['token'])) $this->checkPayment();
         if (!empty($_GET['referral']) && $this->checkReferralsOwner($_GET['referral']) ||
             $_POST['component'] === $this->getName() && $_POST['action'] === 'subscribe') {
-            $this->makePayment();
+            if ($userSubscriptionActive) {
+                if (!isset($_GET['referral'])) {
+                    $this->activePaidSubscription();
+                } else {
+                    echo "У вас уже оформлена подписка!";
+                }
+            } else {
+                $this->makePayment();
+            }
         } else {
             if ($_POST['component'] === $this->getName() && $_POST['action'] === 'unsubscribe'){
                 $this->unsubscribeUser();

@@ -51,7 +51,10 @@ Subscription.prototype.sendData = function (data) {
     fetch(location.href, {
         method: 'POST',
         cache: 'no-cache',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With':'XMLHttpRequest',
+        },
         body: new URLSearchParams(data)
     }).then(function(response) {
         return response.json()
