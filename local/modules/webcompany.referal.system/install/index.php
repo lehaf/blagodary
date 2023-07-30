@@ -6,7 +6,8 @@ class webcompany_referal_system extends CModule
 {
     public string $componentNameSpace = 'webcompany';
     public array $arModuleComponents = [
-        "subscription"
+        "subscription",
+        "referral.program"
     ];
     public function __construct()
     {
