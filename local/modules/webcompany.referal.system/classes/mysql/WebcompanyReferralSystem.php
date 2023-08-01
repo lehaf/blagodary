@@ -17,18 +17,22 @@ final class WebcompanyReferralSystem
     {
         $this->db = Application::getConnection();
     }
-//    public function getSettings()
-//    {
-//        $result = $this->db->query(
-//        "SELECT * FROM $this->tabsTable".
-//        );
-//        while($ar = $result->fetch())
-//        {
-//            pr($ar);
-//        }
-//    }
 
-    public function setDefaultSettings()
+    public function getSettings()
+    {
+        $result = $this->db->query(
+        "SELECT * FROM $this->tabsTable \r\n".
+            "JOIN ".$this->groupsTable." ON ".$this->groupsTable.'.TAB_ID = '.$this->tabsTable.".ID  \r\n".
+            "JOIN ".$this->fieldsTable." ON ".$this->fieldsTable.'.GROUP_ID = '.$this->groupsTable.'.ID'
+        );
+        pr(get_class_methods($result->getResource()));
+        while($ar = $result->getResource()->fetch_assoc())
+        {
+            pr($ar);
+        }
+    }
+
+    public function setDefaultSettings() : bool
     {
         if (file_exists($_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath)) {
             $defaultSettings = require_once $_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath;
@@ -79,7 +83,9 @@ final class WebcompanyReferralSystem
                 }
                 $sqlRequest = $sqlTabsInsert.$sqlGroupsInsert.$sqlFieldsInsert;
                 $this->db->queryExecute($sqlRequest);
+                return true;
             }
         }
+        return false;
     }
 }
