@@ -7,7 +7,18 @@ use \Bitrix\Main\Application;
 final class WebcompanyReferralSystem
 {
     private string $tabsTable = 'w_referrals_tabs';
+    private array $tabsTableFields = [
+        'CODE' => 'TAB_CODE',
+        'NAME' => 'TAB_NAME',
+        'TITLE' => 'TAB_TITLE',
+        'SORT' => 'TAB_SORT',
+    ];
     private string $groupsTable = 'w_referrals_groups';
+    private array $groupsTableFields = [
+        'CODE' => 'GROUP_CODE',
+        'NAME' => 'GROUP_NAME',
+        'SORT' => 'GROUP_SORT',
+    ];
     private string $fieldsTable = 'w_referrals_fields';
     private string $defaultSettingsFilePath = '/local/modules/webcompany.referal.system/.default.php';
     private int $standardSort = 500;
@@ -20,15 +31,39 @@ final class WebcompanyReferralSystem
 
     public function getSettings()
     {
+        $tabsAlies = '';
+        foreach ($this->tabsTableFields as $tabField => $tabAlies) {
+            $tabsAlies .= $this->tabsTable.'.'.$tabField.' AS '.$tabAlies.', ';
+        }
+
+        $groupsAlies = '';
+        foreach ($this->groupsTableFields as $groupField => $groupAlies) {
+            $groupsAlies .= $this->groupsTable.'.'.$groupField.' AS '.$groupAlies.', ';
+        }
+        $groupsAlies = rtrim($groupsAlies,', ');
+
         $result = $this->db->query(
-        "SELECT * FROM $this->tabsTable \r\n".
+        "SELECT *, ".$tabsAlies.$groupsAlies." ".
+            "FROM $this->tabsTable \r\n".
             "JOIN ".$this->groupsTable." ON ".$this->groupsTable.'.TAB_ID = '.$this->tabsTable.".ID  \r\n".
             "JOIN ".$this->fieldsTable." ON ".$this->fieldsTable.'.GROUP_ID = '.$this->groupsTable.'.ID'
         );
-        pr(get_class_methods($result->getResource()));
-        while($ar = $result->getResource()->fetch_assoc())
-        {
-            pr($ar);
+
+        $resSettings = $result->fetchALl();
+
+        if (!empty($resSettings)) {
+            $settings = [];
+            foreach ($resSettings as $setting) {
+                $settings[$setting['TAB_CODE']] = [
+                    'tabName' => $setting['TAB_NAME'],
+                    'tabTitle' => $setting['TAB_TITLE'],
+                    'tabGroups' => [
+                        $setting['GROUP_CODE'] => [
+                            
+                        ]
+                    ]
+                ];
+            }
         }
     }
 
