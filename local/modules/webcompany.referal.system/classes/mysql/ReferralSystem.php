@@ -3,8 +3,9 @@
 namespace WebCompany;
 
 use \Bitrix\Main\Application;
+use Bitrix\Main\Loader;
 
-final class WebcompanyReferralSystem
+final class ReferralSystem
 {
     private string $tabsTable = 'w_referrals_tabs';
     private array $tabsTableFields = [
@@ -29,7 +30,7 @@ final class WebcompanyReferralSystem
         $this->db = Application::getConnection();
     }
 
-    public function getSettings()
+    public function getSettingsTree() : array
     {
         $tabsAlies = '';
         foreach ($this->tabsTableFields as $tabField => $tabAlies) {
@@ -53,18 +54,77 @@ final class WebcompanyReferralSystem
 
         if (!empty($resSettings)) {
             $settings = [];
+            $groups = [];
+            $sett = [];
             foreach ($resSettings as $setting) {
+                $sett[$setting['TAB_CODE']][$setting['GROUP_CODE']][$setting['ID']]= [
+                    "id" => $setting['CODE'],
+                    "name" => $setting['NAME'],
+                    "value" => $setting['VALUE'],
+                    "hint" => $setting['HINT'],
+                    "explanation" => $setting['EXPLANATION'],
+                    'type' => [$setting['TYPE'], $setting['LENGHT'], $setting['HEIGHT']]
+                ];
+
+                $groups[$setting['TAB_CODE']][$setting['GROUP_CODE']] = [
+                    'groupName' => $setting['GROUP_NAME'],
+                    'settings' =>  $sett[$setting['TAB_CODE']][$setting['GROUP_CODE']]
+                ];
+
                 $settings[$setting['TAB_CODE']] = [
                     'tabName' => $setting['TAB_NAME'],
                     'tabTitle' => $setting['TAB_TITLE'],
-                    'tabGroups' => [
-                        $setting['GROUP_CODE'] => [
-                            
-                        ]
-                    ]
+                    'tabGroups' => $groups[$setting['TAB_CODE']]
                 ];
             }
         }
+
+        return $settings ?? [];
+    }
+
+    public function getSettingValue(string $settingCode) : string
+    {
+        if (!empty($settingCode)) {
+            $result = $this->db->query(
+                "SELECT * FROM $this->fieldsTable \r\n".
+                "WHERE CODE='".$settingCode."'"
+             );
+
+            $resSettings = $result->fetch();
+        }
+
+        return $resSettings['VALUE'] ??  '';
+    }
+
+    public function getSettingCodes() : array
+    {
+        $result = $this->db->query(
+        "SELECT * FROM $this->fieldsTable \r\n"
+        );
+
+        $resSettings = $result->fetchALl();
+
+        if (!empty($resSettings)) {
+            $settingCodes = [];
+            foreach ($resSettings as $setting) {
+                $settingCodes[] = $setting['CODE'];
+            }
+        }
+
+        return $settingCodes ?? [];
+    }
+
+    public function saveNewSettings(array $newSettings) : bool
+    {
+        if (!empty($newSettings)) {
+            foreach ($newSettings as $setting) {
+                $sqlFieldsInsert = 'UPDATE '.$this->fieldsTable.' SET VALUE="'.$setting['value'].'" WHERE CODE="'.$setting['code'].'"';
+                $this->db->queryExecute($sqlFieldsInsert);
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public function setDefaultSettings() : bool
@@ -72,10 +132,34 @@ final class WebcompanyReferralSystem
         if (file_exists($_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath)) {
             $defaultSettings = require_once $_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath;
             if (!empty($defaultSettings)) {
+                foreach ($defaultSettings as $tabInfo) {
+                    if (!empty($tabInfo['tabGroups'])) {
+                        foreach ($tabInfo['tabGroups'] as $groupInfo) {
+                            if (!empty($groupInfo['settings'])) {
+                                foreach ($groupInfo['settings'] as $setting) {
+                                    $sqlFieldsInsert = 'UPDATE '.$this->fieldsTable.' SET VALUE="'.$setting['default'].'" WHERE CODE="'.$setting['id'].'"';
+                                    $this->db->queryExecute($sqlFieldsInsert);
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function insertDataToTables() : bool
+    {
+        if (file_exists($_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath)) {
+            $defaultSettings = require_once $_SERVER['DOCUMENT_ROOT'].$this->defaultSettingsFilePath;
+            if (!empty($defaultSettings)) {
                 $sqlTabsInsert = 'INSERT INTO '.$this->tabsTable.' (CODE, NAME, TITLE, SORT) VALUES ';
                 $lastTabKey = array_key_last($defaultSettings);
                 $sqlGroupsInsert = 'INSERT INTO '.$this->groupsTable.' (TAB_ID, CODE, NAME, SORT) VALUES ';
-                $sqlFieldsInsert = 'INSERT INTO '.$this->fieldsTable.' (GROUP_ID, NAME, VALUE, HINT, EXPLANATION, TYPE, LENGHT, HEIGHT, SORT) VALUES ';
+                $sqlFieldsInsert = 'INSERT INTO '.$this->fieldsTable.' (CODE, GROUP_ID, NAME, VALUE, HINT, EXPLANATION, TYPE, LENGHT, HEIGHT, SORT) VALUES ';
                 foreach ($defaultSettings as $tabCode => $tabInfo) {
                     static $tabId = 1;
                     $sqlTabsInsert .= "('$tabCode', '$tabInfo[tabName]', '$tabInfo[tabName]', $this->standardSort)";
@@ -100,7 +184,7 @@ final class WebcompanyReferralSystem
                             if (!empty($groupInfo['settings'])) {
                                 $lastFieldKey = array_key_last($groupInfo['settings']);
                                 foreach ($groupInfo['settings'] as $key => $fieldInfo) {
-                                    $sqlFieldsInsert .= "($groupId, '$fieldInfo[name]', '$fieldInfo[default]', '$fieldInfo[hint]',
+                                    $sqlFieldsInsert .= "('$fieldInfo[id]', $groupId, '$fieldInfo[name]', '$fieldInfo[default]', '$fieldInfo[hint]',
                                     '$fieldInfo[explanation]', '".$fieldInfo['type'][0]."', ".($fieldInfo['type'][1] ?? "NULL").", ".
                                         ($fieldInfo['type'][2] ?? "NULL").", $this->standardSort)";
 
@@ -116,8 +200,10 @@ final class WebcompanyReferralSystem
                     }
                     $tabId++;
                 }
-                $sqlRequest = $sqlTabsInsert.$sqlGroupsInsert.$sqlFieldsInsert;
-                $this->db->queryExecute($sqlRequest);
+//                $sqlRequest = $sqlTabsInsert.$sqlGroupsInsert.$sqlFieldsInsert;
+                $this->db->queryExecute($sqlTabsInsert);
+                $this->db->queryExecute($sqlGroupsInsert);
+                $this->db->queryExecute($sqlFieldsInsert);
                 return true;
             }
         }

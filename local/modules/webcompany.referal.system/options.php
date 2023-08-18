@@ -4,9 +4,17 @@
 /** @global object $APPLICATION */
 /** @var string $mid id модуля*/
 
+use WebCompany\ReferralSystem;
+
 if(!$USER->IsAdmin() || !\Bitrix\Main\Loader::includeModule($mid)) return;
 
-$arAllOptions = require_once '.options.settings.php';
+$settingsRefSys = new ReferralSystem();
+$arAllOptions = $settingsRefSys->getSettingsTree();
+if (empty($arAllOptions)) {
+    $settingsRefSys->insertDataToTables();
+    $arAllOptions = $settingsRefSys->getSettingsTree();
+}
+
 $arTabSettings = [];
 foreach ($arAllOptions as $key => $arTab) {
     $arTabSettings[] = [
@@ -15,34 +23,45 @@ foreach ($arAllOptions as $key => $arTab) {
         "TITLE" => $arTab['tabTitle']
     ];
 }
+
 $tabControl = new CAdminTabControl("tabControl", $arTabSettings);
 
-if($_SERVER["REQUEST_METHOD"] == "POST" && ($_POST['Update'] || $_POST['Apply'] || $_POST['RestoreDefaults'])>0 && check_bitrix_sessid()) {
-	if($_POST['RestoreDefaults'] <> '') {
-		$arDefValues = $arDefaultValues['default'];
-		foreach($arDefValues as $key=>$value)
-		{
-			COption::RemoveOption("messageservice", $key);
-		}
-	} else {
-		foreach($arAllOptions as $arOption)
-		{
-			$name=$arOption[0];
-			$val=$_REQUEST[$name];
-			if($arOption[3][0]=="checkbox" && $val!="Y")
-				$val="N";
-			COption::SetOptionString("messageservice", $name, $val, $arOption[1]);
-		}
-	}
-	if($_POST['Update'] <> '' && $_REQUEST["back_url_settings"] <> '')
-		LocalRedirect($_REQUEST["back_url_settings"]);
-	else
-		LocalRedirect($APPLICATION->GetCurPage()."?mid=".urlencode($mid)."&lang=".urlencode(LANGUAGE_ID)."&back_url_settings=".urlencode($_REQUEST["back_url_settings"])."&".$tabControl->ActiveTabParam());
+if($_SERVER["REQUEST_METHOD"] == "POST" && check_bitrix_sessid()) {
+    $settingCodes = $settingsRefSys->getSettingCodes();
+
+    if (!empty($_POST['save'])) {
+        $saveSettings = [];
+        foreach ($_POST as $key => $value) {
+            if (in_array($key,$settingCodes)) {
+               $saveSettings[] = [
+                   'code' => $key,
+                   'value' => $value
+               ];
+            }
+        }
+        $saveRes = $settingsRefSys->saveNewSettings($saveSettings);
+        $arAllOptions = $settingsRefSys->getSettingsTree();
+        $message = 'Настройки сохранены!';
+    }
+
+    if (!empty($_POST['default'])) {
+        $saveRes = $settingsRefSys->setDefaultSettings();
+        $arAllOptions = $settingsRefSys->getSettingsTree();
+        $message = 'Установлены настройки по умолчанию!';
+    }
+
 }
-
-
-$tabControl->Begin();
+pr($settingsRefSys->getSettingValue('ops'));
 ?>
+<?if (!empty($message)):?>
+    <div class="adm-info-message-wrap adm-info-message-green">
+        <div class="adm-info-message">
+            <div class="adm-info-message-title"><?=$message?></div>
+            <div class="adm-info-message-icon"></div>
+        </div>
+    </div>
+<?endif;?>
+<?$tabControl->Begin();?>
 <form method="post" action="<?=$APPLICATION->GetCurPage()?>?mid=<?=urlencode($mid)?>&amp;lang=<?=LANGUAGE_ID?>">
 	<?foreach($arAllOptions as $optionGroup => $arTabs):?>
         <?$tabControl->BeginNextTab();?>
@@ -61,13 +80,13 @@ $tabControl->Begin();
                             <label for="<?=$arSetting['id']?>"><?=$arSetting['name']?>:</label>
                         <td width="60%">
                             <?if($arSetting['type'][0]=="checkbox"):?>
-                                <input type="checkbox" id="<?=$arSetting['id']?>" name="<?=$arSetting['id']?>" value="Y" <?=$arSetting['default'] == "Y" ? " checked" : ''?>>
+                                <input type="checkbox" id="<?=$arSetting['id']?>" name="<?=$arSetting['id']?>" value="Y" <?=$arSetting['value'] == "Y" ? " checked" : ''?>>
                             <?elseif($arSetting['type'][0]=="text"):?>
-                                <input type="text" size="<?=$arSetting['type'][1]?>" maxlength="255" value="<?=$arSetting['default']?>" name="<?=$arSetting['id']?>">
+                                <input type="text" size="<?=$arSetting['type'][1]?>" maxlength="255" value="<?=$arSetting['value']?>" name="<?=$arSetting['id']?>">
                             <?elseif($arSetting['type'][0]=="number"):?>
-                                <input type="number" style="width:<?=$arSetting['type'][1]?>em" maxlength="255" value="<?=$arSetting['default']?>" name="<?=$arSetting['id']?>">
+                                <input type="number" style="width:<?=$arSetting['type'][1]?>em" maxlength="255" value="<?=$arSetting['value']?>" name="<?=$arSetting['id']?>">
                             <?elseif($arSetting['type'][0]=="textarea"):?>
-                                <textarea rows="<?=$arSetting['type'][1]?>" cols="<?=$arSetting['type'][2]?>" name="<?=$arSetting['id']?>"><?=$arSetting['default']?></textarea>
+                                <textarea rows="<?=$arSetting['type'][1]?>" cols="<?=$arSetting['type'][2]?>" name="<?=$arSetting['id']?>"><?=$arSetting['value']?></textarea>
                             <?elseif($arSetting['type'][0]=="selectbox"):?>
                                 <select name="<?=$arSetting['id']?>">
                                     <?foreach ($arSetting['type'][1] as $key => $value):?>
@@ -90,25 +109,13 @@ $tabControl->Begin();
 	<?endforeach?>
 	<?$tabControl->Buttons();?>
 	<input type="submit"
-           name="Update"
+           name="save"
            value="Сохранить"
            title="Сохранить изменения"
            class="adm-btn-save"
     >
-	<?if($_REQUEST["back_url_settings"] <> ''):?>
-		<input type="button"
-               name="Cancel"
-               value="<?=GetMessage("MAIN_OPT_CANCEL")?>"
-               title="<?=GetMessage("MAIN_OPT_CANCEL_TITLE")?>"
-               onclick="window.location='<?=htmlspecialcharsbx(CUtil::addslashes($_REQUEST["back_url_settings"]))?>'"
-        >
-		<input type="hidden"
-               name="back_url_settings"
-               value="<?=htmlspecialcharsbx($_REQUEST["back_url_settings"])?>"
-        >
-	<?endif?>
 	<input type="submit"
-           name="RestoreDefaults"
+           name="default"
            title="<?=GetMessage("MAIN_HINT_RESTORE_DEFAULTS")?>"
            OnClick="return confirm('<?=AddSlashes(GetMessage("MAIN_HINT_RESTORE_DEFAULTS_WARNING"))?>')"
            value="По умолчанию"
