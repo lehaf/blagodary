@@ -167,6 +167,28 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
+    private function increaseCounter() : void
+    {
+        if (defined('BANNER_COUNTER_IBLOCK_ID')) {
+            if (\Bitrix\Main\Loader::includeModule('iblock')) {
+                $adsCounterEntity = \Bitrix\Iblock\Iblock::wakeUp(BANNER_COUNTER_IBLOCK_ID)->getEntityDataClass();
+                $counter = $adsCounterEntity::getList(array(
+                    'select' => ['ID', 'COUNTER'],
+                    'filter' => array('=ACTIVE' => 'Y')
+                ))->fetchObject();
+
+                $newCount = 1;
+                if ($counter->getCounter()) {
+                    $newCount = $counter->getCounter()->getValue() + 1;
+                }
+                $counter->setCounter($newCount);
+                $counter->save();
+                $taggedCache = \Bitrix\Main\Application::getInstance()->getTaggedCache();
+                $taggedCache->clearByTag('iblock_id_'.BANNER_COUNTER_IBLOCK_ID);
+            }
+        }
+    }
+
     private function deactivateAds(int $adsId) : void
     {
         if (!empty($adsId) && defined('ADS_IBLOCK_ID')) {
@@ -177,6 +199,7 @@ class AddElementForm extends \CBitrixComponent
                 ))->fetchObject();
                 $obAds->setActive(false);
                 $obAds->save();
+                $this->increaseCounter();
             }
         }
     }
