@@ -21,10 +21,11 @@ PropSearch.prototype.setEventListener = function () {
         this.$form.onsubmit = () => {
             event.preventDefault();
             let goodName = this.$form.querySelector(this.settings.nameInputId).value;
-            if (goodName) this.$searchUrl += goodName + '+';
             let region = this.$form.querySelector(this.settings.regionInputId).value;
-            if (region) this.$searchUrl += region + '+';
             let cityInputId = this.$form.querySelector(this.settings.cityInputId).value;
+            if (goodName) this.$searchUrl += goodName;
+            if (region || cityInputId) this.$searchUrl += '+';
+            if (region) this.$searchUrl += region + '+';
             if (cityInputId) this.$searchUrl += cityInputId;
             location.href = this.$searchUrl;
         }

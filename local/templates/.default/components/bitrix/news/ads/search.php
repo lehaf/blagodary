@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
 use WebCompany\YouWatchBefore;
 
@@ -24,16 +24,15 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
 <? $arFinedElementsId = $APPLICATION->IncludeComponent(
 	"bitrix:search.page",
 	"search-page",
-	Array(
-		"CHECK_DATES" => $arParams["CHECK_DATES"]!=="N"? "Y": "N",
-		"arrWHERE" => Array("iblock_".$arParams["IBLOCK_TYPE"]),
-		"arrFILTER" => Array("iblock_".$arParams["IBLOCK_TYPE"]),
+	array(
+		"CHECK_DATES" => $arParams["CHECK_DATES"] !=="N" ? "Y": "N",
+		"arrWHERE" => array("iblock_".$arParams["IBLOCK_TYPE"]),
+		"arrFILTER" => array("iblock_ads"),
 		"SHOW_WHERE" => "N",
-		//"PAGE_RESULT_COUNT" => "",
 		"CACHE_TYPE" => $arParams["CACHE_TYPE"],
 		"CACHE_TIME" => $arParams["CACHE_TIME"],
 		"SET_TITLE" => $arParams["SET_TITLE"],
-		"arrFILTER_iblock_".$arParams["IBLOCK_TYPE"] => Array($arParams["IBLOCK_ID"])
+		"arrFILTER_iblock_".$arParams["IBLOCK_TYPE"] => array($arParams["IBLOCK_ID"])
 	),
 	$component
 );
@@ -134,7 +133,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                 /** @var string $typeOfView */
                 ?>
             </div>
-            <? if ($arFinedElementsId) {
+            <? if (!empty($arFinedElementsId)) {
                 global $arFilterAds;
                 $arFilterAds = [
                     'ID' => $arFinedElementsId,

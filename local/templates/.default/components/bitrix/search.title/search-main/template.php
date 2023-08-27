@@ -23,8 +23,9 @@ $this->setFrameMode(true);?>
             <div class="form-group-search form-group-search--select">
                 <label for="selectBanner">Область</label>
                 <select name="region" class="custom-select custom-old" id="selectBanner">
+                    <option value="" selected>Все</option>
                     <?foreach ($arResult['REGION'] as $key => $regionName):?>
-                        <option value="<?=$regionName?>" <?=$key === 0 ? 'selected' : ''?>><?=$regionName?></option>
+                        <option value="<?=$regionName?>"><?=$regionName?></option>
                     <?endforeach;?>
                 </select>
             </div>
@@ -33,8 +34,9 @@ $this->setFrameMode(true);?>
             <div class="form-group-search form-group-search--select-new">
                 <label for="selectBannerNew">Город / Район</label>
                 <select name="city" class="custom-select new-select"  id="selectBannerNew">
+                    <option value="" selected>Все</option>
                     <?foreach ($arResult['CITY'] as $key => $cityName):?>
-                        <option value="<?=$cityName?>" <?=$key === 0 ? 'selected' : ''?>><?=$cityName?></option>
+                        <option value="<?=$cityName?>"><?=$cityName?></option>
                     <?endforeach;?>
                 </select>
             </div>

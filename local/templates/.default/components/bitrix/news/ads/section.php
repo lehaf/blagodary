@@ -114,7 +114,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 "SECTION_CODE" => $_REQUEST["SECTION_CODE"],
                 "XML_EXPORT" => "N",
                 "TEMPLATE_THEME" => "blue",
-                "SECTION_ID" => $_REQUEST["SECTION_ID"]
+                "SECTION_ID" => $arActiveSection['ID']
             ),
             false
         );?>
