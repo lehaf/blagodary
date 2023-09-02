@@ -11,7 +11,11 @@ const AjaxFilter = function () {
 		'elementsClass':'.announcements-content',
 		'elementsContainerClass':'.announcements-content',
 		'paginationLinkSelector':'.pagination-list .pagination-list__item a',
-	}
+	};
+
+	this.dependenceList = {
+		'REGION':'CITY'
+	};
 
 	this.$filterForm = document.querySelector('form#'+this.settings.formFilterId);
 	this.$filterSubmitBtn = this.$filterForm.querySelector('#'+this.settings.formFilterSubmitId);
@@ -31,6 +35,7 @@ AjaxFilter.prototype.setupListener = function ()
 {
 	this.setFilterEvent();
 	this.setResetFilterEvent();
+	this.setDependentLists();
 }
 
 AjaxFilter.prototype.setFilterEvent = function () {
@@ -100,6 +105,54 @@ AjaxFilter.prototype.createGetString = function (getParams)
 		return '';
 	}
 }
+
+AjaxFilter.prototype.setDependentLists = function ()
+{
+	const _this = this;
+	if (this.dependenceList) {
+		for (let mainFiledCode in this.dependenceList) {
+			const mainField = document.querySelector('select#'+mainFiledCode);
+			const dependenceFieldCode = this.dependenceList[mainFiledCode];
+			mainField.onchange = () => {
+				let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
+					.getAttribute('data-dependency');
+				let dependenceLi = document.querySelector('select#'+dependenceFieldCode).parentNode
+					.querySelectorAll('.jq-selectbox__dropdown li');
+
+				let blockField = true;
+				let defaultAllOption = 'Все';
+				if (dependenceLi) {
+					for (let li of dependenceLi) {
+						if (li.getAttribute('data-dependency') !== dependencyFilter) {
+							li.style.display = 'none';
+						} else {
+							blockField = false;
+							li.style.display = 'block';
+						}
+
+						if (li.getAttribute('data-dependency') === null) {
+							li.style.display = 'block';
+							defaultAllOption = li.innerHTML;
+						}
+					}
+				}
+
+				let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
+				let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
+				if (!dependencyFilter || blockField) {
+					dependenceClickContainer.style.pointerEvents = 'none';
+					selectVision.style.background = '#e8e8e8'; // #d5d5d5
+					dependenceClickContainer.querySelector('.jq-selectbox__select-text').innerHTML = defaultAllOption;
+				} else {
+					dependenceClickContainer.style.pointerEvents = 'all';
+					selectVision.style.background = '#fff'; // #fff
+				}
+			}
+		}
+	}
+}
+
+
 
 AjaxFilter.prototype.getParamsToArray = function ()
 {

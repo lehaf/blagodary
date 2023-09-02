@@ -69,10 +69,21 @@ $this->setFrameMode(true);
                             <?$firstKey = array_key_first($arFilter['VALUES'])?>
                                 <div class="form-group-search form-group-search--select aside-form__item">
                                     <label for="<?=$arFilter['NAME']?>"><?=$arFilter['NAME']?></label>
-                                    <select name="<?=$arFilter['VALUES'][$firstKey]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['NAME']?>">
-                                        <option value="">Все</option>
+                                    <select name="<?=$arFilter['VALUES'][$firstKey]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['CODE']?>">
+                                        <?if ($arFilter['CODE'] === 'REGION'):?>
+                                            <option value="" data-dependency="">Вся Беларусь</option>
+                                        <?elseif ($arFilter['CODE'] === 'CITY'):?>
+                                            <option value="" data-dependency="">Любой</option>
+                                        <?else:?>
+                                            <option value="" data-dependency="">Все</option>
+                                        <?endif;?>
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
-                                            <option value="<?=$arVal['HTML_VALUE_ALT']?>" <?=!empty($arVal['CHECKED']) ? 'selected' : ''?>><?=$arVal['VALUE']?></option>
+                                            <option value="<?=$arVal['HTML_VALUE_ALT']?>"
+                                                    data-dependency="<?=$arVal['URL_ID']?>"
+                                                <?=!empty($arVal['CHECKED']) ? 'selected' : ''?>
+                                            >
+                                                <?=$arVal['VALUE']?>
+                                            </option>
                                         <?endforeach;?>
                                     </select>
                                 </div>

@@ -23,7 +23,7 @@ $this->setFrameMode(true);?>
             <div class="form-group-search form-group-search--select">
                 <label for="selectBanner">Область</label>
                 <select name="region" class="custom-select custom-old" id="selectBanner">
-                    <option value="" selected>Все</option>
+                    <option value="" selected>Вся Беларусь</option>
                     <?foreach ($arResult['REGION'] as $key => $regionName):?>
                         <option value="<?=$regionName?>"><?=$regionName?></option>
                     <?endforeach;?>
