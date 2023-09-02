@@ -67,8 +67,8 @@ global $USER;
                     "SET_META_KEYWORDS" => "Y",	// Устанавливать ключевые слова страницы
                     "SET_META_DESCRIPTION" => "Y",	// Устанавливать описание страницы
                     "SET_LAST_MODIFIED" => "Y",	// Устанавливать в заголовках ответа время модификации страницы
-                    "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",	// Включать инфоблок в цепочку навигации
-                    "ADD_SECTIONS_CHAIN" => "Y",	// Включать раздел в цепочку навигации
+                    "INCLUDE_IBLOCK_INTO_CHAIN" => "N",	// Включать инфоблок в цепочку навигации
+                    "ADD_SECTIONS_CHAIN" => "N",	// Включать раздел в цепочку навигации
                     "HIDE_LINK_WHEN_NO_DETAIL" => "Y",	// Скрывать ссылку, если нет детального описания
                     "PARENT_SECTION" => "",	// ID раздела
                     "PARENT_SECTION_CODE" => "",	// Код раздела
