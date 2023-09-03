@@ -323,7 +323,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             <? global $arrFilter;
                 $arrFilter['!=PROPERTY_OWNER'] = $BLOCKED;
             $APPLICATION->IncludeComponent(
-	"bitrix:catalog.section",
+                "bitrix:catalog.section",
                 $typeOfView,
                 array(
                     "ACTION_VARIABLE" => "",
@@ -345,8 +345,8 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                     "DISPLAY_TOP_PAGER" => "N",
                     "ELEMENT_SORT_FIELD" => "active_from",
                     "ELEMENT_SORT_FIELD2" => "id",
-                    "ELEMENT_SORT_ORDER" => "desc",
-                    "ELEMENT_SORT_ORDER2" => "asc",
+                    "ELEMENT_SORT_ORDER" => "ASC",
+                    "ELEMENT_SORT_ORDER2" => "DESC",
                     "ENLARGE_PRODUCT" => "PROP",
                     "ENLARGE_PROP" => "NEWPRODUCT",
                     "FILTER_NAME" => "arrFilter",

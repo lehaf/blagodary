@@ -40,11 +40,11 @@
         <?if (!empty($arResult['REGION'])):?>
             <div class="form-group">
                 <label for="selectForm" class="data-user__label">Область</label>
-                <select name="PERSONAL_STATE" class="custom-select custom-old" id="selectForm">
-                    <?foreach ($arResult['REGION'] as $key => $regionName):?>
-                        <option value="<?=$regionName?>"
-                            <?=$arResult["arUser"]["PERSONAL_STATE"] == $regionName ? 'selected' : ($key === 0 ? 'selected' : '')?>
-                        ><?=$regionName?></option>
+                <select name="PERSONAL_STATE" class="custom-select custom-old" id="REGION">
+                    <?foreach ($arResult['REGION'] as $key => $region):?>
+                        <option data-dependency="<?=$region['XML_ID']?>" value="<?=$region['VALUE']?>"
+                            <?=$arResult["arUser"]["PERSONAL_STATE"] == $region['VALUE'] ? 'selected' : ($key === 0 ? 'selected' : '')?>
+                        ><?=$region['VALUE']?></option>
                     <?endforeach;?>
                 </select>
             </div>
@@ -52,11 +52,11 @@
         <?if (!empty($arResult['CITY'])):?>
             <div class="form-group">
                 <label for="selectFormNew" class="data-user__label">Город / Район</label>
-                <select name="PERSONAL_CITY" class="custom-select new-select" id="selectFormNew">
-                    <?foreach ($arResult['CITY'] as $key => $cityName):?>
-                        <option value="<?=$cityName?>"
-                            <?=$arResult["arUser"]["PERSONAL_CITY"] == $cityName ? 'selected' : ($key === 0 ? 'selected' : '')?>
-                        ><?=$cityName?></option>
+                <select name="PERSONAL_CITY" class="custom-select new-select" id="CITY">
+                    <?foreach ($arResult['CITY'] as $xmlId => $city):?>
+                        <option data-dependency="<?=$city['UF_GROUP']?>" value="<?=$city['UF_NAME']?>"
+                            <?=$arResult["arUser"]["PERSONAL_CITY"] == $city['UF_NAME'] ? 'selected' : ''?>
+                        ><?=$city['UF_NAME']?></option>
                     <?endforeach;?>
                 </select>
             </div>
