@@ -63,8 +63,8 @@ AjaxFilter.prototype.setFilterEvent = function () {
 
 AjaxFilter.prototype.filterParamsExist = function (getParams)
 {
-	for(let key in getParams) {
-		if (key.includes('arrFilter')) return true;
+	for (let key in getParams) {
+		if (key.includes('arrFilter') || key.includes('set_filter')) return true;
 	}
 	return false;
 }
@@ -84,9 +84,12 @@ AjaxFilter.prototype.fillGetParamsValues = function (getParams, formData)
 		if (key && value) {
 			if (value === 'on') getParams[key] = 'Y';
 			getParams[key] = value;
+		} else {
+			if (getParams[key] && !value) delete getParams[key];
 		}
 	}
-	getParams['set_filter'] = 'y';
+
+	if (getParams['set_filter'] !== 'y') getParams['set_filter'] = 'y';
 	return getParams;
 }
 
@@ -148,6 +151,19 @@ AjaxFilter.prototype.setDependentLists = function ()
 					selectVision.style.background = '#fff'; // #fff
 				}
 			}
+			let observer = new MutationObserver(mutationRecords => {
+				let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
+				let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
+				dependenceClickContainer.style.pointerEvents = 'none';
+				selectVision.style.background = '#e8e8e8'; // #d5d5d5
+			});
+			// Контейнер для зависимого select
+			let dependencySelectContainer = document.querySelector('select#'+dependenceFieldCode).parentNode;
+			// наблюдать за зависимым select
+			observer.observe(dependencySelectContainer, {
+				childList: true, // наблюдать за непосредственными детьми
+				subtree: true // и более глубокими потомками
+			});
 		}
 	}
 }
