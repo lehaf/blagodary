@@ -15,6 +15,10 @@ const CreateAdsApp = function () {
         'maxImagesLimit': 10,
     }
 
+    this.dependenceList = {
+        'REGION':'CITY'
+    };
+
     this.$dropZone = document.querySelector(".dropzone");
     this.$dropZoneContent = document.querySelector(this.settings.dropZoneContentClass);
     this.$counter = document.querySelector(this.settings.uploadCounterClass);
@@ -62,6 +66,7 @@ CreateAdsApp.prototype.getTemplateImg = function (img,name) {
 CreateAdsApp.prototype.init = function () {
     this.setEventListener();
     this.setMaskPhone();
+    this.setDependentLists();
 }
 
 CreateAdsApp.prototype.setEventListener = function () {
@@ -238,6 +243,62 @@ CreateAdsApp.prototype.addImgFile = function (newImages, addToFiles = true) {
             })
         } else {
             alert('Вы загрузили максимальное колличество картинок!')
+        }
+    }
+}
+
+CreateAdsApp.prototype.setDependentLists = function ()
+{
+    const _this = this;
+    if (this.dependenceList) {
+        for (let mainFiledCode in this.dependenceList) {
+            const mainField = document.querySelector('select#'+mainFiledCode);
+            const dependenceFieldCode = this.dependenceList[mainFiledCode];
+            mainField.onchange = () => {
+                _this.filterDependencyValues(mainField, dependenceFieldCode);
+            }
+
+            let isDependencyFieldDefaultBlocked = false;
+            let observer = new MutationObserver(mutationRecords => {
+                if (!isDependencyFieldDefaultBlocked) {
+                    _this.filterDependencyValues(mainField, dependenceFieldCode);
+                    isDependencyFieldDefaultBlocked = true;
+                }
+            });
+            // Контейнер для зависимого select
+            let dependencySelectContainer = document.querySelector('select#'+dependenceFieldCode).parentNode;
+            // наблюдать за зависимым select
+            observer.observe(dependencySelectContainer, {
+                childList: true, // наблюдать за непосредственными детьми
+                subtree: true // и более глубокими потомками
+            });
+
+        }
+    }
+}
+
+CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceFieldCode)
+{
+    let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
+        .getAttribute('data-dependency');
+
+    let dependenceLi = document.querySelector('select#'+dependenceFieldCode)
+        .parentNode.querySelectorAll('.jq-selectbox__dropdown li');
+
+
+    let defaultAllOption = 'Все';
+    if (dependenceLi) {
+        let i = 0;
+        for (let li of dependenceLi) {
+            if (li.getAttribute('data-dependency') !== dependencyFilter) {
+                li.style.display = 'none';
+            } else {
+                if (i === 0) {
+                    li.click();
+                }
+                li.style.display = 'block';
+                i++;
+            }
         }
     }
 }
