@@ -3,7 +3,7 @@
 $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
     'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
     'select' => array('*'),
-    'filter' => array('PROPERTY_ID' => [REGION_PROP_ID,CITY_PROP_ID]),
+    'filter' => array('PROPERTY_ID' => [REGION_PROP_ID]),
     'cache' => array(
         'ttl' => 360000,
         'cache_joins' => true
@@ -12,10 +12,23 @@ $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
 
 while ($arValue = $obPropRegionValues->fetch()) {
     if (REGION_PROP_ID == $arValue['PROPERTY_ID']) {
-        $arResult['REGION'][] = $arValue['VALUE'];
+        $arResult['REGION'][$arValue['XML_ID']] = $arValue['VALUE'];
     }
+}
 
-    if (CITY_PROP_ID == $arValue['PROPERTY_ID']) {
-        $arResult['CITY'][] = $arValue['VALUE'];
+$propCitiesGroups = [];
+if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
+    $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
+    $hlClass = $entity->getDataClass();
+    $citiesValues = $hlClass::getList([
+        'select' => ['UF_NAME','UF_GROUP'],
+        'cache' => [
+            'ttl' => 36000000,
+            'cache_joins' => true
+        ]
+    ])->fetchAll();
+
+    foreach ($citiesValues as $city) {
+        $arResult['CITY'][] = $city;
     }
 }

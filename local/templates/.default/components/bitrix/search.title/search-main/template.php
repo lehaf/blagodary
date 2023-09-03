@@ -23,9 +23,9 @@ $this->setFrameMode(true);?>
             <div class="form-group-search form-group-search--select">
                 <label for="selectBanner">Область</label>
                 <select name="region" class="custom-select custom-old" id="selectBanner">
-                    <option value="" selected>Вся Беларусь</option>
-                    <?foreach ($arResult['REGION'] as $key => $regionName):?>
-                        <option value="<?=$regionName?>"><?=$regionName?></option>
+                    <option data-dependency="" value="" selected>Вся Беларусь</option>
+                    <?foreach ($arResult['REGION'] as $xmlId => $regionName):?>
+                        <option data-dependency="<?=$xmlId?>" value="<?=$regionName?>"><?=$regionName?></option>
                     <?endforeach;?>
                 </select>
             </div>
@@ -34,9 +34,9 @@ $this->setFrameMode(true);?>
             <div class="form-group-search form-group-search--select-new">
                 <label for="selectBannerNew">Город / Район</label>
                 <select name="city" class="custom-select new-select"  id="selectBannerNew">
-                    <option value="" selected>Все</option>
-                    <?foreach ($arResult['CITY'] as $key => $cityName):?>
-                        <option value="<?=$cityName?>"><?=$cityName?></option>
+                    <option data-dependency="" value="" selected>Все</option>
+                    <?foreach ($arResult['CITY'] as $key => $city):?>
+                        <option data-dependency="<?=$city['UF_GROUP']?>" value="<?=$city['UF_NAME']?>"><?=$city['UF_NAME']?></option>
                     <?endforeach;?>
                 </select>
             </div>

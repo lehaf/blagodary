@@ -18,7 +18,6 @@ if (!empty($arResult['ITEMS'])) {
         }
     }
 
-    $cityPropXml = [];
     foreach ($arResult['ITEMS'] as $propKey => $prop) {
         if ($prop['CODE'] === 'CITY' && !empty($prop['VALUES']) && !empty($propCitiesGroups)) {
             foreach ($prop['VALUES'] as $valKey => $val) {
