@@ -37,10 +37,10 @@ if (!empty($arResult)) {
         }
     }
 
-    if (!empty($arResult['PROPERTIES']['CITY']['VALUE']) && !empty($arResult['PROPERTIES']['CITY']['PROPERTY_VALUE_ID'])) {
-        $propCityId[] = $arResult['PROPERTIES']['CITY']['PROPERTY_VALUE_ID'];
-        $citiesPropVal = getCitiesById($propCityId);
-        $arResult['PROPERTIES']['CITY']['VALUE'] = $citiesPropVal[$arResult['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']];
+    if (!empty($arResult['PROPERTIES']['CITY']['VALUE'])) {
+        $propCityXml[] = $arResult['PROPERTIES']['CITY']['VALUE'];
+        $citiesPropVal = getCitiesByXml($propCityXml);
+        $arResult['PROPERTIES']['CITY']['VALUE'] = $citiesPropVal[$arResult['PROPERTIES']['CITY']['VALUE']];
     }
 
 

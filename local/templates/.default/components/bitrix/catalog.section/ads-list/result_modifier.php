@@ -12,7 +12,7 @@ if (!empty($arResult['ITEMS'])) {
         }
 
         if (!empty($arItem['PROPERTIES']['CITY']['VALUE'])) {
-            $propCityId[] = $arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID'];
+            $propCityXml[] = $arItem['PROPERTIES']['CITY']['VALUE'];
         }
 
         // Ресайзим картинки если их нет - тавим заглушку
@@ -31,12 +31,11 @@ if (!empty($arResult['ITEMS'])) {
         }
     }
     unset($arItem);
-
-    $citiesPropVal = getCitiesById($propCityId);
+    $citiesPropVal = getCitiesByXml($propCityXml);
     if (!empty($citiesPropVal)) {
         foreach ($arResult['ITEMS'] as &$arItem) {
-            if (!empty($arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']) && !empty($citiesPropVal[$arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']])) {
-                $arItem['PLACE'] .= ' / '.$citiesPropVal[$arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']];
+            if (!empty($arItem['PROPERTIES']['CITY']['VALUE']) && !empty($citiesPropVal[$arItem['PROPERTIES']['CITY']['VALUE']])) {
+                $arItem['PLACE'] .= ' / '.$citiesPropVal[$arItem['PROPERTIES']['CITY']['VALUE']];
             }
         }
         unset($arItem);

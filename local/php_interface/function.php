@@ -336,7 +336,7 @@ function redirectTo404() : void
 }
 
 
-function getCitiesById(array $propId) : array
+function getCitiesByXml(array $propXml) : array
 {
     $propCityVal = [];
     if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
@@ -344,8 +344,8 @@ function getCitiesById(array $propId) : array
         $HLCity = $entity->getDataClass();
 
         $elements = $HLCity::getList(array(
-            "select" => array("ID", 'UF_NAME'),
-            "filter" => array("=ID" => $propId), // Задаем параметры фильтра выборки
+            "select" => array("UF_XML_ID", 'UF_NAME'),
+            "filter" => array("=UF_XML_ID" => $propXml), // Задаем параметры фильтра выборки
             'cache' => [
                 'ttl' => 3600000,
                 'cache_joins' => true
@@ -354,7 +354,7 @@ function getCitiesById(array $propId) : array
 
         if (!empty($elements)) {
             foreach ($elements as $propVal) {
-                $propCityVal[$propVal['ID']] = $propVal['UF_NAME'];
+                $propCityVal[$propVal['UF_XML_ID']] = $propVal['UF_NAME'];
             }
         }
     }
