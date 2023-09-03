@@ -246,9 +246,9 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                 <option data-dependency="<?=$city['UF_GROUP']?>"
                                         value="<?=$city['UF_XML_ID']?>"
                                     <?if (!empty($arResult['ITEM']['CITY'])):?>
-                                        <?=$arResult['ITEM']['CITY'] === $cityId ? "selected" : ''?>
+                                        <?=$arResult['ITEM']['CITY'] === $city['UF_XML_ID'] ? "selected" : ''?>
                                     <?else:?>
-                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_NAME'] ? "selected" : ''?>
+                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_XML_ID'] ? "selected" : ''?>
                                     <?endif;?>
                                 ><?=$city['UF_NAME']?></option>
                             <?endforeach;?>

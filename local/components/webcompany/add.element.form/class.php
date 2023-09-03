@@ -327,7 +327,7 @@ class AddElementForm extends \CBitrixComponent
                     if ($propName === 'CITY') {
                         $obNewElement->set($propName,$propValue);
                     } elseif ($propName === 'REGION') {
-//                        $obNewElement->getRegion()->setValue($propValue);
+                        $obNewElement->setRegion($propValue);
                     } else {
                         $obNewElement->set($propName,$propValue);
                     }

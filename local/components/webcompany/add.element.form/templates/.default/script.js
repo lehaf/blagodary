@@ -260,7 +260,7 @@ CreateAdsApp.prototype.setDependentLists = function ()
 
             let isDependencyFieldDefaultBlocked = false;
             let observer = new MutationObserver(mutationRecords => {
-                if (!isDependencyFieldDefaultBlocked) {
+                if (!isDependencyFieldDefaultBlocked && !location.search.includes('item=')) {
                     _this.filterDependencyValues(mainField, dependenceFieldCode);
                     isDependencyFieldDefaultBlocked = true;
                 }
@@ -286,7 +286,6 @@ CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceF
         .parentNode.querySelectorAll('.jq-selectbox__dropdown li');
 
 
-    let defaultAllOption = 'Все';
     if (dependenceLi) {
         let i = 0;
         for (let li of dependenceLi) {
