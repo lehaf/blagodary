@@ -117,45 +117,30 @@ AjaxFilter.prototype.setDependentLists = function ()
 			const mainField = document.querySelector('select#'+mainFiledCode);
 			const dependenceFieldCode = this.dependenceList[mainFiledCode];
 			mainField.onchange = () => {
-				let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
-					.getAttribute('data-dependency');
-				let dependenceLi = document.querySelector('select#'+dependenceFieldCode).parentNode
-					.querySelectorAll('.jq-selectbox__dropdown li');
-
-				let blockField = true;
-				let defaultAllOption = 'Все';
-				if (dependenceLi) {
-					for (let li of dependenceLi) {
-						if (li.getAttribute('data-dependency') !== dependencyFilter) {
-							li.style.display = 'none';
-						} else {
-							blockField = false;
-							li.style.display = 'block';
-						}
-
-						if (li.getAttribute('data-dependency') === null) {
-							li.style.display = 'block';
-							defaultAllOption = li.innerHTML;
-						}
-					}
+				let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
+				if (!mainField.value) {
+					dependencySelect.options[0].selected = true;
 				}
-
-				let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
-				let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
-				if (!dependencyFilter || blockField) {
-					dependenceClickContainer.style.pointerEvents = 'none';
-					selectVision.style.background = '#e8e8e8'; // #d5d5d5
-					dependenceClickContainer.querySelector('.jq-selectbox__select-text').innerHTML = defaultAllOption;
-				} else {
-					dependenceClickContainer.style.pointerEvents = 'all';
-					selectVision.style.background = '#fff'; // #fff
-				}
+				// Ставим в видимое значение зависимого поля его стандартный option
+				dependencySelect.parentNode.querySelector('.jq-selectbox__select-text')
+					.innerHTML = dependencySelect.options[0].innerHTML;
+				_this.filterDependencyValues(mainField, dependenceFieldCode);
 			}
+
+			let isDependencyFieldDefaultBlocked = false;
+			const isMainFieldChosen = mainField.options[0].selected !== true;
 			let observer = new MutationObserver(mutationRecords => {
-				let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
-				let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
-				dependenceClickContainer.style.pointerEvents = 'none';
-				selectVision.style.background = '#e8e8e8'; // #d5d5d5
+				if (!isDependencyFieldDefaultBlocked) {
+					if (!isMainFieldChosen) {
+						let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
+						let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
+						dependenceClickContainer.style.pointerEvents = 'none';
+						selectVision.style.background = '#e8e8e8'; // #d5d5d5
+					} else {
+						_this.filterDependencyValues(mainField, dependenceFieldCode);
+					}
+					isDependencyFieldDefaultBlocked = true;
+				}
 			});
 			// Контейнер для зависимого select
 			let dependencySelectContainer = document.querySelector('select#'+dependenceFieldCode).parentNode;
@@ -165,6 +150,43 @@ AjaxFilter.prototype.setDependentLists = function ()
 				subtree: true // и более глубокими потомками
 			});
 		}
+	}
+}
+
+AjaxFilter.prototype.filterDependencyValues = function (mainField, dependenceFieldCode)
+{
+	let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
+		.getAttribute('data-dependency');
+	let dependenceLi = document.querySelector('select#'+dependenceFieldCode)
+		.parentNode.querySelectorAll('.jq-selectbox__dropdown li');
+
+	let blockField = true;
+	let defaultAllOption = 'Все';
+	if (dependenceLi) {
+		for (let li of dependenceLi) {
+			if (li.getAttribute('data-dependency') !== dependencyFilter) {
+				li.style.display = 'none';
+			} else {
+				blockField = false;
+				li.style.display = 'block';
+			}
+
+			if (li.getAttribute('data-dependency') === null) {
+				li.style.display = 'block';
+				defaultAllOption = li.innerHTML;
+			}
+		}
+	}
+
+	let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
+	let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
+	if (!dependencyFilter || blockField) {
+		dependenceClickContainer.style.pointerEvents = 'none';
+		selectVision.style.background = '#e8e8e8'; // #d5d5d5
+		dependenceClickContainer.querySelector('.jq-selectbox__select-text').innerHTML = defaultAllOption;
+	} else {
+		dependenceClickContainer.style.pointerEvents = 'all';
+		selectVision.style.background = '#fff'; // #fff
 	}
 }
 
