@@ -79,7 +79,8 @@ $this->setFrameMode(true);
                                         <?endif;?>
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
                                             <option value="<?=$arVal['HTML_VALUE_ALT']?>"
-                                                    data-dependency="<?=$arVal['URL_ID']?>"
+                                                    <?if ($arFilter['CODE'] === 'CITY'):?>data-dependency="<?=$arVal['CITY_GROUP']?>"<?endif;?>
+                                                    <?if ($arFilter['CODE'] === 'REGION'):?>data-dependency="<?=$arVal['URL_ID']?>"<?endif;?>
                                                 <?=!empty($arVal['CHECKED']) ? 'selected' : ''?>
                                             >
                                                 <?=$arVal['VALUE']?>

@@ -345,7 +345,11 @@ function getCitiesById(array $propId) : array
 
         $elements = $HLCity::getList(array(
             "select" => array("ID", 'UF_NAME'),
-            "filter" => array("=ID" => $propId)  // Задаем параметры фильтра выборки
+            "filter" => array("=ID" => $propId), // Задаем параметры фильтра выборки
+            'cache' => [
+                'ttl' => 3600000,
+                'cache_joins' => true
+            ]
         ))->fetchAll();
 
         if (!empty($elements)) {
