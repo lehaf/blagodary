@@ -75,7 +75,7 @@ class AddElementForm extends \CBitrixComponent
             $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
                 'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
                 'select' => array('*'),
-                'filter' => array('PROPERTY_ID' => [REGION_PROP_ID,CITY_PROP_ID]),
+                'filter' => array('PROPERTY_ID' => [REGION_PROP_ID]),
                 'cache' => array(
                     'ttl' => 360000,
                     'cache_joins' => true
@@ -84,11 +84,23 @@ class AddElementForm extends \CBitrixComponent
 
             while ($arValue = $obPropRegionValues->fetch()) {
                 if (REGION_PROP_ID == $arValue['PROPERTY_ID']) {
-                    $arResult['REGION'][$arValue['ID']] = $arValue['VALUE'];
+                    $arResult['REGION'][$arValue['ID']] = $arValue;
                 }
+            }
 
-                if (CITY_PROP_ID == $arValue['PROPERTY_ID']) {
-                    $arResult['CITY'][$arValue['ID']] = $arValue['VALUE'];
+            if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
+                $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
+                $hlClass = $entity->getDataClass();
+                $citiesValues = $hlClass::getList([
+                    'select' => ['UF_XML_ID','UF_NAME','UF_GROUP'],
+                    'cache' => [
+                        'ttl' => 36000000,
+                        'cache_joins' => true
+                    ]
+                ])->fetchAll();
+
+                foreach ($citiesValues as $city) {
+                    $arResult['CITY'][$city['UF_XML_ID']] = $city;
                 }
             }
         }
@@ -310,10 +322,15 @@ class AddElementForm extends \CBitrixComponent
             $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obNewElement = $iblockClassName::createObject();
             $obNewElement->setId($obNewElement->sysGetPrimaryAsString());
-
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
                 if (!in_array($propName, $this->arMultipleFields)) {
-                    $obNewElement->set($propName,$propValue);
+                    if ($propName === 'CITY') {
+                        $obNewElement->set($propName,$propValue);
+                    } elseif ($propName === 'REGION') {
+//                        $obNewElement->getRegion()->setValue($propValue);
+                    } else {
+                        $obNewElement->set($propName,$propValue);
+                    }
                 } else {
                     foreach ($propValue as $value) {
                         $obNewElement->addTo($propName, $value);

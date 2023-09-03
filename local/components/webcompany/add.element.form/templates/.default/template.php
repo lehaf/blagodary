@@ -218,14 +218,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     <div class="form-group">
                         <label for="REGION" class="data-user__label">Область*</label>
                         <select name="REGION" class="custom-select custom-old" id="REGION" required>
-                            <?foreach ($arResult['SELECTS']['REGION'] as $key => $regionName):?>
-                                <option value="<?=$regionName?>"
+                            <?foreach ($arResult['SELECTS']['REGION'] as $key => $region):?>
+                                <option value="<?=$region['ID']?>"
+                                        data-dependency="<?=$region['XML_ID']?>"
                                     <?if (!empty($arResult['ITEM']['REGION'])):?>
                                         <?=$arResult['ITEM']['REGION'] === $key ? "selected" : ($key === 0 ? "selected" : '')?>
                                     <?else:?>
-                                        <?=!empty($arResult['USER']['REGION']) && $arResult['USER']['REGION'] === $regionName ? "selected" : ($key === 0 ? "selected" : '')?>
+                                        <?=!empty($arResult['USER']['REGION']) && $arResult['USER']['REGION'] === $region['VALUE'] ? "selected" : ($key === 0 ? "selected" : '')?>
                                     <?endif;?>
-                                ><?=$regionName?></option>
+                                ><?=$region['VALUE']?></option>
                             <?endforeach;?>
                         </select>
                     </div>
@@ -241,14 +242,15 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                     <div class="form-group">
                         <label for="CITY" class="data-user__label">Город / Район*</label>
                         <select name="CITY" class="custom-select new-select" id="CITY" required>
-                            <?foreach ($arResult['SELECTS']['CITY'] as $key => $cityName):?>
-                                <option value="<?=$cityName?>"
+                            <?foreach ($arResult['SELECTS']['CITY'] as $cityId => $city):?>
+                                <option data-dependency="<?=$city['UF_GROUP']?>"
+                                        value="<?=$city['UF_XML_ID']?>"
                                     <?if (!empty($arResult['ITEM']['CITY'])):?>
-                                        <?=$arResult['ITEM']['CITY'] === $key ? "selected" : ($key === 0 ? "selected" : '')?>
+                                        <?=$arResult['ITEM']['CITY'] === $cityId ? "selected" : ''?>
                                     <?else:?>
-                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $cityName ? "selected" : ($key === 0 ? "selected" : '')?>
+                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_NAME'] ? "selected" : ''?>
                                     <?endif;?>
-                                ><?=$cityName?></option>
+                                ><?=$city['UF_NAME']?></option>
                             <?endforeach;?>
                         </select>
                     </div>
