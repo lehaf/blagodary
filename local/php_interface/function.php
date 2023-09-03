@@ -1,6 +1,7 @@
 <?php
 
 use \Bitrix\Main\Data\Cache;
+
 /** @global object $APPLICATION */
 
 function pr($o, $show = false, $die = false, $fullBackTrace = false)
@@ -328,8 +329,30 @@ function formateRegisterDate (string $registerDate) : string
 
 }
 
-function redirectTo404 () : void
+function redirectTo404() : void
 {
     \CHTTP::setStatus("404 Not Found");
     LocalRedirect('/404.php');
+}
+
+
+function getCitiesById(array $propId) : array
+{
+    $propCityVal = [];
+    if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
+        $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
+        $HLCity = $entity->getDataClass();
+
+        $elements = $HLCity::getList(array(
+            "select" => array("ID", 'UF_NAME'),
+            "filter" => array("=ID" => $propId)  // Задаем параметры фильтра выборки
+        ))->fetchAll();
+
+        if (!empty($elements)) {
+            foreach ($elements as $propVal) {
+                $propCityVal[$propVal['ID']] = $propVal['UF_NAME'];
+            }
+        }
+    }
+    return $propCityVal;
 }

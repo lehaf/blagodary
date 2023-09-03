@@ -1,6 +1,7 @@
 <?php
 
 if (!empty($arResult['ITEMS'])) {
+    $propCityId = [];
     foreach ($arResult['ITEMS'] as &$arItem) {
         // Приводим время в нужный формат
         $unixTime = strtotime($arItem['DATE_CREATE']);
@@ -11,7 +12,7 @@ if (!empty($arResult['ITEMS'])) {
         }
 
         if (!empty($arItem['PROPERTIES']['CITY']['VALUE'])) {
-            $arItem['PLACE'] .= ' / '.$arItem['PROPERTIES']['CITY']['VALUE'];
+            $propCityId[] = $arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID'];
         }
 
         // Ресайзим картинки если их нет - тавим заглушку
@@ -30,4 +31,14 @@ if (!empty($arResult['ITEMS'])) {
         }
     }
     unset($arItem);
+
+    $citiesPropVal = getCitiesById($propCityId);
+    if (!empty($citiesPropVal)) {
+        foreach ($arResult['ITEMS'] as &$arItem) {
+            if (!empty($arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']) && !empty($citiesPropVal[$arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']])) {
+                $arItem['PLACE'] .= ' / '.$citiesPropVal[$arItem['PROPERTIES']['CITY']['PROPERTY_VALUE_ID']];
+            }
+        }
+        unset($arItem);
+    }
 }
