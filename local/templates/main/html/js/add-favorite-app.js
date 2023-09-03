@@ -42,15 +42,42 @@ FavoriteManager.prototype.setEventListener = function () {
     if (this.$arAllbtns) {
         this.$arAllbtns.forEach((favoriteBtn) => {
             let itemId = favoriteBtn.getAttribute(_this.settings.itemIdAttrName);
-            favoriteBtn.onclick = () => {
-                if (!favoriteBtn.classList.contains('active')) {
+            favoriteBtn.onclick = (e) => {
+                e.preventDefault();
+                _this.checkUserAndAddFavorite(favoriteBtn,itemId);
+            }
+        });
+    }
+}
+
+FavoriteManager.prototype.checkUserAndAddFavorite = function (favoriteBtn, itemId) {
+    const _this = this;
+    fetch('/login/user_authorize.php', {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({'user_check':'y'})
+        }).then(function(response) {
+            return response.json()
+        }).then(function(json) {
+            if (json['userAuthorize'] === true) {
+                favoriteBtn.classList.toggle("active");
+                if (favoriteBtn.classList.contains('active')) {
                     _this.sendData({'favorite': 'y', 'method': _this.settings.addFavoriteMethod,'item_id':itemId});
                 } else {
                     _this.sendData({'favorite': 'y', 'method': _this.settings.deleteFavoriteMethod,'item_id':itemId});
                 }
+            } else {
+                _this.showLoginPopup();
             }
+        }).catch(error => {
+            // console.log(error);
         });
-    }
+}
+
+FavoriteManager.prototype.showLoginPopup = function () {
+    document.querySelector('.popUp-login').classList.add("active");
+    document.querySelector('.substrate').classList.add("active");
 }
 
 // FavoriteManager.prototype.changeDuplicates = function (itemId, method = '') {

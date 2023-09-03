@@ -85,17 +85,17 @@ if (innerWidth > 1220) {
 
 }
 
-function favoriteCard(el) {
-    el.classList.toggle("active");
-}
-
-document.addEventListener("click", () => {
-    let target = event.target;
-    if (target.classList.contains("favorite-card")) {
-        event.preventDefault()
-        favoriteCard(target)
-    }
-})
+// function favoriteCard(el) {
+//     el.classList.toggle("active");
+// }
+//
+// document.addEventListener("click", () => {
+//     let target = event.target;
+//     if (target.classList.contains("favorite-card")) {
+//         event.preventDefault()
+//         favoriteCard(target)
+//     }
+// })
 
 /*function moreItem(item) {
     $('.' + item).on('click', function () {
