@@ -248,7 +248,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                     <?if (!empty($arResult['ITEM']['CITY'])):?>
                                         <?=$arResult['ITEM']['CITY'] === $city['UF_XML_ID'] ? "selected" : ''?>
                                     <?else:?>
-                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_XML_ID'] ? "selected" : ''?>
+                                        <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_NAME'] ? "selected" : ''?>
                                     <?endif;?>
                                 ><?=$city['UF_NAME']?></option>
                             <?endforeach;?>

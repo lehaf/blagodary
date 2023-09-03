@@ -17,12 +17,12 @@ $this->setFrameMode(true);?>
         <div class="form-group-search">
             <label for="form-search">Поиск по товарам</label>
             <input type="text" placeholder="<?=$arParams["PLACEHOLDER"]?>" name="q"
-                   class="form-search-input" id="form-search">
+                   class="form-search-input" id="form-search-main">
         </div>
         <?if (!empty($arResult['REGION'])):?>
             <div class="form-group-search form-group-search--select">
                 <label for="selectBanner">Область</label>
-                <select name="region" class="custom-select custom-old" id="selectBanner">
+                <select name="region" class="custom-select custom-old" id="selectRegion">
                     <option data-dependency="" value="" selected>Вся Беларусь</option>
                     <?foreach ($arResult['REGION'] as $xmlId => $regionName):?>
                         <option data-dependency="<?=$xmlId?>" value="<?=$regionName?>"><?=$regionName?></option>
@@ -33,8 +33,8 @@ $this->setFrameMode(true);?>
         <?if (!empty($arResult['CITY'])):?>
             <div class="form-group-search form-group-search--select-new">
                 <label for="selectBannerNew">Город / Район</label>
-                <select name="city" class="custom-select new-select"  id="selectBannerNew">
-                    <option data-dependency="" value="" selected>Все</option>
+                <select name="city" class="custom-select new-select"  id="selectCity">
+                    <option data-dependency="" value="" selected>Любой</option>
                     <?foreach ($arResult['CITY'] as $key => $city):?>
                         <option data-dependency="<?=$city['UF_GROUP']?>" value="<?=$city['UF_NAME']?>"><?=$city['UF_NAME']?></option>
                     <?endforeach;?>

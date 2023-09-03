@@ -259,9 +259,10 @@ CreateAdsApp.prototype.setDependentLists = function ()
             }
 
             let isDependencyFieldDefaultBlocked = false;
+            const firstOptionSelected = dependencySelect.options[0].selected === true;
             let observer = new MutationObserver(mutationRecords => {
                 if (!isDependencyFieldDefaultBlocked && !location.search.includes('item=')) {
-                    _this.filterDependencyValues(mainField, dependenceFieldCode);
+                    _this.filterDependencyValues(mainField, dependenceFieldCode,firstOptionSelected);
                     isDependencyFieldDefaultBlocked = true;
                 }
             });
@@ -277,14 +278,14 @@ CreateAdsApp.prototype.setDependentLists = function ()
     }
 }
 
-CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceFieldCode)
+CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceFieldCode, skipClick = false)
 {
+    let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
     let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
         .getAttribute('data-dependency');
 
     let dependenceLi = document.querySelector('select#'+dependenceFieldCode)
         .parentNode.querySelectorAll('.jq-selectbox__dropdown li');
-
 
     if (dependenceLi) {
         let i = 0;
@@ -292,7 +293,7 @@ CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceF
             if (li.getAttribute('data-dependency') !== dependencyFilter) {
                 li.style.display = 'none';
             } else {
-                if (i === 0) {
+                if (i === 0 && !skipClick) {
                     li.click();
                 }
                 li.style.display = 'block';
