@@ -178,23 +178,11 @@ global $USER, $APPLICATION;
     </div>
 </div>
 <div class="mobile_menu_overlay"></div>
-
-<div class="popUp popUp-reset-mail">
-    <h3 class="reset-mail__title">Введите E-mail от своего профиля</h3>
-    <p class="reset-mail__subtitle">Мы отправим на него ссылку для восстановления пароля</p>
-    <form action="#" class="form-reset-mail data-user">
-        <div class="form-group">
-            <label for="reset-email" class="data-user__label">E-mail*</label>
-            <input type="email" name="email" id="reset-email" placeholder="test@gmail.com">
-        </div>
-        <button class="btn-bg" id="submit-reset-password">Отправить</button>
-    </form>
-    <span class="modal-cross">
-        <svg>
-            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup-white"></use>
-        </svg>
-    </span>
-</div>
+<?php $APPLICATION->IncludeComponent(
+    "bitrix:main.auth.forgotpasswd",
+    "forgot_pass",
+    Array()
+);?>
 <?php if (!$USER->IsAuthorized()) :?>
     <div class="popUp popUp-login">
         <div class="login-btn-list">

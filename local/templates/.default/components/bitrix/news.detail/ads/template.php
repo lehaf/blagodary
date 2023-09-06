@@ -197,7 +197,9 @@ $this->setFrameMode(true);
                     <?if (!empty($arResult['DETAIL_TEXT'])):?>
                         <h4 class="card-description__title">Описание</h4>
                         <div class="card-description-text">
+                            <p>
                             <?=$arResult['DETAIL_TEXT']?>
+                            </p>
                         </div>
                         <div class="card-description-text-btn" >
                             Развернуть описание

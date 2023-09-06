@@ -1,20 +1,20 @@
-const AuthAjax = function () {
+const ForgotPass = function () {
     this.setting = {
-        'formId':'#auth-form',
+        'formId':'#forgot-pass',
         'containerInputErrorClass':'error',
         'errorClass':'error-block',
         'errorArrKey':'ERROR_PROCESSING',
         'modalCrossClass':'.modal-cross',
-        'popupClass':'.popUp-login',
+        'popupClass':'.popUp-reset-mail',
         'formBack':'.substrate',
     }
 
     this.errors = {
-       'emptyField':'Обязательное поле!',
-       'wrongEmail':'Некоректный email!',
-       'smallPass':'Минимум 8 символов!',
-       'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
-       'numbersInPass':'Пароль должен содержать цифры!',
+        'emptyField':'Обязательное поле!',
+        'wrongEmail':'Некоректный email!',
+        'smallPass':'Минимум 8 символов!',
+        'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
+        'numbersInPass':'Пароль должен содержать цифры!',
     }
 
     this.$form = document.querySelector('form' + this.setting.formId);
@@ -22,36 +22,38 @@ const AuthAjax = function () {
     this.$substrate = document.querySelector(this.setting.formBack);
     this.$formAction = this.$form.getAttribute('action');
     this.$formInputs = this.$form.querySelectorAll('input');
+    this.$successContainer = this.$form.parentNode.querySelector('.alert-success');
 
     this.init();
 }
 
-AuthAjax.prototype.init = function () {
+ForgotPass.prototype.init = function () {
     this.setupListener();
 }
 
-AuthAjax.prototype.setupListener = function () {
+ForgotPass.prototype.setupListener = function () {
     const _this = this;
     if (this.$form) {
         this.$form.onsubmit = (e) => {
             e.preventDefault();
             let formData = new FormData(this.$form);
             formData.set('AUTH_ACTION', 'Y');
+            formData.set('forgot_pass', 'Y');
             if (_this.checkFormFields()) {
                 _this.sendData(formData);
             }
         }
     }
 
-    this.resetFormEvent();
+    _this.resetFormEvent();
 }
 
-AuthAjax.prototype.resetFormEvent = function () {
+ForgotPass.prototype.resetFormEvent = function () {
     const _this = this;
     if (this.$popUp) {
         let crossBtn = this.$popUp.querySelector(_this.setting.modalCrossClass);
         if (crossBtn) {
-            crossBtn.onclick = () => {
+            crossBtn.onclick = (e) => {
                 _this.resetForm();
             }
         }
@@ -66,7 +68,7 @@ AuthAjax.prototype.resetFormEvent = function () {
     }
 }
 
-AuthAjax.prototype.checkFormFields = function () {
+ForgotPass.prototype.checkFormFields = function () {
     const _this = this;
     if (this.$formInputs) {
         let testPassed = true;
@@ -77,7 +79,7 @@ AuthAjax.prototype.checkFormFields = function () {
                     if (!input.value) {
                         errors.push(_this.errors.emptyField)
                     } else {
-                        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input.value)) {
+                        if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(input.value)) {
                             errors.push(_this.errors.wrongEmail)
                         }
                     }
@@ -100,7 +102,7 @@ AuthAjax.prototype.checkFormFields = function () {
     }
 }
 
-AuthAjax.prototype.createInputErrorMessage = function (input,errorMessage) {
+ForgotPass.prototype.createInputErrorMessage = function (input,errorMessage) {
     let errorDiv = document.createElement('div');
     errorDiv.classList.add(this.setting.errorClass);
     errorDiv.innerHTML = errorMessage;
@@ -117,7 +119,7 @@ AuthAjax.prototype.createInputErrorMessage = function (input,errorMessage) {
     }
 }
 
-AuthAjax.prototype.deleteInputErrorMessage = function (input) {
+ForgotPass.prototype.deleteInputErrorMessage = function (input) {
     let inputContainer = input.parentNode;
     if (inputContainer.classList.contains(this.setting.containerInputErrorClass)) {
         inputContainer.classList.remove(this.setting.containerInputErrorClass);
@@ -129,7 +131,7 @@ AuthAjax.prototype.deleteInputErrorMessage = function (input) {
     }
 }
 
-AuthAjax.prototype.resetForm = function (input) {
+ForgotPass.prototype.resetForm = function (input) {
     const _this = this;
     if (this.$form) {
         if (this.$formInputs) {
@@ -139,10 +141,28 @@ AuthAjax.prototype.resetForm = function (input) {
         }
         _this.$form.reset();
     }
+
+    if (this.$successContainer.style.display === 'block') {
+        this.$successContainer.innerHTML = '';
+        this.$successContainer.style.display = 'none';
+    }
 }
 
-AuthAjax.prototype.enterErrors = function (jsonFields) {
+ForgotPass.prototype.processJson = function (jsonFields) {
+    if (jsonFields['ERROR_PROCESSING']) {
+        this.enterErrors(jsonFields);
+    } else {
+        this.enterSuccess(jsonFields);
+    }
+}
+
+ForgotPass.prototype.enterErrors = function (jsonFields) {
     const _this = this;
+    if (this.$successContainer.style.display === 'block') {
+        this.$successContainer.innerHTML = '';
+        this.$successContainer.style.display = 'none';
+    }
+
     if (this.$form) {
         if (this.$formInputs) {
             this.$formInputs.forEach((input) => {
@@ -152,7 +172,22 @@ AuthAjax.prototype.enterErrors = function (jsonFields) {
     }
 }
 
-AuthAjax.prototype.sendData = function (data) {
+ForgotPass.prototype.enterSuccess = function (jsonFields) {
+    const _this = this;
+    if (this.$form) {
+        if (this.$formInputs) {
+            this.$formInputs.forEach((input) => {
+                _this.deleteInputErrorMessage(input);
+            });
+        }
+        if (jsonFields['SUCCESS'] && this.$successContainer) {
+            this.$successContainer.innerHTML = jsonFields['SUCCESS'];
+            this.$successContainer.style.display = 'block';
+        }
+    }
+}
+
+ForgotPass.prototype.sendData = function (data) {
     const _this = this;
     fetch(_this.$formAction, {
         method: 'POST',
@@ -163,16 +198,12 @@ AuthAjax.prototype.sendData = function (data) {
     }).then(function(jsonResponse) {
         if (jsonResponse) {
             let jsonFields = JSON.parse(jsonResponse);
-            _this.enterErrors(jsonFields);
-        } else {
-            _this.resetForm();
-            location.href = location.origin + '/personal/my-ads/';
+            _this.processJson(jsonFields);
         }
-
     }).catch(error => {
         console.log(error);
     });
 }
 addEventListener('DOMContentLoaded', () => {
-    new AuthAjax();
+    new ForgotPass();
 });

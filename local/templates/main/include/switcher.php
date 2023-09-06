@@ -2,7 +2,7 @@
 $obSession = \Bitrix\Main\Application::getInstance()->getSession();
 $obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
-$typeOfView = 'ads-list';
+$typeOfView = 'ads-card';
 
 if (!empty($obRequest->getPost('typeOfView'))) {
     $obSession->set('typeOfView', $obRequest->getPost('typeOfView'));

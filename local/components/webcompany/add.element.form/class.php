@@ -417,6 +417,7 @@ class AddElementForm extends \CBitrixComponent
         } elseif ($cache->startDataCache()) {
             $arSectionTree = \CIBlockSection::GetNavChain(ADS_IBLOCK_ID, $sectionId, array('ID','NAME','DEPTH_LEVEL'), true);
             $arCacheRes = [];
+
             foreach ($arSectionTree as $arSect) {
                 $arCacheRes['PATH_NAME'][] = $arSect['NAME'];
                 $arCacheRes['TREE'][$arSect['DEPTH_LEVEL']] = $arSect['ID'];

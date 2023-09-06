@@ -6,6 +6,9 @@ const RegisterAjax = function () {
         'errorClass':'error-block',
         'additionalField':'REGISTER[EMAIL]',
         'acceptCheckboxId':'#accept-register',
+        'modalCrossClass':'.modal-cross',
+        'popupClass':'.popUp-login',
+        'formBack':'.substrate',
     }
 
     this.errors = {
@@ -19,6 +22,8 @@ const RegisterAjax = function () {
     }
 
     this.$form = document.querySelector('form' + this.setting.formId);
+    this.$popUp = document.querySelector(this.setting.popupClass);
+    this.$substrate = document.querySelector(this.setting.formBack);
     this.$formAction = this.$form.getAttribute('action');
     this.$formInputs = this.$form.querySelectorAll('input');
     this.$acceptInput = this.$form.querySelector(this.setting.acceptCheckboxId);
@@ -29,6 +34,7 @@ const RegisterAjax = function () {
 RegisterAjax.prototype.init = function () {
     this.setupListener();
     this.clickAccept();
+    // this.resetFormEvent();
 }
 
 RegisterAjax.prototype.setupListener = function () {
@@ -46,6 +52,26 @@ RegisterAjax.prototype.setupListener = function () {
     }
 }
 
+// RegisterAjax.prototype.resetFormEvent = function () {
+//     const _this = this;
+//     if (this.$popUp) {
+//         let crossBtn = this.$popUp.querySelector(_this.setting.modalCrossClass);
+//         if (crossBtn) {
+//             crossBtn.onclick = () => {
+//                 _this.resetForm();
+//             }
+//         }
+//     }
+//
+//     if (this.$substrate) {
+//         this.$substrate.onclick = () => {
+//             if (!this.$substrate.classList.contains('active')) {
+//                 _this.resetForm();
+//             }
+//         }
+//     }
+// }
+
 RegisterAjax.prototype.checkFormFields = function () {
     const _this = this;
     if (this.$formInputs) {
@@ -57,7 +83,7 @@ RegisterAjax.prototype.checkFormFields = function () {
                     if (!input.value) {
                         errors.push(_this.errors.emptyField)
                     } else {
-                        if (!/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(input.value)) {
+                        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input.value)) {
                             errors.push(_this.errors.wrongEmail)
                         }
                     }
@@ -87,7 +113,7 @@ RegisterAjax.prototype.checkFormFields = function () {
                     break;
             }
             let errorMessage = errors.join('<br>');
-            console.log(errorMessage);
+
             if (errorMessage) {
                 testPassed = false;
                 if (input.getAttribute('data-validate') === 'n') {
@@ -160,6 +186,7 @@ RegisterAjax.prototype.deleteInputErrorMessage = function (input) {
     if (errorContainer) {
         errorContainer.remove();
     }
+
 }
 
 RegisterAjax.prototype.resetForm = function (input) {
@@ -169,6 +196,11 @@ RegisterAjax.prototype.resetForm = function (input) {
             this.$formInputs.forEach((input) => {
                 _this.deleteInputErrorMessage(input);
             });
+        }
+
+        let acceptSpan = this.$acceptInput.parentNode.querySelector('.user-agreement');
+        if (acceptSpan.classList.contains('error')) {
+            acceptSpan.classList.remove('error');
         }
         _this.$form.reset();
     }
@@ -211,7 +243,7 @@ RegisterAjax.prototype.sendData = function (data) {
             _this.enterErrors(jsonFields);
         } else {
             _this.resetForm();
-            location.reload();
+            location.href = location.origin + '/personal/my-ads/';
         }
 
     }).catch(error => {
