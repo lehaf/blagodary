@@ -51,7 +51,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && check_bitrix_sessid()) {
     }
 
 }
-pr($settingsRefSys->getSettingValue('ops'));
+
 ?>
 <?if (!empty($message)):?>
     <div class="adm-info-message-wrap adm-info-message-green">
