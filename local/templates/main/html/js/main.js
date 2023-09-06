@@ -5,19 +5,19 @@ fakeHeader.style.height = header.offsetHeight + "px"
 const pageContent = document.querySelector(".page-content")
 const headerSearch = document.querySelector(".header-search")
 
-// function positionSearchResize() {
-//     let position = pageContent.getBoundingClientRect().left;
-//     if (position > 0) {
-//         headerSearch.setAttribute('style', `position:absolute; left: ${position}px`)
-//     }
-// }
+function positionSearchResize() {
+    let position = pageContent.getBoundingClientRect().left;
+    if (position > 0) {
+        headerSearch.setAttribute('style', `position:absolute; left: ${position}px`)
+    }
+}
 
-// if (pageContent && widthWindow > 1024) {
-//     positionSearchResize()
-//     window.addEventListener("resize", () => {
-//         positionSearchResize()
-//     })
-// }
+if (pageContent && widthWindow > 1024) {
+    positionSearchResize()
+    window.addEventListener("resize", () => {
+        positionSearchResize()
+    })
+}
 
 let listsArr = {
     minsk: ["Любой", "Минская область", "Брестская область", "Гродненская область", "Гомельская область", "Могилевская область", "Витебская область"],

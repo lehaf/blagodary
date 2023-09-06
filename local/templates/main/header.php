@@ -55,7 +55,7 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
     <div class="header-bottom">
         <div class="wrapper">
             <div class="header-bottom-content">
-                <?if (!$isMainPage):?><a href="/" class="header-logo"><?else:?><div><?endif;?>
+                <?if (!$isMainPage):?><a href="/" class="header-logo"><?else:?><div class="header-logo"><?endif;?>
                     <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/header-logo.svg" alt="logo">
                 <?if (!$isMainPage):?></a><?else:?></div><?endif;?>
                 <?$APPLICATION->IncludeComponent(
