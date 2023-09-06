@@ -370,7 +370,8 @@ class AddElementForm extends \CBitrixComponent
                 $arButtons = $this->getHermitageButtons($obItem->getId(),$obItem->getIblock()->getId());
                 $arDPU = ['ID' => $obItem->getId(), 'CODE' => $obItem->getCode()];
                 $detailPageUrl = \CIBlock::ReplaceDetailUrl($obItem->getIblock()->getDetailPageUrl(), $arDPU, false, 'E');
-                $firstImgId = !empty($obItem->getImages()->getAll()[0]) ? $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
+                $firstImgId = !empty($obItem->getImages()->getAll()[0] && !empty($obItem->getImages()->getAll()[0]->getValue())) ?
+                    $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
                 $arResizeFirstImg = \CFile::ResizeImageGet(
                     $firstImgId,
                     array("width" => 170, "height" => 131),

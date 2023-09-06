@@ -8,6 +8,7 @@ use \Bitrix\Main\Data\Cache;
 
 class AddElementForm extends \CBitrixComponent
 {
+    private string $editPageTitle = 'Редактировать объявление';
     private string $errorLogTitle = 'Ошибка создания объявления!';
     private string $errorLogDesc = "В компоненте webcompany:add.element.form при создании нового объявления возникли следующие ошибки:";
     private string $successRedirectPath = '/personal/my-ads/';
@@ -231,14 +232,14 @@ class AddElementForm extends \CBitrixComponent
             $countFiles = 0;
             for($i = 0; $i < count($arImages['name']); $i++) {
                 // Проверяем на пустоту
-                if (empty($arImages['name'][$i])) {
-                    $this->arErrors[$this->postImagesArrayName][] = "Поле '".$this->arPostValidFields[$this->postImagesArrayName]."' обязательно для заполнения!";
-                    continue;
-                }
+//                if (empty($arImages['name'][$i])) {
+//                    $this->arErrors[$this->postImagesArrayName][] = "Поле '".$this->arPostValidFields[$this->postImagesArrayName]."' обязательно для заполнения!";
+//                    continue;
+//                }
 
                 $type = pathinfo($arImages['name'][$i], PATHINFO_EXTENSION); // Получаем тип файла
                  // Проверяем, является ли файл изображением исключительно типов PNG, JPG, JPEG
-                if (!in_array($type, $this->arValidImgFormat)) {
+                if (!empty($type) && !in_array($type, $this->arValidImgFormat)) {
                     $this->arErrors[$this->postImagesArrayName][] = "Файл ".$arImages['name'][$i]." не является изображением одним из следующих типов: ".implode(', ',$this->arValidImgFormat).'.';
                     continue;
                 }
@@ -478,7 +479,11 @@ class AddElementForm extends \CBitrixComponent
 
     private function prepareResult() : void
     {
-        if (!empty($_GET['item']) && is_int(intval($_GET['item']))) $arResult['ITEM'] = $this->getEditItem($_GET['item']);
+        if (!empty($_GET['item']) && is_int(intval($_GET['item']))) {
+            global $APPLICATION;
+            $APPLICATION->SetPageProperty("title", $this->editPageTitle);
+            $arResult['ITEM'] = $this->getEditItem($_GET['item']);
+        }
         $arResult['USER'] = $this->getUserInfo();
         $arResult['SECTIONS_LVL'] = $this->getSectionsLvlTree();
         $arResult['SELECTS'] = $this->getRegionsAndCitiesProps();

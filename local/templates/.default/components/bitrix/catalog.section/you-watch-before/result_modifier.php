@@ -7,7 +7,7 @@ if (!empty($arResult['ITEMS'])) {
         $arItem['DATE_CREATE'] = date('d.m.Y в H:i',$unixTime);
 
         // Ресайзим картинки если их нет - тавим заглушку
-        if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'])) {
+        if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'][0])) {
             $arItem['IMG'] = CFile::ResizeImageGet(
                 $arItem['PROPERTIES']['IMAGES']['VALUE'][0],
                 array("width" => 240, "height" => 214),
