@@ -14,7 +14,7 @@ $this->setFrameMode(true);
 $arItem = $arResult['ITEM'];
 $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/main-search.js');
 ?>
-<?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['src'])):?>
+<?php if (!empty($arItem['DETAIL_TEXT']) && !empty($arItem['DETAIL_PICTURE']['SRC'])):?>
     <?
     // Добавляем эрмитаж
     $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
@@ -22,7 +22,8 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/main-search.js');
         array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
     );
     ?>
-    <main id="<?=$this->GetEditAreaID($arItem['ID'])?>" class="main" style="background: url(<?=$arItem['DETAIL_PICTURE']['src']?>) no-repeat center/cover">
+    <main id="<?=$this->GetEditAreaID($arItem['ID'])?>" class="main"
+          style="background: url(<?=$arItem['DETAIL_PICTURE']['SRC']?>) no-repeat center/cover">
         <div class="main-wrapper-text"><?=htmlspecialchars_decode($arItem['DETAIL_TEXT'])?></div>
         <?$APPLICATION->IncludeComponent(
             "bitrix:search.title",
