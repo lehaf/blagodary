@@ -80,6 +80,7 @@ class AddElementForm extends \CBitrixComponent
                 if (!empty($_POST['ads_id']) && !empty($_POST['ads_name']) &&!empty($_POST['user_id']) && !empty($_POST['RATING']) && !empty($_POST['COMMENT'])) {
                     $this->setUserRating($_POST['user_id'], $_POST['ads_name'], $_POST['RATING'], $_POST['COMMENT']);
                     $this->deactivateAds($_POST['ads_id']);
+                    $this->increaseCounter();
                 }
                 break;
             case 'deactivate':
@@ -199,7 +200,6 @@ class AddElementForm extends \CBitrixComponent
                 ))->fetchObject();
                 $obAds->setActive(false);
                 $obAds->save();
-                $this->increaseCounter();
             }
         }
     }
