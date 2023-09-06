@@ -15,9 +15,9 @@ if (!empty($arResult['ITEMS'][0])) {
     $arReversCounter = implode(' ',str_split($reversCounter, 3));
     $arItem['PROPERTIES']['COUNTER']['VALUE'] = strrev($arReversCounter);
     // Ресайзим картинку
-    $arItem['DETAIL_PICTURE'] = CFile::ResizeImageGet(
-        $arItem['DETAIL_PICTURE']['ID'],
-        array("width" => 900, "height" => 100),
-        BX_RESIZE_IMAGE_PROPORTIONAL,
-    );
+//    $arItem['DETAIL_PICTURE'] = CFile::ResizeImageGet(
+//        $arItem['DETAIL_PICTURE']['ID'],
+//        array("width" => 1200, "height" => 200),
+//        BX_RESIZE_IMAGE_PROPORTIONAL,
+//    );
 }
