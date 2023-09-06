@@ -340,7 +340,7 @@ body {
 .jq-selectbox__select:after {
   position: absolute;
   content: url("../assets/img/arrow-bottom.svg");
-  top: 11px;
+  top: 18px;
   right: 19px;
 }
 
