@@ -69,7 +69,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                    name="NAME"
                    placeholder="Например, телевизор Horizont"
                    id="productName"
-                   value="<?=!empty($arResult['ITEM']['NAME']) ? $arResult['ITEM']['NAME'] : ''?>"
+                   value="<?=!empty($arResult['ITEM']['NAME']) ? $arResult['ITEM']['NAME'] : $_POST['NAME']?>"
                    required
             >
         </div>
@@ -189,7 +189,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                               id="announcementTextarea"
                               maxlength="4000"
                               required
-                    ><?=!empty($arResult['ITEM']['DETAIL_TEXT']) ? $arResult['ITEM']['DETAIL_TEXT'] : ''?></textarea>
+                    ><?=!empty($arResult['ITEM']['DETAIL_TEXT']) ? $arResult['ITEM']['DETAIL_TEXT'] : $_POST['DETAIL_TEXT']?></textarea>
                 </label>
                 <div class="form-textarea-description">
                     <div class="min-text">Минимально: 20 знаков</div>
@@ -221,7 +221,9 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             <?foreach ($arResult['SELECTS']['REGION'] as $key => $region):?>
                                 <option value="<?=$region['ID']?>"
                                         data-dependency="<?=$region['XML_ID']?>"
-                                    <?if (!empty($arResult['ITEM']['REGION'])):?>
+                                    <?if (!empty($_POST['REGION'])):?>
+                                        <?=$_POST['REGION'] == $region['ID'] ? "selected" : ''?>
+                                    <?elseif (!empty($arResult['ITEM']['REGION'])):?>
                                         <?=$arResult['ITEM']['REGION'] === $key ? "selected" : ($key === 0 ? "selected" : '')?>
                                     <?else:?>
                                         <?=!empty($arResult['USER']['REGION']) && $arResult['USER']['REGION'] === $region['VALUE'] ? "selected" : ($key === 0 ? "selected" : '')?>
@@ -245,7 +247,9 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             <?foreach ($arResult['SELECTS']['CITY'] as $cityId => $city):?>
                                 <option data-dependency="<?=$city['UF_GROUP']?>"
                                         value="<?=$city['UF_XML_ID']?>"
-                                    <?if (!empty($arResult['ITEM']['CITY'])):?>
+                                    <?if (!empty($_POST['CITY'])):?>
+                                        <?=$_POST['CITY'] == $city['UF_XML_ID'] ? "selected" : ''?>
+                                    <?elseif (!empty($arResult['ITEM']['CITY'])):?>
                                         <?=$arResult['ITEM']['CITY'] === $city['UF_XML_ID'] ? "selected" : ''?>
                                     <?else:?>
                                         <?=!empty($arResult['USER']['CITY']) && $arResult['USER']['CITY'] === $city['UF_NAME'] ? "selected" : ''?>
@@ -312,9 +316,12 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             </div>
                         <?endforeach;?>
                     <?else:?>
-                        <?if (!empty($arResult['USER']['UF_PHONES'])):?>
+                        <?if (!empty($arResult['USER']['UF_PHONES']) || !empty($_POST['OWNER_PHONE'])):?>
+                            <?
+                                $phones = !empty($_POST['OWNER_PHONE']) ? $_POST['OWNER_PHONE'] : $arResult['USER']['UF_PHONES'];
+                            ?>
                             <?$firstKey = array_key_first($arResult['USER']['UF_PHONES'])?>
-                            <?foreach ($arResult['USER']['UF_PHONES'] as $key => $phone):?>
+                            <?foreach ($phones as $key => $phone):?>
                                 <div class="form-group form-group--tel">
                                     <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>
                                     <input type="tel"

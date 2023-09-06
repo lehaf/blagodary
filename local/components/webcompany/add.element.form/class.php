@@ -323,6 +323,7 @@ class AddElementForm extends \CBitrixComponent
             $iblockClassName = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
             $obNewElement = $iblockClassName::createObject();
             $obNewElement->setId($obNewElement->sysGetPrimaryAsString());
+
             foreach ($this->arFieldsForRecord as $propName => $propValue) {
                 if (!in_array($propName, $this->arMultipleFields)) {
                     if ($propName === 'CITY') {
@@ -339,6 +340,7 @@ class AddElementForm extends \CBitrixComponent
                 }
             }
 
+
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
                 $arImage['MODULE_ID'] = 'iblock';
                 $fileId = \CFile::SaveFile($arImage,'iblock');
@@ -348,6 +350,14 @@ class AddElementForm extends \CBitrixComponent
             $obRes = $obNewElement->save();
 
             if ($obRes->isSuccess()) {
+                $newAdsId = $obRes->getId();
+                if (!empty($newAdsId)) {
+                    $arLoadProductArray = Array(
+                        "IBLOCK_SECTION_ID" => $this->arFieldsForRecord['IBLOCK_SECTION_ID']
+                    );
+                    $el = new \CIBlockElement;
+                    $el->Update($newAdsId, $arLoadProductArray);
+                }
                 LocalRedirect($this->successRedirectPath);
             } else {
                 $this->processErrors($obRes->getErrorMessages());
