@@ -13,19 +13,24 @@ $isAddAdsPage = $curPage === '/personal/my-ads/add-ads/';
 $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
 $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
 ?>
-<html>
+<!doctype html>
+<html lang="<?=LANGUAGE_ID?>">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <?$APPLICATION->ShowHead();?>
     <?
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/style.css");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/linksstyle.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/add-favorite-app.js");
     ?>
-    <title><?$APPLICATION->ShowTitle()?></title>
+    <title><?php $APPLICATION->ShowTitle()?></title>
 </head>
 <body>
 <?$APPLICATION->ShowPanel()?>
-<div class="fake-header" style="height: 126px;"></div>
+<div class="fake-header" style="height: 116px;"></div>
 <header class="header">
     <div class="header-top">
         <div class="wrapper">

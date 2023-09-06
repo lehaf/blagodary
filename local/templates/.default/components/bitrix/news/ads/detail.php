@@ -74,7 +74,13 @@ $this->setFrameMode(true);
 ],
 $component,
 ['HIDE_ICONS' => 'Y']
-);?>
+);
+// Добавляем товар в куки
+if (!empty($ElementID)) {
+    $obViewedGoods = new YouWatchBefore();
+    $obViewedGoods->setCookie($ElementID);
+}
+?>
 <?if (!empty($curUserId) && $GLOBALS['OWNER_ID'] != $curUserId):?>
     <?php $APPLICATION->IncludeComponent(
         "bitrix:form.result.new",
@@ -124,7 +130,7 @@ if (!empty($GLOBALS['SECTION_ID'])) {
     $arAdsFilter = [
         'IBLOCK_SECTION_ID' => $GLOBALS['SECTION_ID'],
         '!=PROPERTY_OWNER' => $BLOCKED,
-        '!ID' => $ElementID,
+        '!=ID' => $ElementID,
     ];
 
     $APPLICATION->IncludeComponent(
@@ -197,11 +203,13 @@ if (!empty($GLOBALS['SECTION_ID'])) {
 ?>
 
 <?
+
 $obViewedGoods = new YouWatchBefore();
 $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
 if (!empty($arViewedGoodsId)) {
     global $arViewedGoodsFilter;
     $arViewedGoodsFilter = ['ID' => $arViewedGoodsId,'!ID' => $ElementID, '!=PROPERTY_OWNER' => $BLOCKED,];
+    $this->SetViewTarget('viewed-detail');
     $APPLICATION->IncludeComponent(
         "bitrix:catalog.section",
         "you-watch-before-detail",
@@ -272,5 +280,6 @@ if (!empty($arViewedGoodsId)) {
         ),
         false
     );
+    $this->EndViewTarget();
 }
 ?>

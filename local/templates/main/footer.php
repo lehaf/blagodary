@@ -1,8 +1,9 @@
 <?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
-global $USER;
+global $USER, $APPLICATION;
 ?>
     </div>
 </div>
+<?php $APPLICATION->ShowViewContent('viewed-detail');?>
 <footer class="footer">
     <div class="footer-top">
         <div class="wrapper">

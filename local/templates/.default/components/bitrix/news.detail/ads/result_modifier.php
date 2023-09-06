@@ -1,7 +1,5 @@
 <?php
 
-use WebCompany\YouWatchBefore;
-
 if (!empty($arResult)) {
     // Ресайзим картинки если их нет - тавим заглушку
     if (!empty($arResult['PROPERTIES']['IMAGES']['VALUE'])) {
@@ -65,9 +63,6 @@ if (!empty($arResult)) {
     $this->AddDeleteAction($arResult['ID'], $arResult['DELETE_LINK'], $arResult["DELETE_LINK_TEXT"],
         array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
     );
-
-    $obViewedGoods = new YouWatchBefore();
-    $obViewedGoods->setCookie($arResult['ID']);
 
 
     $this->getComponent()->setResultCacheKeys(['OWNER']);
