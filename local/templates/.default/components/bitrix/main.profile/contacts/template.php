@@ -18,7 +18,12 @@
                     <div class="form-group form-group--tel">
                         <label for="dataUserTel" class="data-user__label data-user__label--tel">Контактный телефон №<?=$key+1?></label>
                         <input type="tel" value="<?=$phone?>" name="UF_PHONES[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" id="dataUserTel">
-                        <span class="remove_phone"><svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use></svg></span>
+                        <span class="remove_phone">
+                            <svg>
+                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+                            </svg>
+                        </span>
+
                     </div>
                 <?endforeach;?>
             <?else:?>

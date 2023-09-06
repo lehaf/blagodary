@@ -4,7 +4,7 @@ const PhoneController = function () {
          <div class="form-group form-group--tel">
              <label class="data-user__label data-user__label--tel">Контактный телефон*</label>
              <input type="tel" name="UF_PHONES[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel" name="new-number">
-             <span class="remove_phone"><svg><use xlink:href="/local/templates/main/html/assets/img/sprites/sprite.svg#plus"></use></svg></span>
+             <span class="remove_phone"><svg><use xlink:href="/local/templates/main/html/assets/img/sprites/sprite.svg#cross-popup"></use></svg></span>
          </div>
         `;
 
@@ -57,9 +57,11 @@ PhoneController.prototype.setDependentLists = function ()
             }
 
             let isDependencyFieldDefaultBlocked = false;
+            let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
+            const needClick = dependencySelect.options[0].selected !== true;
             let observer = new MutationObserver(mutationRecords => {
                 if (!isDependencyFieldDefaultBlocked) {
-                    _this.filterDependencyValues(mainField, dependenceFieldCode, true);
+                    _this.filterDependencyValues(mainField, dependenceFieldCode, needClick);
                     isDependencyFieldDefaultBlocked = true;
                 }
             });

@@ -27,7 +27,7 @@ const CreateAdsApp = function () {
              <div class="form-group form-group--tel">
                  <label class="data-user__label data-user__label--tel">Контактный телефон</label>
                  <input type="tel" name="OWNER_PHONE[]" placeholder="+375 (xx) xxx-xx-xx" class="dataUserTel">
-                 <span class="remove_phone"><svg><use xlink:href="/local/templates/main/html/assets/img/sprites/sprite.svg#plus"></use></svg></span>
+                 <span class="remove_phone"><svg><use xlink:href="/local/templates/main/html/assets/img/sprites/sprite.svg#cross-popup"></use></svg></span>
              </div>`;
     this.init();
 }
@@ -259,10 +259,11 @@ CreateAdsApp.prototype.setDependentLists = function ()
             }
 
             let isDependencyFieldDefaultBlocked = false;
-            const firstOptionSelected = dependencySelect.options[0].selected === true;
+            let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
+            const needClick = dependencySelect.options[0].selected !== true;
             let observer = new MutationObserver(mutationRecords => {
                 if (!isDependencyFieldDefaultBlocked && !location.search.includes('item=')) {
-                    _this.filterDependencyValues(mainField, dependenceFieldCode,firstOptionSelected);
+                    _this.filterDependencyValues(mainField, dependenceFieldCode,needClick);
                     isDependencyFieldDefaultBlocked = true;
                 }
             });
@@ -280,7 +281,6 @@ CreateAdsApp.prototype.setDependentLists = function ()
 
 CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceFieldCode, skipClick = false)
 {
-    let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
     let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
         .getAttribute('data-dependency');
 
@@ -296,6 +296,7 @@ CreateAdsApp.prototype.filterDependencyValues = function (mainField, dependenceF
                 if (i === 0 && !skipClick) {
                     li.click();
                 }
+
                 li.style.display = 'block';
                 i++;
             }

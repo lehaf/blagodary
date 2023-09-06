@@ -305,7 +305,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                 <?if ($firstKey !== $key):?>
                                     <span class="remove_phone">
                                         <svg>
-                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
                                         </svg>
                                     </span>
                                 <?endif;?>
@@ -328,7 +328,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                                     <?if ($firstKey !== $key):?>
                                         <span class="remove_phone">
                                             <svg>
-                                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
+                                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
                                             </svg>
                                         </span>
                                     <?endif;?>
