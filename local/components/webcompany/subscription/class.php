@@ -6,12 +6,14 @@ use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Sale\PaySystem;
 use WebCompany\WReferralsTable;
+use WebCompany\ReferralSystem;
 use Bitrix\Main\Type\DateTime;
 
 
 class Subscription extends \CBitrixComponent
 {
     private string $moduleName = 'webcompany.referal.system';
+    private string $subscriptionNotExistText;
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';
@@ -364,6 +366,10 @@ class Subscription extends \CBitrixComponent
 
     public function prepareResult() : void
     {
+        Loader::includeModule($this->moduleName);
+        $WC = new ReferralSystem;
+        $this->arResult['NO_SUBSCRIPTION_TEXT'] = $WC->getSettingValue('noSubscriptionText');
+        $this->arResult['SUBSCRIPTION_PRICE'] = $WC->getSettingValue('subscriptionPrice');
         $curOrdersPage = !empty($_GET[$this->paginationParam]) ? $_GET[$this->paginationParam] : 1;
         $ordersOffset = $curOrdersPage !== 0 ? $this->arParams['PAGE_RECORDS_COUNT'] * $curOrdersPage - $this->arParams['PAGE_RECORDS_COUNT'] : 0;
         $this->getUserSubscriptionHistory($this->arParams['PAGE_RECORDS_COUNT'], $ordersOffset, $curOrdersPage);

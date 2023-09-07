@@ -60,7 +60,7 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
                                 Текущая Подписка Бесплатная (по реферальной программе) до <?=$arResult['SUBSCRIPTION']['FREE_DATE']?>
                             </h4>
                         </div>
-                        <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                        <h4 class="title-block">Оформить подписку всего за <?=$arResult['SUBSCRIPTION_PRICE']?> рублей в неделю.</h4>
                         <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                     </div>
                 </div>
@@ -88,11 +88,10 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
                 <div class="no-subscription">
                     <div class="profile-error__message">
                         <h4 class="title-block">
-                            <span>У вас нет подписки.<br>
-                            Вы не можете просматривать контакты владельцев объявлений и размещать объявления.</span>
+                            <span><?=$arResult['NO_SUBSCRIPTION_TEXT']?></span>
                         </h4>
                     </div>
-                    <h4 class="title-block">Оформить подписку всего за N рублей в неделю.</h4>
+                    <h4 class="title-block">Оформить подписку всего за <?=$arResult['SUBSCRIPTION_PRICE']?> рублей в неделю.</h4>
                     <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                 </div>
             </div>
