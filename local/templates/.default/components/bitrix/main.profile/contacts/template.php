@@ -2,7 +2,7 @@
 /** @global object $APPLICATION */
 /** @var array $arResult */
 ?>
-<form action="<?=$arResult["FORM_TARGET"]?>" class="data-user" method="post"  enctype="multipart/form-data">
+<form id="form-contacts-info" action="<?=$arResult["FORM_TARGET"]?>" class="data-user" method="post"  enctype="multipart/form-data">
     <?=$arResult["BX_SESSION_CHECK"]?>
     <input type="hidden" name="lang" value="<?=LANG?>">
     <input type="hidden" name="ID" value=<?=$arResult["ID"]?>>
@@ -69,5 +69,12 @@
     </div>
     <button type="submit" name="save" value="<?=(($arResult["ID"]>0) ? GetMessage("MAIN_SAVE") : GetMessage("MAIN_ADD"))?>" class="btn-bg data-user-btn">Сохранить изменения</button>
 </form>
-
+<div class="popUp popUp-success">
+    <h5 class="popUp__title">Изменения сохранены</h5>
+    <span class="modal-cross">
+        <svg>
+            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use>
+        </svg>
+    </span>
+</div>
 

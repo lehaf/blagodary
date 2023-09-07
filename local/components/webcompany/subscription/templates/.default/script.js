@@ -21,7 +21,8 @@ Subscription.prototype.init = function () {
 Subscription.prototype.setSubscriptionEvent = function () {
     const _this = this;
     if (this.$subscriptionBtn) {
-        this.$subscriptionBtn.onclick = () => {
+        this.$subscriptionBtn.onclick = (e) => {
+            e.preventDefault();
             let action = this.$subscriptionBtn.getAttribute(this.settings.subscriptionBtnAttr);
             let data = {
                 'component': _this.componentName,

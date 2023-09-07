@@ -1,5 +1,10 @@
 const PhoneController = function () {
 
+    this.settings = {
+        'saveButton': '.data-user button[name="save"]',
+        'form': 'form#form-contacts-info',
+    }
+
      this.templatePhone = `
          <div class="form-group form-group--tel">
              <label class="data-user__label data-user__label--tel">Контактный телефон*</label>
@@ -11,6 +16,9 @@ const PhoneController = function () {
     this.dependenceList = {
         'REGION':'CITY'
     };
+
+    this.$form = document.querySelector(this.settings.form);
+    this.$saveBtn = document.querySelector(this.settings.saveButton);
 
     this.init();
 }
@@ -31,6 +39,16 @@ PhoneController.prototype.setupListener = function ()
         _this.initPhoneMask();
         _this.deletePhone();
     });
+
+    if (this.$saveBtn) {
+        this.$saveBtn.onclick = (e) => {
+            e.preventDefault();
+            let form = new FormData(_this.$form);
+            if (!form.has('UF_PHONES')) form.append('UF_PHONES[]', '')
+            form.append('save', 'Сохранить');
+            _this.sendData(form);
+        }
+    }
 }
 
 PhoneController.prototype.initPhoneMask = function ()
@@ -99,6 +117,20 @@ PhoneController.prototype.filterDependencyValues = function (mainField, dependen
             }
         }
     }
+}
+
+PhoneController.prototype.sendData = function (data) {
+    fetch('', {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(data)
+    }).then(function(response) {
+        return response.text()
+    }).then(function(text) {
+    }).catch(error => {
+        // console.log(error);
+    });
 }
 
 addEventListener('DOMContentLoaded',() => {
