@@ -124,6 +124,7 @@ DeactivateItemApp.prototype.hideModal = function () {
 }
 
 DeactivateItemApp.prototype.checkRatingForm = function () {
+    const _this = this;
     const chosenUsers = this.$usersContainer.querySelector(this.settings.usersLiClass+'.active');
     const usersContainer = document.querySelector('.person-list-container');
     let formValid = true;
@@ -153,10 +154,10 @@ DeactivateItemApp.prototype.checkRatingForm = function () {
                 }
             });
             if (oneChecked === false) {
-                this.createInputErrorMessage(document.querySelector('.form-group-rate'),this.errors.ratingMessage);
+                this.createInputErrorMessage(this.$rateForm.querySelector('.form-group-rate'),this.errors.ratingMessage);
                 formValid = false;
             } else {
-                this.deleteInputErrorMessage(document.querySelector('.form-group-rate'));
+                this.deleteInputErrorMessage(this.$rateForm.querySelector('.form-group-rate'));
             }
         }
     }

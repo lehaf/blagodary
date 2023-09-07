@@ -254,7 +254,8 @@ function getUserRatingData(int $userId) : array
                 $unixTime = strtotime($obReview->getDateCreate());
                 $date = date('d.m.Y',$unixTime);
                 $arUsersId[] = $uId;
-                $arRating['LIST'][$uId] = [
+                $arRating['LIST'][] = [
+                    'USER_ID' => $uId,
                     'DATE' => $date,
                     'RATING' => $obReview->getRating()->getValue()
                 ];
@@ -279,14 +280,17 @@ function getUserRatingData(int $userId) : array
             ))->fetchAll();
 
             if (!empty($arUsers)) {
+                $users = [];
                 foreach ($arUsers as $arUser) {
-                    if (is_array($arRating['LIST'][$arUser['ID']]))
-                        $arRating['LIST'][$arUser['ID']]['NAME'] = $arUser['NAME'];
+                    $users[$arUser['ID']] = $arUser['NAME'];
+                }
+
+                foreach ($arRating['LIST'] as &$userReview) {
+                    $userReview['NAME'] = $users[$userReview['USER_ID']];
                 }
             }
         }
     }
-
     return $arRating;
 }
 

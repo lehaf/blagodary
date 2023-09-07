@@ -223,6 +223,7 @@ class AddElementForm extends \CBitrixComponent
                 if ($obAllUsers = $obAds->getWhoWantTake()->getAll()) {
                     $arUsersId = [];
                     foreach ($obAllUsers as $obValue) {
+                        if ($this->curUserId == $obValue->getValue()) continue;
                         $arUsersId[] = $obValue->getValue();
                     }
                     $arUsersInfo = UserTable::getList(array(
@@ -266,6 +267,7 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
+
     private function getUserReviews(int $userId) : bool
     {
         if (\Bitrix\Main\Loader::includeModule('iblock')) {
@@ -278,6 +280,8 @@ class AddElementForm extends \CBitrixComponent
                     'cache_joins' => true
                 ]
             ))->fetch();
+
+
             if (!empty($arSection['ID'])) {
                 $ratingElementsEntity = \Bitrix\Iblock\Iblock::wakeUp(RATING_IBLOCK_ID)->getEntityDataClass();
                 $obReviews = $ratingElementsEntity::getList(array(
