@@ -41,7 +41,20 @@ if (!empty($arResult)) {
         $arResult['PROPERTIES']['CITY']['VALUE'] = $citiesPropVal[$arResult['PROPERTIES']['CITY']['VALUE']];
     }
 
+    $propertiesForAllSections = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, 0);
+    $propertiesForCurSection = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, $arResult['IBLOCK_SECTION_ID']);
+    $specialPropsId = [];
+    foreach ($propertiesForCurSection as $propId => $prop) {
+        if (is_array($propertiesForAllSections) && !array_key_exists($propId,$propertiesForAllSections)) {
+            $specialPropsId[] = $propId;
+        }
+    }
 
+    foreach ($arResult['PROPERTIES'] as $propCode => $prop) {
+        if (is_array($specialPropsId) && in_array($prop['ID'], $specialPropsId)) {
+            $arResult['FEATURES'][] = $prop;
+        }
+    }
 
     // Добавляем товару эрмитаж
     $arButtons = CIBlock::GetPanelButtons(

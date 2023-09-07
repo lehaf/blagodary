@@ -6,7 +6,7 @@
 $APPLICATION->SetTitle("Пользователское соглашение");?>
     <div class="question-content">
         <div class="services-more">
-            <h1 class="">Header 1</h1>
+            <h1><?php $APPLICATION->ShowTitle();?></h1>
             <p class="">
                 Мы вынуждены отталкиваться от того, что начало повседневной работы по
                 формированию позиции создаёт необходимость включения в производственный

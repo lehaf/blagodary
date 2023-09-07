@@ -85,18 +85,16 @@ $this->setFrameMode(true);
                                         </svg>
                                         <?=$arResult['PROPERTIES']['OWNER_NAME']['VALUE']?>
                                     </div>
-                                    <?if (!empty($arResult['RATING']['TOTAL'])):?>
-                                        <div class="card-info-rating">
-                                            <div class="rating-result-text"><?=$arResult['RATING']['TOTAL']?></div>
-                                            <div class="rating-result">
-                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 1 ? 'active' : ''?>"></span>
-                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 2 ? 'active' : ''?>"></span>
-                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 3 ? 'active' : ''?>"></span>
-                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 4 ? 'active' : ''?>"></span>
-                                                <span class="<?=$arResult['RATING']['TOTAL'] >= 5 ? 'active' : ''?>"></span>
-                                            </div>
+                                    <div class="card-info-rating">
+                                        <div class="rating-result-text"><?=$arResult['RATING']['TOTAL']?></div>
+                                        <div class="rating-result">
+                                            <span class="<?=$arResult['RATING']['TOTAL'] >= 1 ? 'active' : ''?>"></span>
+                                            <span class="<?=$arResult['RATING']['TOTAL'] >= 2 ? 'active' : ''?>"></span>
+                                            <span class="<?=$arResult['RATING']['TOTAL'] >= 3 ? 'active' : ''?>"></span>
+                                            <span class="<?=$arResult['RATING']['TOTAL'] >= 4 ? 'active' : ''?>"></span>
+                                            <span class="<?=$arResult['RATING']['TOTAL'] >= 5 ? 'active' : ''?>"></span>
                                         </div>
-                                    <?endif;?>
+                                    </div>
                                     <?if (!empty($arResult['RATING']['REVIEWS_COUNT'])):?>
                                         <div class="total-rating">
                                             <span class="total-rating__text">Оценок:</span>
@@ -161,39 +159,20 @@ $this->setFrameMode(true);
                     <?endif;?>
                 </div>
                 <div class="card-description">
-                    <h4 class="card-description__title">Характеристики</h4>
-                    <ul class="card-description-list">
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Разрешение экрана, пикс</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">2280 х 1080</div>
-                        </li>
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Оперативная память (RAM), Гб</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">32</div>
-                        </li>
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Количество SIM-карт</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">1</div>
-                        </li>
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Операционная система</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">Android 8</div>
-                        </li>
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Разрешение основной камеры, Мп</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">24</div>
-                        </li>
-                        <li class="card-description-list__item">
-                            <div class="card-description-list__item-name">Разрешение фронтальной камеры, Мп</div>
-                            <div class="fake-line"></div>
-                            <div class="card-description-list__item-result">5</div>
-                        </li>
-                    </ul>
+                    <?php if (!empty($arResult['FEATURES'])):?>
+                        <h4 class="card-description__title">Характеристики</h4>
+                        <ul class="card-description-list">
+                            <?php foreach ($arResult['FEATURES'] as $feature):?>
+                                <li class="card-description-list__item">
+                                    <div class="card-description-list__item-name"><?=$feature['NAME']?></div>
+                                    <div class="fake-line"></div>
+                                    <div class="card-description-list__item-result">
+                                        <?=is_array($feature['VALUE']) ? implode(' / ',$feature['VALUE']) : $feature['NAME']?>
+                                    </div>
+                                </li>
+                            <?php endforeach;?>
+                        </ul>
+                    <?php endif;?>
                     <?if (!empty($arResult['DETAIL_TEXT'])):?>
                         <h4 class="card-description__title">Описание</h4>
                         <div class="card-description-text">
