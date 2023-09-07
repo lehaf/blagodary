@@ -4,6 +4,7 @@
 /** @global object $APPLICATION */
 /** @var string $mid id модуля*/
 
+use Bitrix\Main\Loader;
 use WebCompany\ReferralSystem;
 
 if(!$USER->IsAdmin() || !\Bitrix\Main\Loader::includeModule($mid)) return;
@@ -33,6 +34,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST" && check_bitrix_sessid()) {
         $saveSettings = [];
         foreach ($_POST as $key => $value) {
             if (in_array($key,$settingCodes)) {
+                if ($key === 'subscriptionPrice' && Loader::IncludeModule('catalog')) {
+                    $newElementPrice = \Bitrix\Catalog\PriceTable::getByPrimary(1, [
+                            'select' => ['PRICE']
+                        ]
+                    )->fetchObject();
+                    $newElementPrice->setPrice($value);
+                    $priceResult = $newElementPrice->save();
+                }
+
                $saveSettings[] = [
                    'code' => $key,
                    'value' => $value

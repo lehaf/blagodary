@@ -31,7 +31,7 @@ if (!empty($_GET['user_id'])) {
 }
 ?>
 
-<?if (!empty($arUser) && !empty($arRating)):?>
+<?if (!empty($arUser)):?>
     <div class="user-data-content">
         <div class="user-data__img">
             <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/profile.jpg"

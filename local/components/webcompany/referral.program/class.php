@@ -5,11 +5,13 @@ namespace WebCompany;
 use Bitrix\Main\Application;
 use Bitrix\Main\Web\Cookie;
 use WebCompany\WReferralsTable;
+use WebCompany\ReferralSystem;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Type\DateTime;
 
 class ReferralProgram extends \CBitrixComponent
 {
+    private string $moduleName = 'webcompany.referal.system';
     private int $userId;
     private int $randomStringLength = 5;
     private string $subscriptionPagePath = '/personal/subscription/';
@@ -142,6 +144,12 @@ class ReferralProgram extends \CBitrixComponent
 
     public function prepareResult() : void
     {
+        if (Loader::includeModule($this->moduleName)) {
+            $WC = new ReferralSystem;
+            $this->arResult['REFERRAL_SYSTEM_TITLE'] = $WC->getSettingValue('referralTitle');
+            $this->arResult['REFERRAL_SYSTEM_DESCRIPTION'] = $WC->getSettingValue('referralDesc');
+        }
+
         if (!empty($_POST['payDateMin']) || !empty($_POST['payDateMax'])) {
             $dateMin = strtotime($_POST['payDateMin']);
             $dateMax = strtotime($_POST['payDateMax']);

@@ -100,17 +100,15 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
     <?if (!empty($arResult['ORDER_HISTORY'])):?>
         <div class="history-subscription">
             <ul class="history-subscription-list">
-                <li class="history-subscription-list__item">
-                    <div class="history-subscription-data">26.09.2022 </div>
-                    <div class="history-subscription-description">
-                        <span class="strong">БЕСПЛАТНАЯ ПОДПИСКА</span>, за счет реферальной системы на период  с 19.04.2022 16-50 по 25.04.2022 16:50
-                    </div>
-                </li>
                 <?foreach ($arResult['ORDER_HISTORY'] as $orderData):?>
                     <li class="history-subscription-list__item">
                         <div class="history-subscription-data"><?=$orderData['DATE_PAYED']?></div>
                         <div class="history-subscription-description">
-                            Приобретена подписка на период с <?=$orderData['DATE_SUBSCRIPTION_FROM']?> по <?=$orderData['DATE_SUBSCRIPTION_TO']?>
+                            <?if ($orderData['FREE'] === 'Y'):?>
+                                <span class="strong">БЕСПЛАТНАЯ ПОДПИСКА</span>, за счет реферальной системы на период c <?=$orderData['DATE_SUBSCRIPTION_FROM']?> по <?=$orderData['DATE_SUBSCRIPTION_TO']?>
+                            <?else:?>
+                                Приобретена подписка на период с <?=$orderData['DATE_SUBSCRIPTION_FROM']?> по <?=$orderData['DATE_SUBSCRIPTION_TO']?>
+                            <?endif;?>
                         </div>
                     </li>
                 <?endforeach;?>

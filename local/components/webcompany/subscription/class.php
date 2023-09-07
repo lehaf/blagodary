@@ -6,6 +6,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Sale\PaySystem;
 use WebCompany\WReferralsTable;
+use WebCompany\WUserSubscriptionTable;
 use WebCompany\ReferralSystem;
 use Bitrix\Main\Type\DateTime;
 
@@ -13,24 +14,26 @@ use Bitrix\Main\Type\DateTime;
 class Subscription extends \CBitrixComponent
 {
     private string $moduleName = 'webcompany.referal.system';
-    private string $subscriptionNotExistText;
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';
     private string $paginationParam = 'orders_page';
     private int $paymentId = 2;
     private int $oneDaySec = 86400;
-    private int $subscriptionDaysFree = 3;
-    private int $subscriptionDays = 1;
+    private int $subscriptionDaysFree;
+    private int $subscriptionDays;
     private object $userSession;
 
     public function __construct($component = \null)
     {
-        if (Loader::includeModule('sale')) {
+        if (Loader::includeModule('sale') && Loader::includeModule($this->moduleName)) {
             global $USER;
             $this->userId = $USER->GetID();
             $this->productId = SUBSCRIBE_GOOD_ID;
             $this->userSession = \Bitrix\Main\Application::getInstance()->getSession();
+            $WC = new ReferralSystem;
+            $this->subscriptionDaysFree = (int)$WC->getSettingValue('referralAccessCountFree');
+            $this->subscriptionDays = (int)$WC->getSettingValue('referralAccessCount');
         }
         parent::__construct($component);
     }
@@ -124,14 +127,10 @@ class Subscription extends \CBitrixComponent
     private function getUserSubscriptionHistory(int $ordersLimit, int $ordersOffset = 0, $curPage = 1) : void
     {
         if (!empty($this->userId)) {
-            $userOrders = \Bitrix\Sale\Order::getList([
-                'order' => ['ID' => 'DESC'],
-                'select' => ['ID','DATE_PAYED'],
+            $userSubscription = WUserSubscriptionTable::getList([
+                'select' => ['*'],
                 'filter' => [
-                    "USER_ID" => $this->userId, //по пользователю
-//                    "STATUS_ID" =>$statusId, //по статусу
-                    "PAYED" => "Y", //оплаченные
-                    "CANCELED" =>"N", //не отмененные
+                    "USER_ID" => $this->userId
                 ],
                 'limit' => $ordersLimit,
                 'offset' => $ordersOffset,
@@ -142,17 +141,37 @@ class Subscription extends \CBitrixComponent
                 ]
             ]);
 
-            $orders = $userOrders->fetchAll();
-            if (!empty($orders)) {
-                foreach ($orders as $order) {
-                    $unixTime = strtotime($order['DATE_PAYED']);
+//            $userOrders = \Bitrix\Sale\Order::getList([
+//                'order' => ['ID' => 'DESC'],
+//                'select' => ['ID','DATE_PAYED'],
+//                'filter' => [
+//                    "USER_ID" => $this->userId, //по пользователю
+////                    "STATUS_ID" =>$statusId, //по статусу
+//                    "PAYED" => "Y", //оплаченные
+//                    "CANCELED" =>"N", //не отмененные
+//                ],
+//                'limit' => $ordersLimit,
+//                'offset' => $ordersOffset,
+//                'count_total' => true,
+//                'cache' => [
+//                    'ttl' => 360000,
+//                    'cache_joins' => true
+//                ]
+//            ]);
+
+            $subscriptionHistory = $userSubscription->fetchAll();
+            if (!empty($subscriptionHistory)) {
+                foreach ($subscriptionHistory as $order) {
+                    $dateFrom = strtotime($order['DATE_FROM']);
+                    $dateTo = strtotime($order['DATE_TO']);
                     $this->arResult['ORDER_HISTORY'][] = [
-                        'DATE_PAYED' => date('d.m.Y',$unixTime),
-                        'DATE_SUBSCRIPTION_FROM' => date('d.m.Y H:i',$unixTime),
-                        'DATE_SUBSCRIPTION_TO' => date('d.m.Y H:i',$unixTime+$this->oneDaySec*$this->subscriptionDays)
+                        'DATE_PAYED' => date('d.m.Y',$dateFrom),
+                        'DATE_SUBSCRIPTION_FROM' => date('d.m.Y H:i',$dateFrom),
+                        'DATE_SUBSCRIPTION_TO' => date('d.m.Y H:i',$dateTo),
+                        'FREE' => $order['FREE']
                     ];
                 }
-                $this->setPaginationParams($userOrders->getCount(), $ordersLimit, $curPage);
+                $this->setPaginationParams($userSubscription->getCount(), $ordersLimit, $curPage);
             }
         }
     }
@@ -271,6 +290,13 @@ class Subscription extends \CBitrixComponent
                 $subscriptionUntilSec = strtotime($userSubscription['UF_SUBSCRIPTION_DATE']) + $addTimeDeferenceFree;
                 $fields["UF_SUBSCRIPTION_DATE"] = DateTime::createFromTimestamp($subscriptionUntilSec);
             }
+
+            $userSubscription = WUserSubscriptionTable::createObject();
+            $userSubscription->setUserId($refOwnerId);
+            $userSubscription->setFree('Y');
+            $userSubscription->setDateFrom(new DateTime());
+            $userSubscription->setDateTo(DateTime::createFromTimestamp($subscriptionFreeUntilSec));
+            $userSubscription->save();
             $user->Update($this->userSession->get('referralOwner'), $fields);
         }
     }
@@ -302,6 +328,7 @@ class Subscription extends \CBitrixComponent
     private function setUserSubscription(\CUser $user) : void
     {
         if (!empty($this->userId)) {
+
             $subscriptionDate = !empty($this->arResult['SUBSCRIPTION']['DATE']) ? strtotime($this->arResult['SUBSCRIPTION']['DATE']) : time();
             $curTime = time();
             $subscriptionUntilSec = $curTime >= $subscriptionDate ?
@@ -310,6 +337,12 @@ class Subscription extends \CBitrixComponent
                 "UF_SUBSCRIPTION" => 'Y',
                 "UF_SUBSCRIPTION_DATE" => DateTime::createFromTimestamp($subscriptionUntilSec)
             );
+            $userSubscription = WUserSubscriptionTable::createObject();
+            $userSubscription->setUserId($this->userId);
+            $userSubscription->setFree('N');
+            $userSubscription->setDateFrom(new DateTime());
+            $userSubscription->setDateTo(DateTime::createFromTimestamp($subscriptionUntilSec));
+            $userSubscription->save();
             $user->Update($this->userId, $fields);
         }
     }
