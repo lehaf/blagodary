@@ -82,13 +82,16 @@ AjaxFilter.prototype.fillGetParamsValues = function (getParams, formData)
 {
 	for(let [key, value] of formData.entries()) {
 		if (key && value) {
-			if (value === 'on') getParams[key] = 'Y';
-			getParams[key] = value;
+			if (value === 'on') {
+				getParams[key] = 'Y';
+			} else {
+				getParams[key] = value;
+			}
 		} else {
 			if (getParams[key] && !value) delete getParams[key];
 		}
 	}
-
+	console.log(getParams);
 	if (getParams['set_filter'] !== 'y') getParams['set_filter'] = 'y';
 	return getParams;
 }
@@ -258,6 +261,7 @@ AjaxFilter.prototype.setResetFilterEvent = function () {
 				_this.sendData(_this.prepareLinkForAjax(getParams));
 				_this.clearForm(_this.$filterForm);
 			}
+			_this.setDependentLists();
 		}
 	}
 }
