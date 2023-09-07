@@ -13,12 +13,17 @@ const CreateAdsApp = function () {
         'phonesContainerClass':'.form-tel-container',
         'removePhoneClass':'.remove_phone',
         'maxImagesLimit': 10,
+        'categoryLvl2': '.category-selection-subcategory li',
+        'categoryLvl3': '.category-selection-subcategory-3 li',
     }
 
     this.dependenceList = {
         'REGION':'CITY'
     };
 
+    this.$categoryLvl2 = document.querySelectorAll(this.settings.categoryLvl2);
+    this.$categoryLvl3 = document.querySelectorAll(this.settings.categoryLvl3);
+    this.$dropZone = document.querySelector(".dropzone");
     this.$dropZone = document.querySelector(".dropzone");
     this.$dropZoneContent = document.querySelector(this.settings.dropZoneContentClass);
     this.$counter = document.querySelector(this.settings.uploadCounterClass);
@@ -75,6 +80,71 @@ CreateAdsApp.prototype.setEventListener = function () {
     this.setDeletePhoneEvent();
     this.setDeleteUploadedImgEvent();
     this.setDropzoneEvents();
+    this.setGetAdditionalSectionSettingsEvent();
+}
+
+CreateAdsApp.prototype.setGetAdditionalSectionSettingsEvent = function () {
+    const _this = this;
+    if (this.$categoryLvl2) {
+        this.$categoryLvl2.forEach((sectionLvl2Li) => {
+            sectionLvl2Li.onclick = () => {
+                let sectionId = sectionLvl2Li.getAttribute('data-section-id');
+                if (sectionId && !_this.checkChildSections(sectionId)) {
+                    let data = {
+                        'additional_settings' : 'y',
+                        'section_id' : sectionId
+                    };
+                    _this.sendData(data);
+                }
+            }
+        });
+    }
+
+    if (this.$categoryLvl3) {
+        this.$categoryLvl3.forEach((sectionLvl3) => {
+            sectionLvl3.onclick = () => {
+                let sectionId = sectionLvl3.getAttribute('data-section-id');
+                if (sectionId) {
+                    let data = {
+                        'additional_settings' : 'y',
+                        'section_id' : sectionId
+                    };
+                    _this.sendData(data);
+                }
+            }
+        });
+    }
+}
+
+CreateAdsApp.prototype.checkChildSections = function (sectionId) {
+    if (this.$categoryLvl3) {
+        let children = document.querySelector('.category-selection-subcategory-3 div[data-parent-id="'+sectionId+'"]');
+        if (children !== null) return true;
+    }
+    return false;
+}
+
+CreateAdsApp.prototype.sendData = function (data) {
+    fetch(location.href, {
+        method: 'POST',
+        cache: 'no-cache',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(data)
+    }).then(function(response) {
+        return response.text()
+    }).then(function(text) {
+        if (text) {
+            document.querySelector('.extra-options').style.display = 'flex';
+            document.querySelector('.extra-options').innerHTML = text;
+            $('.custom-select').styler();
+            $('.new-select').trigger('refresh');
+        } else {
+            document.querySelector('.extra-options').innerHTML = '';
+            document.querySelector('.extra-options').style.display = 'none';
+        }
+    }).catch(error => {
+        // console.log(error);
+    });
 }
 
 CreateAdsApp.prototype.setDeletePhoneEvent = function () {

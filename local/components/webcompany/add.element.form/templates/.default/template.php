@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -180,6 +180,12 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                 <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pen"></use></svg>
                 Изменить подкатегорию</div>
         </div>
+        <div class="extra-options" style="display: <?=!empty($arResult['SPECIAL_PROPS']) ? 'flex' : 'none'?>;">
+            <?if (!empty($arResult['ITEM'])):?>
+                <?php $this->getComponent()->includeComponentTemplate('section_parameters');?>
+            <?endif;?>
+        </div>
+
         <div class="form-textarea">
             <h3 class="title-block title-block--left mb-20">Описание*:</h3>
             <div class="form-group">

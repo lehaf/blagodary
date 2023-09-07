@@ -469,7 +469,9 @@ class AddElementForm extends \CBitrixComponent
                 if ($arAllImages = $obElement->getImages()->getAll()) {
                     $arImgJson = [];
                     foreach ($arAllImages as $obImg) {
-                        $imgPath = '/upload/' . $obImg->getFile()->getSubdir().'/'.$obImg->getFile()->getFileName();
+                        if ($obImg->getFile()) {
+                            $imgPath = '/upload/' . $obImg->getFile()->getSubdir().'/'.$obImg->getFile()->getFileName();
+                        }
                         $arItem['IMAGES'][] = [
                             'NAME' => $obImg->getFile()->getFileName(),
                             'SRC' => $imgPath
@@ -487,12 +489,160 @@ class AddElementForm extends \CBitrixComponent
         return [];
     }
 
+    private function getAdditionalElementSettingsForEdit(int $itemId, int $sectionId, array &$arResult): void
+    {
+        $propertiesForAllSections = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, 0);
+        $propertiesForCurSection = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, $sectionId);
+        $specialProps = [];
+        $specialPropsId = [];
+        foreach ($propertiesForCurSection as $propId => $prop) {
+            if (!array_key_exists($propId,$propertiesForAllSections)) {
+                $specialPropsId[] = $propId;
+                $specialProps[$propId] = $prop;
+            }
+        }
+
+        $propsInfo = \Bitrix\Iblock\PropertyTable::getList(array(
+            'select' => array('ID','NAME','CODE','PROPERTY_TYPE','MULTIPLE'),
+            'filter' => array('IBLOCK_ID' => ADS_IBLOCK_ID, 'ID' => $specialPropsId)
+        ))->fetchAll();
+        $additionalProps["LIST"] = [];
+        $additionalProps["SIMPLE"] = [];
+        $propCodes = [];
+        foreach ($propsInfo as $prop) {
+            $propCodes[] = $prop['CODE'];
+            if ($prop['PROPERTY_TYPE'] === 'L') {
+                $enumValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
+                    'select' => array('ID', 'XML_ID', 'VALUE'),
+                    'filter' => array('PROPERTY_ID' => $prop['ID'])
+                ))->fetchAll();
+                $prop['VALUES'] = $enumValues;
+                $additionalProps["LIST"][] = [
+                    'MULTIPLE' => $prop['MULTIPLE'],
+                    'CODE' => $prop['CODE']
+                ];
+            } else {
+                $additionalProps["SIMPLE"][] = $prop['CODE'];
+            }
+
+            if (!empty($specialProps[$prop['ID']])) {
+                $specialProps[$prop['ID']] = array_merge($specialProps[$prop['ID']],$prop);
+            }
+        }
+
+        \Bitrix\Main\Loader::includeModule('iblock');
+        $iblock = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID);
+        $classArticleName = $iblock->getEntityDataClass();
+        $element = $classArticleName::getByPrimary($itemId, array(
+            'select' => $propCodes
+        ))->fetchObject();
+        $elementAddPropsValue = [];
+        foreach ($propCodes as $code) {
+            if (in_array($code,$additionalProps["SIMPLE"])) {
+                if (!empty($element->get($code)) && is_object($element->get($code))) {
+                    $elementAddPropsValue[$code] = $element->get($code)->getValue();
+                }
+            } else {
+                if (!empty($element->get($code)) && is_object($element->get($code))) {
+                    foreach ($element->get($code)->getAll() as $value) {
+                        if (!empty($value->getValue())) {
+                            $elementAddPropsValue[$code][$value->getId()] = $value->getValue();
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!empty($specialProps)) {
+            foreach ($specialProps as &$prop) {
+                if (!empty($elementAddPropsValue[$prop['CODE']])) {
+                    $prop['EDIT_VALUES'] = $elementAddPropsValue[$prop['CODE']];
+                }
+            }
+            unset($prop);
+        }
+
+        $arResult['ADDITIONAL_PROPS'] = json_encode($additionalProps);
+        $arResult['SPECIAL_PROPS'] = $specialProps;
+    }
+
+    private function getAdditionalElementSettings(int $sectionId): void
+    {
+        $propertiesForAllSections = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, 0);
+        $propertiesForCurSection = \CIBlockSectionPropertyLink::GetArray(ADS_IBLOCK_ID, $sectionId);
+        $specialProps = [];
+        $specialPropsId = [];
+        foreach ($propertiesForCurSection as $propId => $prop) {
+            if (!array_key_exists($propId,$propertiesForAllSections)) {
+                $specialPropsId[] = $propId;
+                $specialProps[$propId] = $prop;
+            }
+        }
+
+        $propsInfo = \Bitrix\Iblock\PropertyTable::getList(array(
+            'select' => array('ID','NAME','CODE','PROPERTY_TYPE','MULTIPLE'),
+            'filter' => array('IBLOCK_ID' => ADS_IBLOCK_ID, 'ID' => $specialPropsId)
+        ))->fetchAll();
+        $additionalProps = [];
+        foreach ($propsInfo as $prop) {
+            if ($prop['PROPERTY_TYPE'] === 'L') {
+                $enumValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
+                    'select' => array('ID', 'XML_ID', 'VALUE'),
+                    'filter' => array('PROPERTY_ID' => $prop['ID'])
+                ))->fetchAll();
+                $prop['VALUES'] = $enumValues;
+                $additionalProps["LIST"][] = [
+                    'MULTIPLE' => $prop['MULTIPLE'],
+                    'CODE' => $prop['CODE']
+                ];
+            } else {
+                $additionalProps["SIMPLE"][] = $prop['CODE'];
+            }
+
+            if (!empty($specialProps[$prop['ID']])) {
+                $specialProps[$prop['ID']] = array_merge($specialProps[$prop['ID']],$prop);
+            }
+        }
+
+        $this->arResult['ADDITIONAL_PROPS'] = json_encode($additionalProps);
+        $this->arResult['SPECIAL_PROPS'] = $specialProps;
+        ob_end_clean();
+        ob_start();
+        $this->includeComponentTemplate('section_parameters');
+        die();
+    }
+
+    private function addAdditionalFields() : void
+    {
+        if (!empty($_POST['ADDITIONAL_PROPS'])) {
+            $additionalProps = json_decode($_POST['ADDITIONAL_PROPS'], true);
+            if (!empty($additionalProps['SIMPLE'])) {
+                foreach ($additionalProps['SIMPLE'] as $propCode) {
+                    if (empty($this->arFieldsForRecord[$propCode])) $this->arFieldsForRecord[$propCode] = $_POST[$propCode];
+                }
+            }
+
+            if (!empty($additionalProps['LIST'])) {
+                foreach ($additionalProps['LIST'] as $prop) {
+                    if (empty($this->arFieldsForRecord[$prop['CODE']])) $this->arFieldsForRecord[$prop['CODE']] = $_POST[$prop['CODE']];
+                    if ($prop['MULTIPLE'] === 'Y') $this->arMultipleFields[] = $prop['CODE'];
+                }
+            }
+        }
+    }
+
     private function prepareResult() : void
     {
         if (!empty($_GET['item']) && is_int(intval($_GET['item']))) {
-            global $APPLICATION;
-            $APPLICATION->SetPageProperty("title", $this->editPageTitle);
             $arResult['ITEM'] = $this->getEditItem($_GET['item']);
+            if (!empty($arResult['ITEM']['IBLOCK_SECTION_ID'])) {
+                $this->getAdditionalElementSettingsForEdit($arResult['ITEM']['ID'],$arResult['ITEM']['IBLOCK_SECTION_ID'],$arResult);
+            }
+
+            if (!empty($arResult['ITEM'])) {
+                global $APPLICATION;
+                $APPLICATION->SetPageProperty("title", $this->editPageTitle);
+            }
         }
         $arResult['USER'] = $this->getUserInfo();
         $arResult['SECTIONS_LVL'] = $this->getSectionsLvlTree();
@@ -502,14 +652,20 @@ class AddElementForm extends \CBitrixComponent
 
     public function executeComponent() : void
     {
+        if (!empty($_POST['section_id']) && $_POST['additional_settings'] === 'y') {
+            $this->getAdditionalElementSettings($_POST['section_id']);
+        }
+
         $this->prepareResult();
         if ($this->isPostFormData()) {
             if (!empty($_POST['ITEM_ID'])) {
                 if ($this->checkPostFields() && $this->checkPostImages()) {
+                    $this->addAdditionalFields();
                     $this->updateUserAds($_POST['ITEM_ID']);
                 }
             } else {
                 if ($this->checkPostFields() && $this->checkPostImages()) {
+                    $this->addAdditionalFields();
                     $this->createNewUserAds();
                 }
             }
