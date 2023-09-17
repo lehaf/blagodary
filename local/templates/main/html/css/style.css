@@ -111,6 +111,12 @@ body {
   background: url("../assets/img/search.svg") no-repeat 105px top;
 }
 
+@-moz-document url-prefix() {
+  .header-search__el::placeholder {
+    background: url("../assets/img/search.svg") no-repeat 125px center;
+  }
+}
+
 .btn-bg {
   display: flex;
   align-items: center;
@@ -538,6 +544,11 @@ select.custom-select {
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
   border-radius: 100px;
   cursor: pointer;
+  z-index: 2;
+}
+
+.slick-slider{
+  z-index: 1;
 }
 
 .slider-arrow-prev svg,
@@ -4489,7 +4500,7 @@ input[type="checkbox"] {
 
 .password-control {
   position: absolute;
-  top: 44px;
+  top: 41px;
   right: 15px;
   display: inline-block;
   width: 20px;
