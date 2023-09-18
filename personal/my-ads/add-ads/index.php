@@ -4,6 +4,8 @@
 /** @global object $USER */
 /** @const string  SITE_TEMPLATE_PATH */
 
+if (!$USER->IsAuthorized()) LocalRedirect('/');
+
 $APPLICATION->SetTitle("Подать объявление");
 
 use Bitrix\Main\Page\Asset;

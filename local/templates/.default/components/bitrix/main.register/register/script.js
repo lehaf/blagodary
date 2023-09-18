@@ -101,6 +101,19 @@ RegisterAjax.prototype.checkFormFields = function () {
                         errors.push(_this.errors.numbersInPass);
                     }
                     break;
+                case 'text':
+                    if (input.value.length < 8) {
+                        errors.push(_this.errors.smallPass);
+                    }
+
+                    if (input.value === input.value.toLowerCase()) {
+                        errors.push(_this.errors.upperLowerCase);
+                    }
+
+                    if (!/[0-9]/.test(input.value)) {
+                        errors.push(_this.errors.numbersInPass);
+                    }
+                    break;
                 case 'checkbox':
                     if (!this.$acceptInput.checked) {
                         _this.errorAccept();
@@ -112,17 +125,20 @@ RegisterAjax.prototype.checkFormFields = function () {
                     }
                     break;
             }
+
             let errorMessage = errors.join('<br>');
+            console.log(errorMessage);
+            if (input.getAttribute('data-validate') === 'n') {
+                if (_this.$form.querySelector('#passwordRegistration').value !== input.value) {
+                    errorMessage = _this.errors.passNotMatch;
+                    _this.createInputErrorMessage(input,errorMessage);
+                }
+            } else {
+                _this.createInputErrorMessage(input,errorMessage);
+            }
 
             if (errorMessage) {
                 testPassed = false;
-                if (input.getAttribute('data-validate') === 'n') {
-                    if (_this.$form.querySelector('#passwordRegistration').value !== input.value) {
-                        _this.createInputErrorMessage(input,_this.errors.passNotMatch);
-                    }
-                } else {
-                    _this.createInputErrorMessage(input,errorMessage);
-                }
             } else {
                 _this.deleteInputErrorMessage(input);
             }

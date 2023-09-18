@@ -1,7 +1,10 @@
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 
 /** @global object $APPLICATION */
+/** @global object $USER */
 /** @const string  SITE_TEMPLATE_PATH */
+
+if (!$USER->IsAuthorized()) LocalRedirect('/');
 
 $APPLICATION->SetTitle("Реферальная программа");
 

@@ -5934,11 +5934,13 @@ body .bx-core-popup-menu-item-text {
   }
 }
 
-
 .card-slider * div{
   height: 100%;
 }
 
+body input {
+  color: #2a3548 !important;
+}
 
 
 

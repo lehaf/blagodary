@@ -58,32 +58,32 @@ PersonalData.prototype.checkFormFields = function () {
         let testPassed = true;
         this.$formInputs.forEach((input) => {
             let errors = [];
-            switch (input.getAttribute('type')) {
-                case 'password':
-                    if (input.value.length < 8) {
-                        errors.push(_this.errors.smallPass);
-                    }
 
-                    if (input.value === input.value.toLowerCase()) {
-                        errors.push(_this.errors.upperLowerCase);
-                    }
+            if (input.value.length < 8) {
+                errors.push(_this.errors.smallPass);
+            }
 
-                    if (!/[0-9]/.test(input.value)) {
-                        errors.push(_this.errors.numbersInPass);
-                    }
-                    break;
+            if (input.value === input.value.toLowerCase()) {
+                errors.push(_this.errors.upperLowerCase);
+            }
+
+            if (!/[0-9]/.test(input.value)) {
+                errors.push(_this.errors.numbersInPass);
             }
 
             let errorMessage = errors.join('<br>');
-            if (errorMessage) {
-                testPassed = false;
-                if (input.getAttribute('data-validate') === 'n') {
-                    if (_this.$form.querySelector('input[name="NEW_PASSWORD"]').value !== input.value) {
-                        _this.createInputErrorMessage(input,_this.errors.passNotMatch);
-                    }
-                } else {
+            if (input.getAttribute('data-validate') === 'n') {
+                if (_this.$form.querySelector('input[name="NEW_PASSWORD"]').value !== input.value) {
+                    errorMessage = _this.errors.passNotMatch;
                     _this.createInputErrorMessage(input,errorMessage);
                 }
+            } else {
+                _this.createInputErrorMessage(input,errorMessage);
+            }
+
+
+            if (errorMessage) {
+                testPassed = false;
             } else {
                 _this.deleteInputErrorMessage(input);
             }
