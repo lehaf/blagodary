@@ -51,7 +51,7 @@ if (!empty($arResult)) {
     }
 
     foreach ($arResult['PROPERTIES'] as $propCode => $prop) {
-        if (is_array($specialPropsId) && in_array($prop['ID'], $specialPropsId)) {
+        if (is_array($specialPropsId) && in_array($prop['ID'], $specialPropsId) && !empty($prop['VALUE'])) {
             $arResult['FEATURES'][] = $prop;
         }
     }

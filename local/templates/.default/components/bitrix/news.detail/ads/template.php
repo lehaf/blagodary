@@ -167,7 +167,7 @@ $this->setFrameMode(true);
                                     <div class="card-description-list__item-name"><?=$feature['NAME']?></div>
                                     <div class="fake-line"></div>
                                     <div class="card-description-list__item-result">
-                                        <?=is_array($feature['VALUE']) ? implode(' / ',$feature['VALUE']) : $feature['NAME']?>
+                                        <?=is_array($feature['VALUE']) ? implode(' / ',$feature['VALUE']) : $feature['VALUE']?>
                                     </div>
                                 </li>
                             <?php endforeach;?>
