@@ -24,7 +24,6 @@ const CreateAdsApp = function () {
     this.$categoryLvl2 = document.querySelectorAll(this.settings.categoryLvl2);
     this.$categoryLvl3 = document.querySelectorAll(this.settings.categoryLvl3);
     this.$dropZone = document.querySelector(".dropzone");
-    this.$dropZone = document.querySelector(".dropzone");
     this.$dropZoneContent = document.querySelector(this.settings.dropZoneContentClass);
     this.$counter = document.querySelector(this.settings.uploadCounterClass);
     this.$inputFile = document.querySelector(this.settings.idInputFile);
@@ -75,6 +74,7 @@ CreateAdsApp.prototype.init = function () {
 }
 
 CreateAdsApp.prototype.setEventListener = function () {
+    this.getInputFilesEvent();
     this.setInputFileEvent();
     this.setPhoneEvent();
     this.setDeletePhoneEvent();
@@ -148,7 +148,6 @@ CreateAdsApp.prototype.sendData = function (data) {
 }
 
 CreateAdsApp.prototype.setDeletePhoneEvent = function () {
-    const _this = this;
     let deletePhonesBtn = document.querySelectorAll(this.settings.removePhoneClass);
     if (deletePhonesBtn) {
         deletePhonesBtn.forEach((removeBtn) => {
@@ -169,16 +168,49 @@ CreateAdsApp.prototype.setPhoneEvent = function () {
     }
 }
 
+CreateAdsApp.prototype.getInputFilesEvent = function () {
+    const _this = this;
+    if (this.$inputFile) {
+        let imgTags = document.querySelectorAll(this.settings.imgContainerClass + ' img');
+        if (imgTags.length > 0) {
+            imgTags.forEach((imgTag) => {
+                let img = imgTag.getAttribute('src');
+                fetch(img).then(r => r.blob()).then((blob) => {
+                    let fileName = img.split("/").pop();
+                    let file =  new File([blob], fileName, {type: blob.type});
+                    const dt  = new DataTransfer();
+                    if (_this.$inputFile.files.length > 0) {
+                        for (let i = 0; i < _this.$inputFile.files.length; i++) {
+                            if (i <= 9) {
+                                const inputFile = _this.$inputFile.files[i];
+                                dt.items.add(inputFile);
+                            } else {
+                                alert(`Превышен лимит картинок! Картинка ${file.name} не загружена!`)
+                            }
+                        }
+                        dt.items.add(file);
+                    } else {
+                        dt.items.add(file);
+                    }
+                    _this.$inputFile.files = dt.files;
+                    _this.$files = dt.files;
+                });
+            });
+        }
+    }
+}
+
 CreateAdsApp.prototype.setInputFileEvent = function () {
     const _this = this;
     this.$inputFile.onchange = () => {
         let images = _this.$dropZone.querySelectorAll(this.settings.imgContainerClass);
-        if (_this.$inputFile.files.length > 0 && images.length > 0) {
+        if (_this.$inputFile.files.length > 0 && _this.$files) {
             images.forEach((img) => {
                 img.remove();
             });
         }
-        _this.uploadImgFromBtn();
+        const countUploadFiles = _this.$inputFile.files.length;
+        _this.uploadImgFromBtn(countUploadFiles);
     }
 }
 
@@ -204,29 +236,16 @@ CreateAdsApp.prototype.setDropzoneEvents = function () {
             _this.addImgFile(newImg);
         }
     }
-
-    if (this.$dropZoneContent) {
-        let json = this.$dropZoneContent.getAttribute(this.settings.imgAttr);
-        if (json) {
-            let img = JSON.parse(json);
-            const dt  = new DataTransfer();
-            img.forEach((img) => {
-                dt.items.add(new File(['editCollection'], img));
-            });
-            this.$inputFile.files = dt.files;
-        }
-    }
 }
 
 CreateAdsApp.prototype.setDeleteUploadedImgEvent = function () {
     const _this = this;
     this.$deleteImgBtns = document.querySelectorAll(this.settings.deleteImgBtnClass);
     if (this.$deleteImgBtns.length > 0) {
-        this.$deleteImgBtns.forEach((imgDelBtn) => {
+        this.$deleteImgBtns.forEach((imgDelBtn,index) => {
             imgDelBtn.onclick = () => {
                 let dataName = imgDelBtn.getAttribute(_this.settings.imgFileAttr);
-                let fileIndex = imgDelBtn.getAttribute(_this.settings.imgIndexAttr);
-                _this.removeFile(dataName);
+                _this.removeFile(dataName,index);
                 imgDelBtn.parentNode.classList.add("remove")
                 setTimeout(()=>{
                     imgDelBtn.parentNode.remove();
@@ -236,14 +255,15 @@ CreateAdsApp.prototype.setDeleteUploadedImgEvent = function () {
     }
 }
 
-CreateAdsApp.prototype.removeFile = function (fileName) {
+CreateAdsApp.prototype.removeFile = function (fileName, index) {
     const dt  = new DataTransfer();
     for (let i = 0; i < this.$inputFile.files.length; i++) {
         const file = this.$inputFile.files[i];
-        if (file.name !== fileName) dt.items.add(file);
+        if (i !== index) dt.items.add(file);
     }
     this.$counter.innerHTML = dt.files.length;
     this.$inputFile.files = dt.files
+    this.$files = dt.files
 }
 
 CreateAdsApp.prototype.addFile = function (img) {
@@ -266,32 +286,47 @@ CreateAdsApp.prototype.addFile = function (img) {
     return true;
 }
 
-CreateAdsApp.prototype.uploadImgFromBtn = function () {
-    const _this = this;
-    const dt  = new DataTransfer();
+CreateAdsApp.prototype.uploadImgFromBtn = function (countUploadFiles = 0) {
+    if (countUploadFiles > 0) {
+        const _this = this;
+        const dt  = new DataTransfer();
 
-    for (let i = 0; i < this.$inputFile.files.length; i++) {
-        const file = this.$inputFile.files[i];
-        if (i <= 9) {
-            dt.items.add(file);
-        } else {
-            alert(`Превышен лимит картинок! Картинка ${file.name} не загружена!`)
-        }
-    }
-    this.$inputFile.files = dt.files;
-    let imgList = Array.from(this.$inputFile.files);
-    imgList.forEach((img, index) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(img);
-        reader.onload = function () {
-            if (index <= _this.settings.maxImagesLimit-1) {
-                _this.$counter.innerHTML = _this.$inputFile.files.length;
-                let templateImg = _this.getTemplateImg(reader.result, img.name);
-                _this.$dropZoneContent.insertAdjacentHTML('beforeEnd', templateImg);
-                _this.setDeleteUploadedImgEvent();
+        // Добавляем старые файлы
+        if (this.$files) {
+            for (let i = 0; i < this.$files.length; i++) {
+                const file = this.$files[i];
+                if (i <= 9) {
+                    dt.items.add(file);
+                } else {
+                    alert(`Превышен лимит картинок! Картинка ${file.name} не загружена!`)
+                }
             }
         }
-    })
+
+        for (let i = 0; i < this.$inputFile.files.length && dt.files.length < 10; i++) {
+            const file = this.$inputFile.files[i];
+            if (i <= 9) {
+                dt.items.add(file);
+            } else {
+                alert(`Превышен лимит картинок! Картинка ${file.name} не загружена!`)
+            }
+        }
+        this.$inputFile.files = dt.files;
+        this.$files = this.$inputFile.files;
+        let imgList = Array.from(this.$inputFile.files);
+        imgList.forEach((img, index) => {
+            let reader = new FileReader();
+            reader.readAsDataURL(img);
+            reader.onload = function () {
+                if (index <= _this.settings.maxImagesLimit-1) {
+                    _this.$counter.innerHTML = _this.$inputFile.files.length;
+                    let templateImg = _this.getTemplateImg(reader.result, img.name);
+                    _this.$dropZoneContent.insertAdjacentHTML('beforeEnd', templateImg);
+                    _this.setDeleteUploadedImgEvent();
+                }
+            }
+        })
+    }
 }
 
 CreateAdsApp.prototype.addImgFile = function (newImages, addToFiles = true) {
