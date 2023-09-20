@@ -433,7 +433,10 @@ class AddElementForm extends \CBitrixComponent
                 $arCacheRes['PATH_NAME'][] = $arSect['NAME'];
                 $arCacheRes['TREE'][$arSect['DEPTH_LEVEL']] = $arSect['ID'];
             }
-            $arCacheRes['PATH_NAME'] = implode(' / ',$arCacheRes['PATH_NAME']);
+
+            if (!empty($arCacheRes['PATH_NAME'])) {
+                $arCacheRes['PATH_NAME'] = implode(' / ',$arCacheRes['PATH_NAME']);
+            }
             $cache->endDataCache($arCacheRes);
         }
 

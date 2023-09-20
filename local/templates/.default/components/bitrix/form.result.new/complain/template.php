@@ -20,7 +20,7 @@
                 <?$firstKey = array_key_first($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'])?>
                 <div class="form-group-wrapper">
                     <?foreach ($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'] as $key => $arField):?>
-                        <div class="form-group__item radio-btn">
+                        <div class="form-group__item radio-btn" style="width: 100%">
                             <label for="<?=$key?>"><?=$arField['MESSAGE']?></label>
                             <input type="radio"
                                    name="form_<?=$arField['FIELD_TYPE'].'_COMPLAINS'?>"
