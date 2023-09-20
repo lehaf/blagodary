@@ -30,19 +30,21 @@ $this->setFrameMode(true);
                             </div>
                         <?endforeach;?>
                     </div>
-                    <div class="card-slider-arrows slider-arrows-container">
-                        <div class="card-slider-prev slider-arrow-prev">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev">
-                                </use>
-                            </svg>
+                    <?if (!empty($arResult['IMAGES']['BIG_SLIDER']) && count($arResult['IMAGES']['BIG_SLIDER']) > 1):?>
+                        <div class="card-slider-arrows slider-arrows-container">
+                            <div class="card-slider-prev slider-arrow-prev">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev">
+                                    </use>
+                                </svg>
+                            </div>
+                            <div class="card-slider-next slider-arrow-next">
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
+                                </svg>
+                            </div>
                         </div>
-                        <div class="card-slider-next slider-arrow-next">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
-                            </svg>
-                        </div>
-                    </div>
+                    <?endif;?>
                     <?if (!empty($arResult['IMAGES']['LITTLE_SLIDER']) && count($arResult['IMAGES']['LITTLE_SLIDER']) > 1):?>
                         <div class="card-slider-main-nav">
                             <?foreach ($arResult['IMAGES']['LITTLE_SLIDER'] as $arImg):?>
