@@ -249,7 +249,8 @@ CreateAdsApp.prototype.setDeleteUploadedImgEvent = function () {
                 imgDelBtn.parentNode.classList.add("remove")
                 setTimeout(()=>{
                     imgDelBtn.parentNode.remove();
-                },300)
+                    _this.setDeleteUploadedImgEvent();
+                },300);
             }
         });
     }
@@ -278,6 +279,7 @@ CreateAdsApp.prototype.addFile = function (img) {
     if (dt.files.length < this.settings.maxImagesLimit) {
         dt.items.add(img);
         this.$inputFile.files = dt.files;
+        this.$files = dt.files;
     } else {
         alert(`Превышен лимит картинок! Картинка ${img.name} не загружена!`);
         return false;
@@ -342,6 +344,7 @@ CreateAdsApp.prototype.addImgFile = function (newImages, addToFiles = true) {
                         _this.$dropZoneContent.insertAdjacentHTML('beforeEnd', templateImg);
                         _this.setDeleteUploadedImgEvent();
                     }
+                    // Добавляем файл в input
                     if (addToFiles) _this.addFile(img);
                     _this.$counter.innerHTML = _this.$inputFile.files.length;
                 }
