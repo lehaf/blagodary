@@ -28,7 +28,6 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
     $rootSectionId = $arSectionTree[0]['ID'] ?? $arSectionTree['ID']; // Получаем id корневого раздела
     $arRootSection = getSectionData($rootSectionId,ADS_IBLOCK_ID); // Получаем данные по корневому разделу
 }
-
 ?>
 
 <div class="page-container">

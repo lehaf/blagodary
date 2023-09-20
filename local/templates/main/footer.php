@@ -132,7 +132,7 @@ global $USER, $APPLICATION;
 </div>
 
 
-<div class="popUp-overlay">
+<div id="mob-filter-header" class="popUp-overlay">
     <div class="popUp-overlay-header">
         <span class="popUp-title">Фильтры</span>
         <span class="popUp-cross">

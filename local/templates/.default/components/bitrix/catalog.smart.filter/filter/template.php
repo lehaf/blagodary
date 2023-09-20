@@ -16,11 +16,6 @@ $this->setFrameMode(true);
     <div class="aside__item aside__item-form">
         <div class="aside-form">
             <form id="filter" class="aside-form-search" name="<?=$arResult["FILTER_NAME"]."_form"?>" action="<?=$arResult["FORM_ACTION"]?>">
-                <div class="form-group-search aside-form__item mobile-input-search">
-                    <label for="form-search-mobile">Поиск по товарам</label>
-                    <input type="text" placeholder="Искать товары" name="form-search"
-                           class="form-search-input" id="form-search-mobile">
-                </div>
                 <?foreach ($arResult['ITEMS'] as $arFilter):?>
                     <?switch ($arFilter['DISPLAY_TYPE']):
                         case 'F':?>

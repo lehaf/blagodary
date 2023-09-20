@@ -11,6 +11,8 @@ const AjaxFilter = function () {
 		'elementsClass':'.announcements-content',
 		'elementsContainerClass':'.announcements-content',
 		'paginationLinkSelector':'.pagination-list .pagination-list__item a',
+		'mobileFilterContainer':'div.aside__item-form',
+		'mobFilterHeader':'div#mob-filter-header',
 	};
 
 	this.dependenceList = {
@@ -43,6 +45,7 @@ AjaxFilter.prototype.setFilterEvent = function () {
 	if (this.$filterForm && this.$filterSubmitBtn) {
 		this.$filterSubmitBtn.onclick = (e) => {
 			e.preventDefault();
+			_this.hideMobileFilter();
 			let getParams = _this.getParamsToArray();
 			let formData = new FormData(this.$filterForm);
 			getParams = _this.fillGetParamsValues(getParams, formData);
@@ -50,6 +53,7 @@ AjaxFilter.prototype.setFilterEvent = function () {
 			if (getParamsStr.length > 0 && _this.filterParamsExist(getParams)) {
 				_this.setLoader();
 				_this.sendData(_this.prepareLinkForAjax(getParamsStr));
+
 			} /*else {
 				console.log(_this.filterParamsExist(getParams));
 				if (location.href.includes('set_filter') && Object.keys(getParams).length > 1 && _this.filterParamsExist(getParams)) {
@@ -59,6 +63,17 @@ AjaxFilter.prototype.setFilterEvent = function () {
 			}*/
 		}
 	}
+}
+
+AjaxFilter.prototype.hideMobileFilter = function () {
+	this.$mobileFilterContainer = document.querySelector(this.settings.mobileFilterContainer);
+	this.$mobFilterHeader = document.querySelector(this.settings.mobFilterHeader);
+	if ((this.$mobileFilterContainer && this.$mobileFilterContainer.classList.contains('active') &&
+		(this.$mobFilterHeader && this.$mobFilterHeader.classList.contains('active')))) {
+		this.$mobileFilterContainer.classList.remove('active');
+		this.$mobFilterHeader.classList.remove('active');
+	}
+
 }
 
 AjaxFilter.prototype.filterParamsExist = function (getParams)
@@ -262,6 +277,7 @@ AjaxFilter.prototype.setResetFilterEvent = function () {
 				_this.clearForm(_this.$filterForm);
 			}
 			_this.setDependentLists();
+			_this.hideMobileFilter();
 		}
 	}
 }

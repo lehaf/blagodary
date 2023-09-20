@@ -133,12 +133,15 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                 /** @var string $typeOfView */
                 ?>
             </div>
-            <? if (!empty($arFinedElementsId)) {
-                global $arFilterAds;
+            <?php if (!empty($arFinedElementsId)) {
+                global $arFilterAds, $arrFilter;
                 $arFilterAds = [
-                    'ID' => $arFinedElementsId,
                     '!=PROPERTY_OWNER' => $BLOCKED,
+                    '=ID' => $arFinedElementsId,
+                    ...$arrFilter
                 ];
+
+
                 $APPLICATION->IncludeComponent(
                     "bitrix:catalog.section",
                     $typeOfView,
