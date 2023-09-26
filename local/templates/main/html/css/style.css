@@ -105,7 +105,7 @@ body {
 }
 
 .header-search__el::placeholder {
-  width: 35%;
+  width: 100%;
   height: 100%;
   padding: 0;
   background: url("../assets/img/search.svg") no-repeat 105px top;

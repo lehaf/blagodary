@@ -15,7 +15,8 @@ const RegisterAjax = function () {
        'emptyField':'Обязательное поле!',
        'wrongEmail':'Некоректный email!',
        'smallPass':'Минимум 8 символов!',
-       'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
+       'upperCase':'Пароль должен содержать заглавные символны!',
+       'lowerCase':'Пароль должен содержать строчные символны!',
        'numbersInPass':'Пароль должен содержать цифры!',
        'passNotMatch':'Пароли не совпадают!'
 
@@ -92,11 +93,15 @@ RegisterAjax.prototype.checkFormFields = function () {
                     if (input.value.length < 8) {
                         errors.push(_this.errors.smallPass);
                     }
-
-                    if (input.value === input.value.toLowerCase()) {
-                        errors.push(_this.errors.upperLowerCase);
+                    // В пароле присутствует хотя бы одна буква нижнего регистра
+                    if (!/(?=.*[a-z])/.test(input.value)) {
+                        errors.push(_this.errors.lowerCase);
                     }
-
+                    // В пароле присутствует хотя бы одна буква верхнего регистра
+                    if (!/(?=.*[A-Z])/.test(input.value)) {
+                        errors.push(_this.errors.upperCase);
+                    }
+                    // В пароле присутствует хотя бы одна цифра
                     if (!/[0-9]/.test(input.value)) {
                         errors.push(_this.errors.numbersInPass);
                     }
@@ -105,11 +110,15 @@ RegisterAjax.prototype.checkFormFields = function () {
                     if (input.value.length < 8) {
                         errors.push(_this.errors.smallPass);
                     }
-
-                    if (input.value === input.value.toLowerCase()) {
-                        errors.push(_this.errors.upperLowerCase);
+                    // В пароле присутствует хотя бы одна буква нижнего регистра
+                    if (!/(?=.*[a-z])/.test(input.value)) {
+                        errors.push(_this.errors.lowerCase);
                     }
-
+                    // В пароле присутствует хотя бы одна буква верхнего регистра
+                    if (!/(?=.*[A-Z])/.test(input.value)) {
+                        errors.push(_this.errors.upperCase);
+                    }
+                    // В пароле присутствует хотя бы одна цифра
                     if (!/[0-9]/.test(input.value)) {
                         errors.push(_this.errors.numbersInPass);
                     }

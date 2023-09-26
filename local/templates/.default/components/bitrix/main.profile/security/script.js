@@ -16,7 +16,8 @@ const PersonalData = function () {
         'emptyField':'Обязательное поле!',
         'wrongEmail':'Некоректный email!',
         'smallPass':'Минимум 8 символов!',
-        'upperLowerCase':'Пароль должен содержать заглавные и строчные символы!',
+        'upperCase':'Пароль должен содержать заглавные символны!',
+        'lowerCase':'Пароль должен содержать строчные символны!',
         'numbersInPass':'Пароль должен содержать цифры!',
         'passNotMatch':'Пароли не совпадают!'
 
@@ -58,34 +59,41 @@ PersonalData.prototype.checkFormFields = function () {
         let testPassed = true;
         this.$formInputs.forEach((input) => {
             let errors = [];
+            const inputType = input.getAttribute('type');
+            if (inputType === 'text' || inputType === 'password') {
+                if (input.value.length < 8) {
+                    errors.push(_this.errors.smallPass);
+                }
+                // В пароле присутствует хотя бы одна буква нижнего регистра
+                if (!/(?=.*[a-z])/.test(input.value)) {
+                    errors.push(_this.errors.lowerCase);
+                }
+                // В пароле присутствует хотя бы одна буква верхнего регистра
+                if (!/(?=.*[A-Z])/.test(input.value)) {
+                    errors.push(_this.errors.upperCase);
+                }
+                // В пароле присутствует хотя бы одна цифра
+                if (!/[0-9]/.test(input.value)) {
+                    errors.push(_this.errors.numbersInPass);
+                }
 
-            if (input.value.length < 8) {
-                errors.push(_this.errors.smallPass);
-            }
+                let errorMessage = errors.join('<br>');
 
-            if (input.value === input.value.toLowerCase()) {
-                errors.push(_this.errors.upperLowerCase);
-            }
-
-            if (!/[0-9]/.test(input.value)) {
-                errors.push(_this.errors.numbersInPass);
-            }
-
-            let errorMessage = errors.join('<br>');
-            if (input.getAttribute('data-validate') === 'n') {
-                if (_this.$form.querySelector('input[name="NEW_PASSWORD"]').value !== input.value) {
-                    errorMessage = _this.errors.passNotMatch;
+                if (input.getAttribute('data-validate') === 'n') {
+                    if (_this.$form.querySelector('input[name="NEW_PASSWORD"]').value !== input.value) {
+                        errorMessage = _this.errors.passNotMatch;
+                        _this.createInputErrorMessage(input,errorMessage);
+                    }
+                } else {
                     _this.createInputErrorMessage(input,errorMessage);
                 }
-            } else {
-                _this.createInputErrorMessage(input,errorMessage);
-            }
 
 
-            if (errorMessage) {
-                testPassed = false;
-            } else {
-                _this.deleteInputErrorMessage(input);
+                if (errorMessage) {
+                    testPassed = false;
+                } else {
+                    _this.deleteInputErrorMessage(input);
+                }
             }
         });
         return testPassed;
