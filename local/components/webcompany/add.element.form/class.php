@@ -74,7 +74,7 @@ class AddElementForm extends \CBitrixComponent
         $arResult = [];
         if (\Bitrix\Main\Loader::includeModule('iblock')) {
             $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
-                'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
+                'order' => array('SORT' => 'ASC', 'VALUE' => 'ASC'),
                 'select' => array('*'),
                 'filter' => array('PROPERTY_ID' => [REGION_PROP_ID]),
                 'cache' => array(
@@ -93,6 +93,7 @@ class AddElementForm extends \CBitrixComponent
                 $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
                 $hlClass = $entity->getDataClass();
                 $citiesValues = $hlClass::getList([
+                    'order' => ['UF_NAME' => 'ASC'],
                     'select' => ['UF_XML_ID','UF_NAME','UF_GROUP'],
                     'cache' => [
                         'ttl' => 36000000,

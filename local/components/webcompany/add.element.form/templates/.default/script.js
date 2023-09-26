@@ -367,12 +367,19 @@ CreateAdsApp.prototype.setDependentLists = function ()
             }
 
             let isDependencyFieldDefaultBlocked = false;
+            let firstEditPageValuesFilter = true;
             let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
             const needClick = dependencySelect.options[0].selected !== true;
             let observer = new MutationObserver(mutationRecords => {
+                console.log(dependenceFieldCode);
                 if (!isDependencyFieldDefaultBlocked && !location.search.includes('item=')) {
                     _this.filterDependencyValues(mainField, dependenceFieldCode,needClick);
                     isDependencyFieldDefaultBlocked = true;
+                }
+
+                if (location.search.includes('item=') && firstEditPageValuesFilter) {
+                    firstEditPageValuesFilter = false;
+                    _this.filterDependencyValues(mainField, dependenceFieldCode,needClick);
                 }
             });
             // Контейнер для зависимого select
