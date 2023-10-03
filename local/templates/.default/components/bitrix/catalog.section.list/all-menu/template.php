@@ -26,12 +26,12 @@ $curPage = $APPLICATION->GetCurPage();
             </button>
             <ul class="category-list">
                 <li class="category-list__item active">
-                    <?if ($curPage !== '/'):?><a href="<?=$arParams['ALL_CATEGORIES_LINK']?>"><?else:?><span><?endif;?>
+                    <span class="main-menu-link">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/category.svg#item-1"></use>
                         </svg>
                         Все категории
-                    <?if ($curPage !== '/'):?></a><?else:?></span><?endif;?>
+                    </span>
                 </li>
                 <?foreach ($arResult['CATEGORIES'] as $key => $arCategory):?>
                     <li class="category-list__item category-list__item--pop-up <?=$key === 0 ? 'is-active' : ''?>"

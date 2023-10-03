@@ -15,3 +15,7 @@
     color: #2a3548;
     transition: .3s;
 }
+
+span.main-menu-link.hover:hover {
+    color: #059ea3;
+}
