@@ -105,7 +105,7 @@ body {
 }
 
 .header-search__el::placeholder {
-  width: 100%;
+  width: 35%;
   height: 100%;
   padding: 0;
   background: url("../assets/img/search.svg") no-repeat 105px top;
@@ -361,14 +361,13 @@ select.custom-select {
 
 .custom-select {
   position: relative;
-  z-index: 2;
 }
 
 .jq-selectbox__dropdown {
   position: absolute;
   padding: 5px;
   height: min-content !important;
-  overflow-y: hidden;
+  overflow-y: scroll;
   top: 41px !important;
   width: 100% !important;
   background: #fff;
@@ -418,8 +417,6 @@ select.custom-select {
 
 .jq-selectbox__dropdown ul {
   padding: 0 15px;
-  overflow: auto;
-  max-height: 220px !important;
 }
 
 
@@ -5943,6 +5940,10 @@ body .bx-core-popup-menu-item-text {
 
 body input {
   color: #2a3548 !important;
+}
+
+input.popUp-complain-btn {
+  color: white !important;
 }
 
 
