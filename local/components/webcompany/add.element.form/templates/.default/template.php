@@ -326,7 +326,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                             <?
                                 $phones = !empty($_POST['OWNER_PHONE']) ? $_POST['OWNER_PHONE'] : $arResult['USER']['UF_PHONES'];
                             ?>
-                            <?$firstKey = array_key_first($arResult['USER']['UF_PHONES'])?>
+                            <?$firstKey = is_array($arResult['USER']['UF_PHONES']) ? array_key_first($arResult['USER']['UF_PHONES']) : 0?>
                             <?foreach ($phones as $key => $phone):?>
                                 <div class="form-group form-group--tel">
                                     <label for="dataUserTel" class="data-user__label">Контактный телефон*</label>

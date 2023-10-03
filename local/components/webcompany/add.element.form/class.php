@@ -472,17 +472,20 @@ class AddElementForm extends \CBitrixComponent
 
                 if ($arAllImages = $obElement->getImages()->getAll()) {
                     $arImgJson = [];
+
                     foreach ($arAllImages as $obImg) {
                         if ($obImg->getFile()) {
                             $imgPath = '/upload/' . $obImg->getFile()->getSubdir().'/'.$obImg->getFile()->getFileName();
+
+                            $arItem['IMAGES'][] = [
+                                'NAME' => $obImg->getFile()->getFileName(),
+                                'SRC' => $imgPath
+                            ];
+                            $arImgJson[] = $imgPath;
                         }
-                        $arItem['IMAGES'][] = [
-                            'NAME' => $obImg->getFile()->getFileName(),
-                            'SRC' => $imgPath
-                        ];
-                        $arImgJson[] = $imgPath;
                     }
-                    $arItem['IMAGES_JSON'] = json_encode($arImgJson);
+
+                    if (!empty($arImgJson)) $arItem['IMAGES_JSON'] = json_encode($arImgJson);
                 }
 
                 $arItem['SECTIONS'] = $this->getSectionTreePath($obElement->getIblockSectionId());

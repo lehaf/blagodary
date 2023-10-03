@@ -361,13 +361,14 @@ select.custom-select {
 
 .custom-select {
   position: relative;
+  z-index: 2;
 }
 
 .jq-selectbox__dropdown {
   position: absolute;
   padding: 5px;
   height: min-content !important;
-  overflow-y: scroll;
+  overflow-y: hidden;
   top: 41px !important;
   width: 100% !important;
   background: #fff;
@@ -417,6 +418,8 @@ select.custom-select {
 
 .jq-selectbox__dropdown ul {
   padding: 0 15px;
+  overflow: auto;
+  max-height: 220px !important;
 }
 
 

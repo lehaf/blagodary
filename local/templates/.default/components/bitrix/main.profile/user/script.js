@@ -2,6 +2,7 @@ const PersonalData = function () {
 
     this.settings = {
         'saveButton': '.data-user button[name="save"]',
+        'dateBirthInput': 'input[name="PERSONAL_BIRTHDAY"]',
         'form': 'form#form-personal-data',
     }
 
@@ -27,8 +28,14 @@ PersonalData.prototype.setupListener = function ()
             _this.sendData(form);
         }
     }
+
+    this.jqueryDateMaskInit();
 }
 
+PersonalData.prototype.jqueryDateMaskInit = function ()
+{
+    $("input[name='PERSONAL_BIRTHDAY']").mask("99.99.9999" , { placeholder:"__.__.____."});
+}
 
 PersonalData.prototype.sendData = function (data) {
     fetch('', {

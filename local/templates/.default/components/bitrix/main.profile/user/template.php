@@ -30,7 +30,10 @@
                 <div class="form-group-description">Не будет отображаться в профиле</div>
             </div>
             <div class="form-group">
-                <? $APPLICATION->IncludeComponent(
+                <label for="dataUserBirth" class="data-user__label">Дата рождения</label>
+                <input type="text" name="PERSONAL_BIRTHDAY" placeholder="__.__.____" id="dataUserBirth" value="<?=$arResult["arUser"]["PERSONAL_BIRTHDAY"]?>">
+                <div class="form-group-description">Не будет отображаться в профиле</div>
+                <?/* $APPLICATION->IncludeComponent(
                     'bitrix:main.calendar',
                     'birth',
                     array(
@@ -42,7 +45,7 @@
                     ),
                     null,
                     array('HIDE_ICONS' => 'Y')
-                ); ?>
+                ); */?>
             </div>
         </div>
     </div>
