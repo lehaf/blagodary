@@ -3,6 +3,7 @@
 if (!empty($arResult['SECTIONS'])) {
     $newSections = [];
     $rootSectionId = null;
+    $depthLevelSections = [];
 
     foreach ($arResult['SECTIONS'] as $arSection) {
         // удаляем разделы без элементов
@@ -11,6 +12,10 @@ if (!empty($arResult['SECTIONS'])) {
         $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], $arSection["EDIT_LINK_TEXT"]);
         $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], $arSection["DELETE_LINK_TEXT"],
             array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+
+        $depthLevelSections[$arSection['DEPTH_LEVEL']][$arSection['ID']] = $arSection;
+
+
         // Строим новое дерево разделов
         if ($arSection['DEPTH_LEVEL'] == 1) {
             $rootSectionId = $arSection['ID'];
@@ -34,5 +39,18 @@ if (!empty($arResult['SECTIONS'])) {
         }
     }
 
-    $arResult['SECTIONS'] = $newSections;
+    if (!empty($depthLevelSections)) {
+        krsort($depthLevelSections);
+        foreach ($depthLevelSections as $depthLevel => $sections) {
+            if (!empty($sections)) {
+                foreach ($sections as $sectId => $sect) {
+                    if ($depthLevel > 1) {
+                        $depthLevelSections[$depthLevel-1][$sect['IBLOCK_SECTION_ID']]['ITEMS'][$sectId] = $depthLevelSections[$depthLevel][$sectId];
+                    }
+                }
+            }
+        }
+    }
+
+    $arResult['SECTIONS'] = $depthLevelSections[1];
 }

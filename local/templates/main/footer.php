@@ -125,7 +125,8 @@ global $USER, $APPLICATION;
                 "CACHE_NOTES" => "Y",
                 "CACHE_GROUPS" => "Y",
                 "CACHE_FILTER" => "Y",
-                "ALL_CATEGORIES_LINK" => "/"
+                "ALL_CATEGORIES_LINK" => "/",
+                "CUSTOM_SECTION_SORT" => ["UF_MENU_SORT" => "ASC"]
             )
         );?>
     </div>
