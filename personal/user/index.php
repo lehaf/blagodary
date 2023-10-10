@@ -11,8 +11,9 @@ $APPLICATION->SetTitle("Персональные данные");
 use Bitrix\Main\Page\Asset;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
-Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.formstyler.min.js");
+//Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.formstyler.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/air-datepicker.js");
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.selectbox.min.js");
 Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/air-datepicker.css");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.maskedinput.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/slick.js");
