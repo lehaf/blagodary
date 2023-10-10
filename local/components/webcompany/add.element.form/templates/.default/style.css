@@ -11,3 +11,10 @@
     color: #6a2112;
     list-style-type: disc;
 }
+
+@media (max-width: 768px) {
+    body .popUp-error__btn {
+        margin-top: 10px;
+        display: block !important;
+    }
+}

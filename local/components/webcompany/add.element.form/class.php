@@ -318,6 +318,9 @@ class AddElementForm extends \CBitrixComponent
         }
     }
 
+    /**
+        Создать объявление
+     */
     private function createNewUserAds() : void
     {
         if (Loader::includeModule("iblock") && defined('ADS_IBLOCK_ID') && !empty($this->arFieldsForRecord)) {
@@ -336,16 +339,15 @@ class AddElementForm extends \CBitrixComponent
                     }
                 } else {
                     foreach ($propValue as $value) {
-                        $obNewElement->addTo($propName, $value);
+                        if (!empty($value)) $obNewElement->addTo($propName, $value);
                     }
                 }
             }
 
-
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImage) {
                 $arImage['MODULE_ID'] = 'iblock';
                 $fileId = \CFile::SaveFile($arImage,'iblock');
-                $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
+                if (!empty($fileId) && $fileId > 0) $obNewElement->addTo($this->postImagesArrayName, new PropertyValue($fileId));
             }
 
             $obRes = $obNewElement->save();
@@ -387,9 +389,10 @@ class AddElementForm extends \CBitrixComponent
             }
 
             $arAllImg = $obNewElement->get($this->postImagesArrayName)->getAll();
+
             $arCurImg = [];
             foreach ($arAllImg as $obImg) {
-                $arCurImg[] = $obImg->getFile()->getFileName();
+                if ($obImg->getFile()) $arCurImg[] = $obImg->getFile()->getFileName();
             }
             $arNewImg = [];
             foreach ($this->arImgForRecord[$this->postImagesArrayName] as $arImg) {
@@ -397,7 +400,7 @@ class AddElementForm extends \CBitrixComponent
             }
             $arImgNotDelete = array_intersect($arNewImg, $arCurImg);
             foreach ($arAllImg as $obImg) {
-                if (!in_array($obImg->getFile()->getFileName(),$arImgNotDelete)) {
+                if ($obImg->getFile() && !in_array($obImg->getFile()->getFileName(),$arImgNotDelete)) {
                     $obNewElement->removeFrom($this->postImagesArrayName,$obImg->getFile()->getId());
                     \CFile::Delete($obImg->getFile()->getId());
                 }
