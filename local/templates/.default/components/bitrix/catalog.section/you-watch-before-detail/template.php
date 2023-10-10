@@ -24,7 +24,7 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
                         $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"], array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
-                        <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>"class="viewed-slider__item">
+                        <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="viewed-slider__item">
                             <span class="viewed-slider__item-img" style="height: 195.749px;">
                                 <img src="<?=$arItem['IMG']['src']?>"
                                      title="<?=$arItem['NAME']?>"

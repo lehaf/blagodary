@@ -184,7 +184,7 @@ class AddFavorite extends \CBitrixComponent
                 $firstImgId = !empty($obItem->getImages()->getAll()[0]) ? $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
                 $arResizeFirstImg = \CFile::ResizeImageGet(
                     $firstImgId,
-                    array("width" => 131, "height" => 100),
+                    array("width" => 262, "height" => 200),
                     BX_RESIZE_IMAGE_PROPORTIONAL,
                 );
 

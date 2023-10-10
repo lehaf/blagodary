@@ -10,13 +10,13 @@ if (!empty($arResult['ITEMS'])) {
         if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'][0])) {
             $arItem['IMG'] = CFile::ResizeImageGet(
                 $arItem['PROPERTIES']['IMAGES']['VALUE'][0],
-                array("width" => 240, "height" => 214),
+                array("width" => 580, "height" => 528),
                 BX_RESIZE_IMAGE_PROPORTIONAL,
             );
         } else {
             $arItem['IMG'] = CFile::ResizeImageGet(
                 NO_PHOTO_IMG_ID,
-                array("width" => 240, "height" => 214),
+                array("width" => 580, "height" => 528),
                 BX_RESIZE_IMAGE_PROPORTIONAL,
             );
         }
