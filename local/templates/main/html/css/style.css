@@ -5949,3 +5949,141 @@ input.popUp-complain-btn {
 
 
 
+
+
+
+
+
+
+
+
+
+.form-search-input,
+.select {
+  min-height: 40px;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  padding: 13px 20px 12px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  color: #858585;
+  cursor: pointer;
+}
+
+.select.show{
+  border-radius: 6px 6px 0 0;
+}
+
+.select{
+  width: 100%;
+}
+
+.select {
+  position: relative;
+}
+
+.select:after {
+  position: absolute;
+  content: url("../assets/img/arrow-bottom.svg");
+  top: 11px;
+  right: 19px;
+}
+
+select.custom-select {
+  position: absolute;
+  height: 0;
+  width: 0;
+  opacity: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  padding: 5px;
+  height: min-content !important;
+  top: 41px !important;
+  width: 100% !important;
+  background: #fff;
+  border: 1px solid #d3d3d3;
+  border-radius: 0 0 6px 6px;
+}
+
+.dropdown ul{
+  max-height: 272px;
+  overflow: auto;
+}
+
+.dropdown ul::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dropdown ul::-webkit-scrollbar-track {
+
+}
+
+.dropdown ul::-webkit-scrollbar-thumb {
+  background: #059EA3;
+  border-radius: 11px;
+}
+
+.dropdown li {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -0.01em;
+  color: #797979;
+  padding: 10px 0 11px;
+  transition: 0.3s;
+  cursor: pointer;
+  border-top: 1px solid transparent;
+}
+
+.dropdown li:not(:last-child) {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.dropdown li:hover {
+  position: relative;
+  background: #ffe35c;
+  border-radius: 3px;
+  color: #2a3548;
+  margin: 0 -15px 0;
+  padding: 10px 15px 11px;
+  border-color: transparent;
+}
+
+.dropdown li:hover:before{
+  position: absolute;
+  content: "";
+  top: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: white;
+}
+
+.dropdown li:hover:has(+ next) {
+  border-color: transparent;
+}
+
+.dropdown ul {
+  padding: 0 15px;
+}
+
+.question-block::-webkit-scrollbar {
+  width: 0;
+}
+
+.question-block::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+
+

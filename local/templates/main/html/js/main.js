@@ -50,7 +50,7 @@ function selectCountry(ev) {
     //     $('[data-select="new-list"]').append(o);
     //
     // };
-    $('.custom-select').styler();
+    $('.custom-select').selectbox();
     $('.new-select').trigger('refresh');
 }
 
