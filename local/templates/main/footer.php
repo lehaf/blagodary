@@ -179,12 +179,14 @@ global $USER, $APPLICATION;
     </div>
 </div>
 <div class="mobile_menu_overlay"></div>
-<?php $APPLICATION->IncludeComponent(
-    "bitrix:main.auth.forgotpasswd",
-    "forgot_pass",
-    Array()
-);?>
-<?php if (!$USER->IsAuthorized()) :?>
+<?php if (!$USER->IsAuthorized()):?>
+    <?php if ($_POST['forgot_pass'] !== 'N'):?>
+        <?php $APPLICATION->IncludeComponent(
+            "bitrix:main.auth.forgotpasswd",
+            "forgot_pass",
+            Array()
+        );?>
+    <?php endif?>
     <div class="popUp popUp-login">
         <div class="login-btn-list">
             <button class="login-btn-list__item login-btn active">Вход</button>

@@ -192,7 +192,10 @@ ForgotPass.prototype.sendData = function (data) {
     fetch(_this.$formAction, {
         method: 'POST',
         cache: 'no-cache',
-        body: data
+        body: data,
+        headers: {
+            'X-Requested-With' : 'XMLHttpRequest'
+        }
     }).then(function(response) {
         return response.text()
     }).then(function(jsonResponse) {

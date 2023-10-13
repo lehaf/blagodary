@@ -388,7 +388,7 @@ class AddElementForm extends \CBitrixComponent
 
                 $arResizeFirstImg = \CFile::ResizeImageGet(
                     $firstImgId,
-                    array("width" => 340, "height" => 262),
+                    array("width" => 640, "height" => 524),
                     BX_RESIZE_IMAGE_PROPORTIONAL,
                 );
 
