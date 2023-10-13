@@ -3,6 +3,7 @@
 /** @global object $APPLICATION */
 /** @global array $BLOCKED */
 /** @const string  SITE_TEMPLATE_PATH */
+
 use WebCompany\YouWatchBefore;
 use Bitrix\Main\Page\Asset;
 

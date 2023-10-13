@@ -301,8 +301,8 @@ AjaxFilter.prototype.setResetFilterEvent = function () {
 				_this.setLoader();
 				getParams = _this.deleteFilterParams(getParams);
 				_this.sendData(_this.prepareLinkForAjax(getParams));
-				_this.clearForm(_this.$filterForm);
 			}
+			_this.clearForm(_this.$filterForm);
 			_this.setDependentLists();
 			_this.hideMobileFilter();
 		}
@@ -354,18 +354,10 @@ AjaxFilter.prototype.deleteLoader = function () {
 }
 
 AjaxFilter.prototype.scrollToElement = function (element) {
-	// Создаем новый observer (наблюдатель)
-	let observer = new IntersectionObserver(function (entries) {
-		entries.forEach(function (entry) {
-			if (entry.isIntersecting !== true) {
-				element.scrollIntoView({
-					behavior: 'smooth',
-					block: 'start'
-				});
-			}
-		});
+	element.scrollIntoView({
+		behavior: 'smooth',
+		block: 'start'
 	});
-	observer.observe(element);
 }
 
 AjaxFilter.prototype.prepareLinkForAjax = function (getParamsStr = '') {
@@ -387,12 +379,12 @@ AjaxFilter.prototype.sendData = function (link = '') {
 		let response = _this.getDomElementsFromString(text);
 		let newElements = response.querySelector(_this.settings.elementsClass);
 		let curContainer = document.querySelector(_this.settings.elementsContainerClass);
-		_this.scrollToElement(curContainer);
 		setTimeout(() => {
 			_this.deleteLoader();
 			if (newElements) {
 				curContainer.innerHTML = newElements.innerHTML;
 				_this.setPaginationEvent();
+				_this.scrollToElement(curContainer);
 			} else {
 				curContainer.innerHTML = response.querySelector('body').innerHTML;
 			}

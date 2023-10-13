@@ -81,7 +81,7 @@ PropSearch.prototype.setDependentLists = function ()
                     }
                     isDependencyFieldDefaultBlocked = true;
                 }
-                console.log(isMainFieldChosen);
+
                 if (mainField.options[0].selected) {
                     _this.showDisable(dependenceFieldCode);
                 }
