@@ -47,10 +47,12 @@
             <div class="form-group">
                 <label for="selectForm" class="data-user__label">Область</label>
                 <select name="PERSONAL_STATE" class="custom-select custom-old" id="REGION">
+                    <?php $firstKey = array_key_first($arResult['REGION'])?>
                     <?foreach ($arResult['REGION'] as $key => $region):?>
-                        <option data-dependency="<?=$region['XML_ID']?>" value="<?=$region['VALUE']?>"
-                            <?=$arResult["arUser"]["PERSONAL_STATE"] == $region['VALUE'] ? 'selected' : ($key === 0 ? 'selected' : '')?>
-                        ><?=$region['VALUE']?></option>
+                        <option data-cities='<?=$region['CITIES']?>' value="<?=$region['NAME']?>"
+                            <?=$arResult["arUser"]["PERSONAL_STATE"] == $region['NAME'] ? 'selected' :
+                                (empty($arResult["arUser"]["PERSONAL_STATE"]) && $key === $firstKey ? 'selected' : '')?>
+                        ><?=$region['NAME']?></option>
                     <?endforeach;?>
                 </select>
             </div>
@@ -60,7 +62,7 @@
                 <label for="selectFormNew" class="data-user__label">Город / Район</label>
                 <select name="PERSONAL_CITY" class="custom-select new-select" id="CITY">
                     <?foreach ($arResult['CITY'] as $xmlId => $city):?>
-                        <option data-dependency="<?=$city['UF_GROUP']?>" value="<?=$city['UF_NAME']?>"
+                        <option value="<?=$city['UF_NAME']?>"
                             <?=$arResult["arUser"]["PERSONAL_CITY"] == $city['UF_NAME'] ? 'selected' : ''?>
                         ><?=$city['UF_NAME']?></option>
                     <?endforeach;?>

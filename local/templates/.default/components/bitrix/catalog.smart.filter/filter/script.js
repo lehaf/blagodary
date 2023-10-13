@@ -16,7 +16,7 @@ const AjaxFilter = function () {
 	};
 
 	this.dependenceList = {
-		'REGION':'CITY'
+		'REGION':'CITY',
 	};
 
 	this.$filterForm = document.querySelector('form#'+this.settings.formFilterId);
@@ -106,7 +106,7 @@ AjaxFilter.prototype.fillGetParamsValues = function (getParams, formData)
 			if (getParams[key] && !value) delete getParams[key];
 		}
 	}
-	console.log(getParams);
+
 	if (getParams['set_filter'] !== 'y') getParams['set_filter'] = 'y';
 	return getParams;
 }
@@ -131,31 +131,40 @@ AjaxFilter.prototype.setDependentLists = function ()
 {
 	const _this = this;
 	if (this.dependenceList) {
-		for (let mainFiledCode in this.dependenceList) {
-			const mainField = document.querySelector('select#'+mainFiledCode);
-			const dependenceFieldCode = this.dependenceList[mainFiledCode];
+		for (let mainFieldCode in this.dependenceList) {
+			const mainField = document.querySelector('select#'+mainFieldCode);
+			const dependenceFieldCode = this.dependenceList[mainFieldCode];
+
 			mainField.onchange = () => {
-				let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
-				if (!mainField.value) {
-					dependencySelect.options[0].selected = true;
+				let dataCities = [];
+				for (let option of mainField.options) {
+					if (option.selected === true) {
+						let cities = option.getAttribute('data-cities');
+						// Если есть города то фильтруем
+						if (cities) {
+							dataCities = JSON.parse(cities);
+							if (dataCities) _this.filterDependencyValues(dataCities, dependenceFieldCode);
+							break;
+						} else {
+							// если городов нет то блокируем зависимый селект
+							_this.showAllValues(dependenceFieldCode);
+							_this.showDisable(dependenceFieldCode);
+						}
+					}
 				}
-				// Ставим в видимое значение зависимого поля его стандартный option
-				dependencySelect.parentNode.querySelector('.jq-selectbox__select-text')
-					.innerHTML = dependencySelect.options[0].innerHTML;
-				_this.filterDependencyValues(mainField, dependenceFieldCode);
 			}
 
+			// Блокируем зависимый селект при ините библеотеки селектбокс
 			let isDependencyFieldDefaultBlocked = false;
 			const isMainFieldChosen = mainField.options[0].selected !== true;
 			let observer = new MutationObserver(mutationRecords => {
 				if (!isDependencyFieldDefaultBlocked) {
 					if (!isMainFieldChosen) {
-						let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
-						let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
-						dependenceClickContainer.style.pointerEvents = 'none';
-						selectVision.style.background = '#e8e8e8'; // #d5d5d5
+						_this.showDisable(dependenceFieldCode);
 					} else {
-						_this.filterDependencyValues(mainField, dependenceFieldCode);
+						const selectedOption = document.querySelector('select#'+dependenceFieldCode+' option[selected]');
+						let cities = selectedOption.getAttribute('data-cities');
+						_this.filterDependencyValues(cities, dependenceFieldCode);
 					}
 					isDependencyFieldDefaultBlocked = true;
 				}
@@ -171,44 +180,62 @@ AjaxFilter.prototype.setDependentLists = function ()
 	}
 }
 
-AjaxFilter.prototype.filterDependencyValues = function (mainField, dependenceFieldCode)
+AjaxFilter.prototype.showDisable = function (dependenceFieldCode)
 {
-	let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
-		.getAttribute('data-dependency');
-	let dependenceLi = document.querySelector('select#'+dependenceFieldCode)
-		.parentNode.querySelectorAll('.jq-selectbox__dropdown li');
+	const dependenceViewSelectContainer = document.querySelector('select#'+dependenceFieldCode)
+		.parentNode.querySelector('span.selectbox');
+	dependenceViewSelectContainer.style.pointerEvents = 'none';
+	dependenceViewSelectContainer.querySelector('div.select').style.background = '#e8e8e8'; // #d5d5d5
+}
 
-	let blockField = true;
-	let defaultAllOption = 'Все';
-	if (dependenceLi) {
-		for (let li of dependenceLi) {
-			if (li.getAttribute('data-dependency') !== dependencyFilter) {
-				li.style.display = 'none';
+AjaxFilter.prototype.hideDisable = function (dependenceFieldCode)
+{
+	const dependenceViewSelectContainer = document.querySelector('select#'+dependenceFieldCode)
+		.parentNode.querySelector('span.selectbox');
+	dependenceViewSelectContainer.style.pointerEvents = 'all';
+	dependenceViewSelectContainer.querySelector('div.select').style.background = '#fff'; // #d5d5d5
+}
+
+AjaxFilter.prototype.filterDependencyValues = function (cities, dependenceFieldCode)
+{
+	const _this = this;
+	const dependenceField = document.querySelector('select#'+dependenceFieldCode);
+	const dependenceSelectBoxLi = dependenceField.parentNode.querySelectorAll('.selectbox .dropdown li');
+
+	if (dependenceSelectBoxLi) {
+		let firstValueClicked = false;
+		for (const li of dependenceSelectBoxLi) {
+			const cityName = li.innerHTML.trim();
+			if (cities && cities.includes(cityName)) {
+				li.style.display = 'block';
+				if (firstValueClicked === false) {
+					li.click();
+					_this.hideDisable(dependenceFieldCode);
+					firstValueClicked = true;
+				}
 			} else {
-				blockField = false;
-				li.style.display = 'block';
-			}
-
-			if (li.getAttribute('data-dependency') === null) {
-				li.style.display = 'block';
-				defaultAllOption = li.innerHTML;
+				li.style.display = 'none';
 			}
 		}
 	}
-
-	let dependenceClickContainer = document.querySelector('#'+dependenceFieldCode+'-styler');
-	let selectVision = dependenceClickContainer.querySelector('.jq-selectbox__select');
-	if (!dependencyFilter || blockField) {
-		dependenceClickContainer.style.pointerEvents = 'none';
-		selectVision.style.background = '#e8e8e8'; // #d5d5d5
-		dependenceClickContainer.querySelector('.jq-selectbox__select-text').innerHTML = defaultAllOption;
-	} else {
-		dependenceClickContainer.style.pointerEvents = 'all';
-		selectVision.style.background = '#fff'; // #fff
-	}
 }
 
+AjaxFilter.prototype.showAllValues = function (dependenceFieldCode)
+{
+	const dependenceField = document.querySelector('select#'+dependenceFieldCode);
+	const dependenceSelectBoxLi = dependenceField.parentNode.querySelectorAll('.selectbox .dropdown li');
 
+	if (dependenceSelectBoxLi) {
+		let firstValueClicked = false;
+		for (const li of dependenceSelectBoxLi) {
+			li.style.display = 'block';
+			if (firstValueClicked === false) {
+				li.click();
+				firstValueClicked = true;
+			}
+		}
+	}
+}
 
 AjaxFilter.prototype.getParamsToArray = function ()
 {

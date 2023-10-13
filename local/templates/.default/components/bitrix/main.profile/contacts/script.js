@@ -67,19 +67,36 @@ PhoneController.prototype.setDependentLists = function ()
 {
     const _this = this;
     if (this.dependenceList) {
-        for (let mainFiledCode in this.dependenceList) {
-            const mainField = document.querySelector('select#'+mainFiledCode);
-            const dependenceFieldCode = this.dependenceList[mainFiledCode];
+        for (let mainFieldCode in this.dependenceList) {
+            const mainField = document.querySelector('select#'+mainFieldCode);
+            const dependenceFieldCode = this.dependenceList[mainFieldCode];
+
             mainField.onchange = () => {
-                _this.filterDependencyValues(mainField, dependenceFieldCode);
+                let dataCities = [];
+                for (let option of mainField.options) {
+                    if (option.selected === true) {
+                        let cities = option.getAttribute('data-cities');
+                        // Если есть города то фильтруем
+                        if (cities) {
+                            dataCities = JSON.parse(cities);
+                            if (dataCities) _this.filterDependencyValues(dataCities, dependenceFieldCode);
+                            break;
+                        } else {
+                            // если городов нет то блокируем зависимый селект
+                            _this.showAllValues(dependenceFieldCode);
+                            _this.showDisable(dependenceFieldCode);
+                        }
+                    }
+                }
             }
 
+            // Блокируем зависимый селект при ините библеотеки селектбокс
             let isDependencyFieldDefaultBlocked = false;
-            let dependencySelect = document.querySelector('select#'+dependenceFieldCode);
-            const needClick = dependencySelect.options[0].selected !== true;
+            const selectedOption = mainField.querySelector('option[selected]');
             let observer = new MutationObserver(mutationRecords => {
                 if (!isDependencyFieldDefaultBlocked) {
-                    _this.filterDependencyValues(mainField, dependenceFieldCode, needClick);
+                    let cities = JSON.parse(selectedOption.getAttribute('data-cities'));
+                    _this.filterDependencyValues(cities, dependenceFieldCode, false);
                     isDependencyFieldDefaultBlocked = true;
                 }
             });
@@ -90,30 +107,62 @@ PhoneController.prototype.setDependentLists = function ()
                 childList: true, // наблюдать за непосредственными детьми
                 subtree: true // и более глубокими потомками
             });
-
         }
     }
 }
 
-PhoneController.prototype.filterDependencyValues = function (mainField, dependenceFieldCode, skipClick = false)
+PhoneController.prototype.showDisable = function (dependenceFieldCode)
 {
-    let dependencyFilter = mainField.querySelector(`option[value="${mainField.value}"]`)
-        .getAttribute('data-dependency');
+    const dependenceViewSelectContainer = document.querySelector('select#'+dependenceFieldCode)
+        .parentNode.querySelector('span.selectbox');
+    dependenceViewSelectContainer.style.pointerEvents = 'none';
+    dependenceViewSelectContainer.querySelector('div.select').style.background = '#e8e8e8'; // #d5d5d5
+}
 
-    let dependenceLi = document.querySelector('select#'+dependenceFieldCode)
-        .parentNode.querySelectorAll('.jq-selectbox__dropdown li');
+PhoneController.prototype.hideDisable = function (dependenceFieldCode)
+{
+    const dependenceViewSelectContainer = document.querySelector('select#'+dependenceFieldCode)
+        .parentNode.querySelector('span.selectbox');
+    dependenceViewSelectContainer.style.pointerEvents = 'all';
+    dependenceViewSelectContainer.querySelector('div.select').style.background = '#fff'; // #d5d5d5
+}
 
-    if (dependenceLi) {
-        let i = 0;
-        for (let li of dependenceLi) {
-            if (li.getAttribute('data-dependency') !== dependencyFilter) {
-                li.style.display = 'none';
-            } else {
-                if (i === 0 && !skipClick) {
-                    li.click();
-                }
+PhoneController.prototype.filterDependencyValues = function (cities, dependenceFieldCode, click = true)
+{
+    const _this = this;
+    const dependenceField = document.querySelector('select#'+dependenceFieldCode);
+    const dependenceSelectBoxLi = dependenceField.parentNode.querySelectorAll('.selectbox .dropdown li');
+    if (dependenceSelectBoxLi) {
+
+        let firstValueClicked = false === click;
+        for (const li of dependenceSelectBoxLi) {
+            const cityName = li.innerHTML.trim();
+            if (cities && cities.includes(cityName)) {
                 li.style.display = 'block';
-                i++;
+                if (firstValueClicked === false) {
+                    li.click();
+                    _this.hideDisable(dependenceFieldCode);
+                    firstValueClicked = true;
+                }
+            } else {
+                li.style.display = 'none';
+            }
+        }
+    }
+}
+
+PhoneController.prototype.showAllValues = function (dependenceFieldCode)
+{
+    const dependenceField = document.querySelector('select#'+dependenceFieldCode);
+    const dependenceSelectBoxLi = dependenceField.parentNode.querySelectorAll('.selectbox .dropdown li');
+
+    if (dependenceSelectBoxLi) {
+        let firstValueClicked = false;
+        for (const li of dependenceSelectBoxLi) {
+            li.style.display = 'block';
+            if (firstValueClicked === false) {
+                li.click();
+                firstValueClicked = true;
             }
         }
     }

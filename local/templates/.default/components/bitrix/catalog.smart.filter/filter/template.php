@@ -66,16 +66,15 @@ $this->setFrameMode(true);
                                     <label for="<?=$arFilter['NAME']?>"><?=$arFilter['NAME']?></label>
                                     <select name="<?=$arFilter['VALUES'][$firstKey]['CONTROL_NAME_ALT']?>" class="custom-select custom-old" id="<?=$arFilter['CODE']?>">
                                         <?if ($arFilter['CODE'] === 'REGION'):?>
-                                            <option value="" data-dependency="">Вся Беларусь</option>
+                                            <option value="" data-cities="">Вся Беларусь</option>
                                         <?elseif ($arFilter['CODE'] === 'CITY'):?>
-                                            <option value="" data-dependency="">Любой</option>
+                                            <option value="" >Любой</option>
                                         <?else:?>
-                                            <option value="" data-dependency="">Все</option>
+                                            <option value="">Все</option>
                                         <?endif;?>
                                         <?foreach ($arFilter['VALUES'] as $key => $arVal):?>
                                             <option value="<?=$arVal['HTML_VALUE_ALT']?>"
-                                                    <?if ($arFilter['CODE'] === 'CITY'):?>data-dependency="<?=$arVal['CITY_GROUP']?>"<?endif;?>
-                                                    <?if ($arFilter['CODE'] === 'REGION'):?>data-dependency="<?=$arVal['URL_ID']?>"<?endif;?>
+                                                    <?if ($arFilter['CODE'] === 'REGION'):?> data-cities='<?=$arVal['CITIES']?>'<?endif;?>
                                                 <?=!empty($arVal['CHECKED']) ? 'selected' : ''?>
                                             >
                                                 <?=$arVal['VALUE']?>
@@ -142,13 +141,13 @@ $this->setFrameMode(true);
                     <?endswitch;?>
                 <?endforeach;?>
                 <div class="aside-form__item--btn">
-                    <button id="filter-submit" class="btn-bg btn--main-search">
+                    <button id="filter-submit" form="filter" class="btn-bg btn--main-search">
                         Найти
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#search-white"></use>
                         </svg>
                     </button>
-                    <button id="filter-reset" type="reset" class="btn-reset btn-reset--scroll">
+                    <button id="filter-reset" form="filter" type="reset" class="btn-reset btn-reset--scroll">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-btn"></use>
                         </svg>

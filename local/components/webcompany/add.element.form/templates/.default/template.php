@@ -226,7 +226,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                         <select name="REGION" class="custom-select custom-old" id="REGION" required>
                             <?foreach ($arResult['SELECTS']['REGION'] as $key => $region):?>
                                 <option value="<?=$region['ID']?>"
-                                        data-dependency="<?=$region['XML_ID']?>"
+                                        data-cities='<?=$region['CITIES']?>'
                                     <?if (!empty($_POST['REGION'])):?>
                                         <?=$_POST['REGION'] == $region['ID'] ? "selected" : ''?>
                                     <?elseif (!empty($arResult['ITEM']['REGION'])):?>
@@ -251,8 +251,7 @@ $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.s
                         <label for="CITY" class="data-user__label">Город / Район*</label>
                         <select name="CITY" class="custom-select new-select" id="CITY" required>
                             <?foreach ($arResult['SELECTS']['CITY'] as $cityId => $city):?>
-                                <option data-dependency="<?=$city['UF_GROUP']?>"
-                                        value="<?=$city['UF_XML_ID']?>"
+                                <option value="<?=$city['UF_XML_ID']?>"
                                     <?if (!empty($_POST['CITY'])):?>
                                         <?=$_POST['CITY'] == $city['UF_XML_ID'] ? "selected" : ''?>
                                     <?elseif (!empty($arResult['ITEM']['CITY'])):?>

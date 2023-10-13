@@ -72,6 +72,25 @@ class AddElementForm extends \CBitrixComponent
     private function getRegionsAndCitiesProps() : array
     {
         $arResult = [];
+        $allCities = [];
+        if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
+            $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
+            $hlClass = $entity->getDataClass();
+            $citiesValues = $hlClass::getList([
+                'order' => ['UF_NAME' => 'ASC'],
+                'select' => ['UF_XML_ID','UF_NAME','UF_GROUP'],
+                'cache' => [
+                    'ttl' => 36000000,
+                    'cache_joins' => true
+                ]
+            ])->fetchAll();
+
+            foreach ($citiesValues as $city) {
+                $allCities[$city['UF_GROUP']][] = $city['UF_NAME'];
+                $arResult['CITY'][$city['UF_XML_ID']] = $city;
+            }
+        }
+
         if (\Bitrix\Main\Loader::includeModule('iblock')) {
             $obPropRegionValues = \Bitrix\Iblock\PropertyEnumerationTable::getList(array(
                 'order' => array('SORT' => 'ASC', 'VALUE' => 'ASC'),
@@ -86,23 +105,7 @@ class AddElementForm extends \CBitrixComponent
             while ($arValue = $obPropRegionValues->fetch()) {
                 if (REGION_PROP_ID == $arValue['PROPERTY_ID']) {
                     $arResult['REGION'][$arValue['ID']] = $arValue;
-                }
-            }
-
-            if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY')) {
-                $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
-                $hlClass = $entity->getDataClass();
-                $citiesValues = $hlClass::getList([
-                    'order' => ['UF_NAME' => 'ASC'],
-                    'select' => ['UF_XML_ID','UF_NAME','UF_GROUP'],
-                    'cache' => [
-                        'ttl' => 36000000,
-                        'cache_joins' => true
-                    ]
-                ])->fetchAll();
-
-                foreach ($citiesValues as $city) {
-                    $arResult['CITY'][$city['UF_XML_ID']] = $city;
+                    $arResult['REGION'][$arValue['ID']]['CITIES'] = json_encode($allCities[$arValue['XML_ID']]);
                 }
             }
         }
