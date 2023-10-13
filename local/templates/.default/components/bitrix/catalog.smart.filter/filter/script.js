@@ -354,10 +354,15 @@ AjaxFilter.prototype.deleteLoader = function () {
 }
 
 AjaxFilter.prototype.scrollToElement = function (element) {
-	element.scrollIntoView({
-		behavior: 'smooth',
-		block: 'start'
-	});
+	const elementTop = element.getBoundingClientRect().top; // Верхняя граница блока
+	const windowTop = document.body.getBoundingClientRect().y; // Высшая точка окна
+	const windowBottom = Math.abs(document.body.getBoundingClientRect().y - window.innerHeight); // Нисшая точка окна
+	if (windowTop > elementTop || elementTop > windowBottom) {
+		element.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start'
+		});
+	}
 }
 
 AjaxFilter.prototype.prepareLinkForAjax = function (getParamsStr = '') {
