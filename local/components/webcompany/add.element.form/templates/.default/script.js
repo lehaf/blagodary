@@ -81,6 +81,7 @@ CreateAdsApp.prototype.setEventListener = function () {
     this.setDeleteUploadedImgEvent();
     this.setDropzoneEvents();
     this.setGetAdditionalSectionSettingsEvent();
+    this.setMyAdsMenuActiveEvent();
 }
 
 CreateAdsApp.prototype.setGetAdditionalSectionSettingsEvent = function () {
@@ -457,6 +458,15 @@ CreateAdsApp.prototype.showAllValues = function (dependenceFieldCode)
                 firstValueClicked = true;
             }
         }
+    }
+}
+
+CreateAdsApp.prototype.setMyAdsMenuActiveEvent = function ()
+{
+    const myAdsLink = document.querySelector('div.profile-menu li > span');
+    myAdsLink.style.cursor = 'pointer';
+    myAdsLink.onclick = () => {
+        location.href = '/personal/my-ads/';
     }
 }
 

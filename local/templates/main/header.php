@@ -9,7 +9,7 @@ global $BLOCKED;
 $BLOCKED = getUserBlockedList();
 $curPage = $APPLICATION->GetCurPage();
 $isMainPage = $curPage === '/';
-$isAddAdsPage = $curPage === '/personal/my-ads/add-ads/';
+$isAddAdsPage = $curPage === '/personal/my-ads/add-ads/' && empty($_GET['item']);
 $pageSpecialClass = $APPLICATION->GetDirProperty("pageSpecialClass");
 $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
 ?>
