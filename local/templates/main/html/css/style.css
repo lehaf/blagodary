@@ -5036,6 +5036,7 @@ input[type="checkbox"] {
 
   .popUp-error__btn{
     display: none;
+    white-space: nowrap;
   }
 
   .popUp-error__description{

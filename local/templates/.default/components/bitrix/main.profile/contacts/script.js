@@ -151,6 +151,7 @@ PhoneController.prototype.filterDependencyValues = function (cities, dependenceF
     }
 }
 
+
 PhoneController.prototype.showAllValues = function (dependenceFieldCode)
 {
     const dependenceField = document.querySelector('select#'+dependenceFieldCode);

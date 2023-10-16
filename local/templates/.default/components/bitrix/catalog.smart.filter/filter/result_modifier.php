@@ -6,6 +6,7 @@ if (!empty($arResult['ITEMS'])) {
         $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
         $hlClass = $entity->getDataClass();
         $citiesValues = $hlClass::getList([
+            'order' => ['UF_NAME' => 'ASC'],
             'select' => ['UF_XML_ID', 'UF_GROUP', 'UF_NAME'],
             'cache' => [
                 'ttl' => 36000000,

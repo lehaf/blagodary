@@ -5,6 +5,7 @@ if (\Bitrix\Main\Loader::includeModule("highloadblock") && defined('HL_PROP_CITY
     $entity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(HL_PROP_CITY);
     $hlClass = $entity->getDataClass();
     $citiesValues = $hlClass::getList([
+        'order' => ['UF_NAME' => 'ASC'],
         'select' => ['UF_NAME','UF_GROUP', 'UF_NAME'],
         'cache' => [
             'ttl' => 36000000,
