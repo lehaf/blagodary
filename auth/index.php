@@ -6,7 +6,6 @@ require($_SERVER["DOCUMENT_ROOT"]."/bitrix/header.php");
 /** @const string  SITE_TEMPLATE_PATH */
 
 $APPLICATION->SetTitle("Смена пароля");
-
 ?>
 <div class="question-content">
     <div class="services-more">

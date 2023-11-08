@@ -15,6 +15,11 @@ const CreateAdsApp = function () {
         'maxImagesLimit': 10,
         'categoryLvl2': '.category-selection-subcategory li',
         'categoryLvl3': '.category-selection-subcategory-3 li',
+        'categoryInputId': 'section-id-value'
+    }
+
+    this.errors = {
+        'categoryError': "Поле 'Выбор категории' обязательно для заполнения!"
     }
 
     this.dependenceList = {
@@ -68,12 +73,12 @@ CreateAdsApp.prototype.getTemplateImg = function (img,name) {
 }
 
 CreateAdsApp.prototype.init = function () {
-    this.setEventListener();
+    this.setEventListeners();
     this.setMaskPhone();
     this.setDependentLists();
 }
 
-CreateAdsApp.prototype.setEventListener = function () {
+CreateAdsApp.prototype.setEventListeners = function () {
     this.getInputFilesEvent();
     this.setInputFileEvent();
     this.setPhoneEvent();
@@ -82,15 +87,48 @@ CreateAdsApp.prototype.setEventListener = function () {
     this.setDropzoneEvents();
     this.setGetAdditionalSectionSettingsEvent();
     this.setMyAdsMenuActiveEvent();
+    this.submitEvent();
+}
+
+CreateAdsApp.prototype.submitEvent = function () {
+    const _this = this;
+    let btnSubmit = document.querySelector('form button[type="submit"]');
+    if (btnSubmit) {
+        btnSubmit.onclick = (e) => {
+            if (!_this.checkCategoryInput()) e.preventDefault();
+        }
+    }
+}
+
+CreateAdsApp.prototype.checkCategoryInput = function () {
+    let categoryInput = document.querySelector('input#'+this.settings.categoryInputId);
+    if (categoryInput && categoryInput.value.length > 0) return true;
+
+    const categoryBlock = document.querySelector('form .category-selection');
+    if (!document.querySelector('.category-error')) {
+        let errorDiv = document.createElement('div');
+        errorDiv.classList.add('component-errors');
+        errorDiv.classList.add('category-error');
+        let ul = document.createElement('ul');
+        let li = document.createElement('li');
+        li.innerHTML = this.errors.categoryError;
+        ul.append(li);
+        errorDiv.append(ul);
+        categoryBlock.after(errorDiv);
+    }
+
+    categoryBlock.scrollIntoView({ block: "center", behavior: "smooth" });
+    return false;
 }
 
 CreateAdsApp.prototype.setGetAdditionalSectionSettingsEvent = function () {
     const _this = this;
-    if (this.$categoryLvl2) {
+    if (this.$categoryLvl2.length > 0) {
         this.$categoryLvl2.forEach((sectionLvl2Li) => {
             sectionLvl2Li.onclick = () => {
                 let sectionId = sectionLvl2Li.getAttribute('data-section-id');
                 if (sectionId && !_this.checkChildSections(sectionId)) {
+                    _this.deleteCategoryError();
                     let data = {
                         'additional_settings' : 'y',
                         'section_id' : sectionId
@@ -101,11 +139,12 @@ CreateAdsApp.prototype.setGetAdditionalSectionSettingsEvent = function () {
         });
     }
 
-    if (this.$categoryLvl3) {
+    if (this.$categoryLvl3.length > 0) {
         this.$categoryLvl3.forEach((sectionLvl3) => {
             sectionLvl3.onclick = () => {
                 let sectionId = sectionLvl3.getAttribute('data-section-id');
                 if (sectionId) {
+                    _this.deleteCategoryError();
                     let data = {
                         'additional_settings' : 'y',
                         'section_id' : sectionId
@@ -115,6 +154,11 @@ CreateAdsApp.prototype.setGetAdditionalSectionSettingsEvent = function () {
             }
         });
     }
+}
+
+CreateAdsApp.prototype.deleteCategoryError = function () {
+    let categoryError = document.querySelector('.category-error');
+    if (categoryError) categoryError.remove();
 }
 
 CreateAdsApp.prototype.checkChildSections = function (sectionId) {
