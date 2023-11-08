@@ -1,0 +1,13 @@
+
+#changePass div.form-group {
+    margin-top: 15px;
+    max-width: 270px;
+}
+
+#changePass button {
+    margin-top: 20px;
+}
+
+.bread-crumbs {
+    margin-top: 7px;
+}

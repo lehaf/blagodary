@@ -27,8 +27,8 @@ Pagination.prototype.setEventListener = function () {
 
 	if (this.$arAllPaginationLinks.length > 0) {
 		this.$arAllPaginationLinks.forEach((paginationLink) => {
-			paginationLink.onclick = () => {
-				event.preventDefault();
+			paginationLink.onclick = (e) => {
+				e.preventDefault();
 				if (!paginationLink.parentNode.classList.contains('active')) {
 					let requestLink = paginationLink.getAttribute('href');
 					_this.setLoader();
