@@ -50,7 +50,7 @@ function selectCountry(ev) {
     //     $('[data-select="new-list"]').append(o);
     //
     // };
-    $('.custom-select').selectbox();
+    $('.custom-select').styler();
     $('.new-select').trigger('refresh');
 }
 
@@ -303,6 +303,7 @@ if (categoryForm) {
                 $('html, body').animate({
                     scrollTop: $("#categorySelection").offset().top - 120
                 }, 1000);
+                $(".category-selection-content-3 .category-selection-list__item").removeClass("active");
                 categorySelectionReady.classList.add("active")
                 formCategorySelectedItem.innerText = sectionOne + " / " + sectionTwo + " / " + chosenSection;
                 inputSectionId.value = sectionId;
