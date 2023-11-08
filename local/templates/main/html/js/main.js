@@ -50,7 +50,7 @@ function selectCountry(ev) {
     //     $('[data-select="new-list"]').append(o);
     //
     // };
-    $('.custom-select').styler();
+    $('.custom-select').selectbox();
     $('.new-select').trigger('refresh');
 }
 
@@ -447,21 +447,21 @@ $('.btn-pick-up').on('click', function () {
 if ($(".card-description-text").length) {
     let innerHeight = $(".card-description-text").height();
     let curHeight = $(".card-description-text").get(0).scrollHeight;
-        if(curHeight > innerHeight){
-            $(".card-description-text").addClass("scroll");
-            $('.card-description-text-btn').on('click', function () {
-                if (!this.classList.contains('active')) {
-                    $(".card-description-text").animate({height: curHeight}, 1000);
-                } else {
-                    $(".card-description-text").animate({height: innerHeight}, 1000);
-                }
-                $(".card-description-text-btn").toggleClass("active");
-                $(".card-description-text").toggleClass("active");
-            });
-        }else{
-            $(".card-description-text").addClass("inner");
-            $('.card-description-text-btn').remove();
-        }
+    if(curHeight > innerHeight){
+        $(".card-description-text").addClass("scroll");
+        $('.card-description-text-btn').on('click', function () {
+            if (!this.classList.contains('active')) {
+                $(".card-description-text").animate({height: curHeight}, 1000);
+            } else {
+                $(".card-description-text").animate({height: innerHeight}, 1000);
+            }
+            $(".card-description-text-btn").toggleClass("active");
+            $(".card-description-text").toggleClass("active");
+        });
+    }else{
+        $(".card-description-text").addClass("inner");
+        $('.card-description-text-btn').remove();
+    }
 }
 
 

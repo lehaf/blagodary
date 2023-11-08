@@ -116,7 +116,13 @@ if (!empty($_GET['user_id'])) {
             )
             );?>
         </div>
-        <?$APPLICATION->IncludeComponent(
+        <?
+        global $smartPreFilter;
+        $smartPreFilter = [
+            'PROPERTY_OWNER' => $userId,
+        ];
+
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
