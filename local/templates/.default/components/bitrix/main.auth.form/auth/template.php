@@ -13,6 +13,7 @@ if ($isAjax) {
     die();
 }
 
+
 ?>
 <form id="auth-form" name="<?=$arResult['FORM_ID'];?>" action="<?=POST_FORM_ACTION_URI;?>" class="login-form data-user">
     <div class="form-group mb-15">
@@ -35,9 +36,9 @@ if ($isAjax) {
     <button type="submit" class="btn-bg">Войти</button>
 </form>
 
-<?if($arResult["AUTH_SERVICES"]):?>
-    <?$this->SetViewTarget('auth_socials');?>
-        <? $APPLICATION->IncludeComponent(
+<?php if($arResult["AUTH_SERVICES"]):?>
+    <?php $this->SetViewTarget('auth_socials');?>
+    <?php $APPLICATION->IncludeComponent(
             "bitrix:socserv.auth.form",
             "socials",
             array(
@@ -49,5 +50,5 @@ if ($isAjax) {
             false,
             array("HIDE_ICONS"=>"Y")
         ); ?>
-    <?$this->EndViewTarget();?>
-<?endif?>
+    <?php $this->EndViewTarget();?>
+<?php endif?>

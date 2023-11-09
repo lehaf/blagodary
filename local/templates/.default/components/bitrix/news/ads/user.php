@@ -31,7 +31,7 @@ if (!empty($_GET['user_id'])) {
 }
 ?>
 
-<?if (!empty($arUser)):?>
+<?php if (!empty($arUser)):?>
     <div class="user-data-content">
         <div class="user-data__img">
             <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/profile.jpg"
@@ -52,21 +52,21 @@ if (!empty($_GET['user_id'])) {
                         <span class="<?=$arRating['TOTAL'] >= 5 ? 'active' : ''?>"></span>
                     </div>
                 </div>
-                <?if (!empty($arRating['REVIEWS_COUNT'])):?>
+                <?php if (!empty($arRating['REVIEWS_COUNT'])):?>
                     <div class="total-rating">
                         <span class="total-rating__text">Оценок:</span>
                         <span class="total-rating__num"><?=$arRating['REVIEWS_COUNT']?></span>
                     </div>
-                <?endif;?>
+                <?php endif;?>
             </div>
-            <?if (!empty($dateRegister)):?>
+            <?php if (!empty($dateRegister)):?>
                 <div class="user-data__time">
                     На сервисе с <span><?=$dateRegister?></span>
                 </div>
-            <?endif;?>
+            <?php endif;?>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>
 <div class="page-container user">
     <aside class="aside">
         <div class="aside__item aside__item-btn">
@@ -90,7 +90,7 @@ if (!empty($_GET['user_id'])) {
             </button>
         </div>
         <div class="aside__item aside__item-category">
-            <?global $arSectFilter;
+            <?php global $arSectFilter;
             $arSectFilter = Array("!UF_MAIN_CATEGORY" => false);
             $APPLICATION->IncludeComponent(
             "bitrix:catalog.section.list",
@@ -116,7 +116,7 @@ if (!empty($_GET['user_id'])) {
             )
             );?>
         </div>
-        <?
+        <?php
         global $smartPreFilter;
         $smartPreFilter = [
             'PROPERTY_OWNER' => $userId,
@@ -165,10 +165,10 @@ if (!empty($_GET['user_id'])) {
                 <h2 class="title-section">
                     <?=!empty($userAdsCount) && $userAdsCount > 0 ? 'Товаров: '.$userAdsCount : 'У пользователя нет объявлений'?>
                 </h2>
-                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
+                <?php include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>
-            <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
-            <?
+            <?php if ($isAjax) $APPLICATION->RestartBuffer(); ?>
+            <?php
             global $arFilterAds, $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
@@ -229,9 +229,9 @@ if (!empty($_GET['user_id'])) {
                 false
             );
             ?>
-            <?if ($isAjax) die(); ?>
+            <?php if ($isAjax) die(); ?>
         </div>
-        <?
+        <?php
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
@@ -313,7 +313,7 @@ if (!empty($_GET['user_id'])) {
 </div>
 
 
-<?if (!empty($arRating)):?>
+<?php if (!empty($arRating)):?>
     <div class="popUp popUp-grade">
         <h5 class="popUp__title">Оценки пользователей</h5>
         <span class="modal-cross">
@@ -348,10 +348,10 @@ if (!empty($_GET['user_id'])) {
                     </div>
                 </div>
             </div>
-            <?if (!empty($arRating['LIST'])):?>
+            <?php if (!empty($arRating['LIST'])):?>
                 <div class="grade-list-container">
                     <ul class="grade-list">
-                        <?foreach ($arRating['LIST'] as $arUser):?>
+                        <?php foreach ($arRating['LIST'] as $arUser):?>
                             <li class="grade-list__item">
                                 <div class="card-info-rating">
                                     <div class="rating-name-user"><?=$arUser['NAME']?></div>
@@ -365,10 +365,10 @@ if (!empty($_GET['user_id'])) {
                                 </div>
                                 <div class="rating-data"><?=$arUser['DATE']?></div>
                             </li>
-                        <?endforeach;?>
+                        <?php endforeach;?>
                     </ul>
                 </div>
-            <?endif;?>
+            <?php endif;?>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>

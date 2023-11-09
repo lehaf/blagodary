@@ -7,6 +7,7 @@ const ForgotPass = function () {
         'modalCrossClass':'.modal-cross',
         'popupClass':'.popUp-reset-mail',
         'formBack':'.substrate',
+        'successText':'Проверьте E-mail, указанный при регистрации. Мы уже отправили вам ссылку для смены пароля.',
     }
 
     this.errors = {
@@ -152,6 +153,7 @@ ForgotPass.prototype.processJson = function (jsonFields) {
     if (jsonFields['ERROR_PROCESSING']) {
         this.enterErrors(jsonFields);
     } else {
+        jsonFields['SUCCESS'] = this.setting.successText;
         this.enterSuccess(jsonFields);
     }
 }
