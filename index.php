@@ -72,7 +72,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                 )
             );?>
         </div>
-        <?$APPLICATION->IncludeComponent(
+        <?php $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
@@ -110,7 +110,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         );?>
     </aside>
     <div class="page-content">
-        <?$APPLICATION->IncludeComponent(
+        <?php $APPLICATION->IncludeComponent(
             "bitrix:news.list",
             "upper-banner",
             Array(
@@ -173,7 +173,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             ),
             false
         );?>
-        <?
+        <?php
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
@@ -183,6 +183,8 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                 "bitrix:catalog.section",
                 "you-watch-before",
                 array(
+                    "LAZY_LOAD_ON" => "N",
+                    "LAZY_LOAD_START" => "0",
                     "ACTION_VARIABLE" => "",
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",
@@ -251,7 +253,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             );
         }
         ?>
-        <?$APPLICATION->IncludeComponent(
+        <?php $APPLICATION->IncludeComponent(
         "bitrix:news.list",
         "banner-with-counter",
                 Array(
@@ -318,16 +320,18 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section">Все объявления</h2>
-                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php';
+                <?php include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php';
                 /** @var string $typeOfView */?>
             </div>
-            <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
-            <? global $arrFilter;
+            <?php if ($isAjax) $APPLICATION->RestartBuffer(); ?>
+            <?php global $arrFilter;
                 $arrFilter['!=PROPERTY_OWNER'] = $BLOCKED;
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 $typeOfView,
                 array(
+                    "LAZY_LOAD_ON" => "Y",
+                    "LAZY_LOAD_START" => "0",
                     "ACTION_VARIABLE" => "",
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",
@@ -422,7 +426,7 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                 ),
                 false
             ); ?>
-            <?if ($isAjax) die(); ?>
+            <?php if ($isAjax) die(); ?>
         </div>
     </div>
 </div>

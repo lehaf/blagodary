@@ -12,23 +12,35 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#location';
+
+// Включаем lazyload
+if ($arParams['LAZY_LOAD_ON'] === 'Y') {
+    $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/image-defer.min.js');
+    $pixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+}
 ?>
-<?if (!empty($arResult['ITEMS'])):?>
+<?php if (!empty($arResult['ITEMS'])):?>
     <div class="viewed viewed--big">
         <div class="wrapper">
             <div class="viewed--big-content">
                 <h2 class="title-section">Ранее вы смотрели</h2>
                 <div class="viewed-slider viewed-slider--big no-arrow">
-                    <?foreach ($arResult['ITEMS'] as $arItem):?>
-                        <?
+                    <?php foreach ($arResult['ITEMS'] as $key => $arItem):?>
+                        <?php
                         $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"], array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
                         <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="viewed-slider__item">
                             <span class="viewed-slider__item-img" style="height: 195.749px;">
-                                <img src="<?=$arItem['IMG']['src']?>"
-                                     title="<?=$arItem['NAME']?>"
-                                     alt="<?=$arItem['NAME']?>"
+                                <img
+                                    <?php if ($arParams['LAZY_LOAD_ON'] === 'Y' && $arParams['LAZY_LOAD_START'] <= $key && isset($pixel)):?>
+                                        src="<?=$pixel?>"
+                                        data-defer-src="<?=$arItem['IMG']['src']?>"
+                                    <?php else:?>
+                                        src="<?=$arItem['IMG']['src']?>"
+                                    <?php endif;?>
+                                    title="<?=$arItem['NAME']?>"
+                                    alt="<?=$arItem['NAME']?>"
                                 >
                             </span>
                                 <span class="viewed-slider__item-description">
@@ -37,7 +49,7 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
                             </span>
                             <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                         </a>
-                    <?endforeach;?>
+                    <?php endforeach;?>
                 </div>
                 <div class="viewed-slider-arrows slider-arrows-container">
                     <div class="viewed-slider-prev slider-arrow-prev">
@@ -55,4 +67,4 @@ $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#lo
             </div>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>

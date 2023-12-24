@@ -92,7 +92,8 @@ SwitcherView.prototype.sendData = function (typeOfView) {
             let curElements = curContainer.querySelector(_this.settings.elementsClass);
             if (curElements) curElements.remove();
             if (newView) curContainer.prepend(newView);
-            window.FavoriteManager.init();
+            if (window.FavoriteManager) window.FavoriteManager.init(); // Реинитим избранное
+            if (window.ImageDefer) window.ImageDefer.init(); // Реинитим lazyload
         },300);
 
     }).catch(error => {

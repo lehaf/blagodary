@@ -81,7 +81,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 )
             );?>
         </div>
-        <?$APPLICATION->IncludeComponent(
+        <?php $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
@@ -122,10 +122,10 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-                <?include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
+                <?php include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php'; /** @var string $typeOfView */?>
             </div>
-            <? if ($isAjax) $APPLICATION->RestartBuffer(); ?>
-            <?
+            <?php if ($isAjax) $APPLICATION->RestartBuffer(); ?>
+            <?php
             global $arFilterAds, $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
@@ -137,6 +137,8 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 "bitrix:catalog.section",
                 $typeOfView,
                 array(
+                    "LAZY_LOAD_ON" => "Y",
+                    "LAZY_LOAD_START" => "12",
                     'SECTION_ID' => $arActiveSection['ID'],
                     "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                     "IBLOCK_ID" => $arParams["IBLOCK_ID"],
@@ -187,15 +189,15 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 false
             );
             ?>
-            <?if ($isAjax) die(); ?>
+            <?php if ($isAjax) die(); ?>
         </div>
-        <?if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false && empty($arrFilter)):?>
+        <?php if (!empty($arActiveSection['DESCRIPTION']) && !empty($arActiveSection['UF_SEO_TITLE']) && $isNotFirstPage === false && empty($arrFilter)):?>
             <div class="text-block">
                 <h2 class="title-section"><?=$arActiveSection['UF_SEO_TITLE']?></h2>
                 <p class="text"><?=$arActiveSection['DESCRIPTION']?></p>
             </div>
-        <?endif;?>
-        <?
+        <?php endif;?>
+        <?php
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
@@ -205,6 +207,8 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 "bitrix:catalog.section",
                 "you-watch-before",
                 array(
+                    "LAZY_LOAD_ON" => "Y",
+                    "LAZY_LOAD_START" => "0",
                     "ACTION_VARIABLE" => "",
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",
@@ -280,4 +284,3 @@ if (!empty($arSectionTree)) {
     array_shift($arSectionTree); // Удаляем рут раздел (т.к. он уже есть в крошках)
     setBreadcrumb($arSectionTree); // Доставляем недостающие крошки
 }
-?>

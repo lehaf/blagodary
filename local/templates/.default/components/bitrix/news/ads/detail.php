@@ -81,7 +81,7 @@ if (!empty($ElementID)) {
     $obViewedGoods->setCookie($ElementID);
 }
 ?>
-<?if (!empty($curUserId) && $GLOBALS['OWNER_ID'] != $curUserId):?>
+<?php if (!empty($curUserId) && $GLOBALS['OWNER_ID'] != $curUserId):?>
     <?php $APPLICATION->IncludeComponent(
         "bitrix:form.result.new",
         "complain",
@@ -122,7 +122,7 @@ if (!empty($ElementID)) {
                 "action" => "action",
             )
         ), false);?>
-<?endif;?>
+<?php endif;?>
 <?php
 if (!empty($GLOBALS['SECTION_ID'])) {
 
@@ -137,6 +137,8 @@ if (!empty($GLOBALS['SECTION_ID'])) {
         "bitrix:news.list",
         "ads-section",
         array(
+            "LAZY_LOAD_ON" => "Y",
+            "LAZY_LOAD_START" => 5,
             "DISPLAY_DATE" => "Y",
             "DISPLAY_NAME" => "Y",
             "DISPLAY_PICTURE" => "Y",
@@ -202,7 +204,7 @@ if (!empty($GLOBALS['SECTION_ID'])) {
 }
 ?>
 
-<?
+<?php
 
 $obViewedGoods = new YouWatchBefore();
 $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
@@ -214,6 +216,8 @@ if (!empty($arViewedGoodsId)) {
         "bitrix:catalog.section",
         "you-watch-before-detail",
         array(
+            "LAZY_LOAD_ON" => "Y",
+            "LAZY_LOAD_START" => "0",
             "ACTION_VARIABLE" => "",
             "ADD_PICT_PROP" => "MORE_PHOTO",
             "ADD_PROPERTIES_TO_BASKET" => "N",

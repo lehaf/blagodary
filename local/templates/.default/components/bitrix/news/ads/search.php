@@ -146,6 +146,8 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                     "bitrix:catalog.section",
                     $typeOfView,
                     array(
+                        "LAZY_LOAD_ON" => "Y",
+                        "LAZY_LOAD_START" => "12",
                         "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
                         "IBLOCK_ID" => $arParams["IBLOCK_ID"],
                         "NEWS_COUNT" => $arParams["NEWS_COUNT"],
@@ -209,6 +211,8 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                 "bitrix:catalog.section",
                 "you-watch-before",
                 array(
+                    "LAZY_LOAD_ON" => "Y",
+                    "LAZY_LOAD_START" => "0",
                     "ACTION_VARIABLE" => "",
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",

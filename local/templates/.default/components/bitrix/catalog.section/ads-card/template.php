@@ -15,14 +15,31 @@ $this->setFrameMode(true);
 $locationSpritePath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/sprite.svg#location';
 $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
+
+// Включаем lazyload
+if ($arParams['LAZY_LOAD_ON'] === 'Y') {
+    $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/image-defer.min.js');
+    $pixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+}
 ?>
 <div class="announcements-content">
-    <?if (!empty($arResult['ITEMS'])):?>
+    <?php if (!empty($arResult['ITEMS'])):?>
         <div class="announcements-content__item announcements-content__item--card active">
-            <?foreach ($arResult['ITEMS'] as $arItem):?>
-                <a href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-card__item">
+            <?php foreach ($arResult['ITEMS'] as $key => $arItem):?>
+                <?php
+                // Добавляем эрмитаж
+                $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
+                $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"], array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+                ?>
+                <a id="<?=$this->GetEditAreaID($arItem['ID'])?>" href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-card__item">
                     <span class="announcements-card__item-img">
-                        <img src="<?=$arItem['IMG']['src']?>"
+                        <img
+                             <?php if ($arParams['LAZY_LOAD_ON'] === 'Y' && $arParams['LAZY_LOAD_START'] <= $key && isset($pixel)):?>
+                                 src="<?=$pixel?>"
+                                 data-defer-src="<?=$arItem['IMG']['src']?>"
+                             <?php else:?>
+                                 src="<?=$arItem['IMG']['src']?>"
+                             <?php endif;?>
                              title="<?=$arItem['NAME']?>"
                              alt="<?=$arItem['NAME']?>"
                         >
@@ -30,23 +47,23 @@ $this->addExternalJs(SITE_TEMPLATE_PATH.'/html/js/switcher_view_app.js');
                     <span class="viewed-slider__item-description">
                         <span class="announcements-card__item--title"><?=$arItem['NAME']?></span>
                         <div class="location">
-                            <?if (!empty($arItem['PLACE'])):?>
+                            <?php if (!empty($arItem['PLACE'])):?>
                                 <svg>
                                     <use xlink:href="<?=$locationSpritePath?>"></use>
                                 </svg>
                                 <?=$arItem['PLACE']?>
-                            <?endif;?>
+                            <?php endif;?>
                         </div>
                         <span class="viewed-slider__item-data"><?=$arItem['DATE_CREATE']?></span>
                     </span>
                     <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                 </a>
-            <?endforeach;?>
+            <?php endforeach;?>
         </div>
-        <?if($arParams["DISPLAY_BOTTOM_PAGER"]):?>
+        <?php if($arParams["DISPLAY_BOTTOM_PAGER"]):?>
             <br /><?=$arResult["NAV_STRING"]?>
-        <?endif;?>
-    <?else:?>
+        <?php endif;?>
+    <?php else:?>
         <div class="empty-ads">Объявлений в каталоге не найдено!</div>
-    <?endif;?>
+    <?php endif;?>
 </div>
