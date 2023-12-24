@@ -1,10 +1,20 @@
 <?php
 
 if (!empty($arResult['ITEMS'])) {
+
+    $propCityXml = [];
     foreach ($arResult['ITEMS'] as &$arItem) {
         // Приводим время в нужный формат
         $unixTime = strtotime($arItem['TIMESTAMP_X']);
         $arItem['TIMESTAMP_X'] = date('d.m.Y в H:i',$unixTime);
+
+        if (!empty($arItem['PROPERTIES']['REGION']['VALUE'])) {
+            $arItem['PLACE'] = $arItem['PROPERTIES']['REGION']['VALUE'];
+        }
+
+        if (!empty($arItem['PROPERTIES']['CITY']['VALUE'])) {
+            $propCityXml[] = $arItem['PROPERTIES']['CITY']['VALUE'];
+        }
 
         // Ресайзим картинки если их нет - тавим заглушку
         if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'][0])) {
@@ -20,6 +30,17 @@ if (!empty($arResult['ITEMS'])) {
                 BX_RESIZE_IMAGE_PROPORTIONAL,
             );
         }
+
     }
     unset($arItem);
+
+    $citiesPropVal = getCitiesByXml($propCityXml);
+    if (!empty($citiesPropVal)) {
+        foreach ($arResult['ITEMS'] as &$arItem) {
+            if (!empty($arItem['PROPERTIES']['CITY']['VALUE']) && !empty($citiesPropVal[$arItem['PROPERTIES']['CITY']['VALUE']])) {
+                $arItem['PLACE'] .= ' / '.$citiesPropVal[$arItem['PROPERTIES']['CITY']['VALUE']];
+            }
+        }
+        unset($arItem);
+    }
 }

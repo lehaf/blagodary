@@ -45,14 +45,16 @@ if ($arParams['LAZY_LOAD_ON'] === 'Y') {
                         >
                     </span>
                     <span class="viewed-slider__item-description">
-                          <span class="announcements-card__item--title"><?=$arItem['NAME']?></span>
+                        <span class="announcements-card__item--title"><?=$arItem['NAME']?></span>
+                        <?php if (!empty($arItem['PLACE'])):?>
                             <div class="location">
-                                    <svg>
-                                        <use xlink:href="<?=$locationSpritePath?>"></use>
-                                    </svg>
-                                    Минск, Партизанский район
-                                </div>
+                                <svg>
+                                    <use xlink:href="<?=$locationSpritePath?>"></use>
+                                </svg>
+                                <?=$arItem['PLACE']?>
+                            </div>
                             <span class="viewed-slider__item-data"><?=$arItem['TIMESTAMP_X']?></span>
+                        <?php endif;?>
                     </span>
                     <span data-item="<?=$arItem['ID']?>" class="favorite-card"></span>
                 </a>
