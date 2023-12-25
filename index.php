@@ -10,7 +10,6 @@ use Bitrix\Main\Page\Asset;
 global $BLOCKED;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
-//Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.formstyler.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/air-datepicker.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.maskedinput.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.selectbox.min.js");
@@ -19,6 +18,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
 
 $obRequest = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 $isAjax = $obRequest->getPost('isAjax') === 'Y';
+$userWithSubscribe = getUserWithSubscribe();
 
 $APPLICATION->SetTitle("Благодарю - прими или отдай");
 ?>
@@ -47,11 +47,11 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         <div class="aside__item aside__item-category">
             <?php
             global $arSectFilter;
-            $arSectFilter = Array("!UF_MAIN_CATEGORY" => false);
+            $arSectFilter = array("!UF_MAIN_CATEGORY" => false);
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
                 "main-category",
-                Array(
+                array(
                     "VIEW_MODE" => "TEXT",
                     "SHOW_PARENT_NAME" => "Y",
                     "IBLOCK_TYPE" => "products",
@@ -72,7 +72,10 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
                 )
             );?>
         </div>
-        <?php $APPLICATION->IncludeComponent(
+        <?php
+        global $smartPreFilter;
+        $smartPreFilter['=PROPERTY_OWNER'] = $userWithSubscribe;
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
@@ -317,117 +320,120 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
             ),
             false
         );?>
-        <div class="announcements">
-            <div class="announcements-header">
-                <h2 class="title-section">Все объявления</h2>
-                <?php include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php';
-                /** @var string $typeOfView */?>
-            </div>
-            <?php if ($isAjax) $APPLICATION->RestartBuffer(); ?>
-            <?php global $arrFilter;
+        <?php if (!empty($userWithSubscribe)):?>
+            <div class="announcements">
+                <div class="announcements-header">
+                    <h2 class="title-section">Все объявления</h2>
+                    <?php include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php';
+                    /** @var string $typeOfView */?>
+                </div>
+                <?php if ($isAjax) $APPLICATION->RestartBuffer(); ?>
+                <?php global $arrFilter;
+                $arrFilter['=PROPERTY_OWNER'] = $userWithSubscribe;
                 $arrFilter['!=PROPERTY_OWNER'] = $BLOCKED;
-            $APPLICATION->IncludeComponent(
-                "bitrix:catalog.section",
-                $typeOfView,
-                array(
-                    "LAZY_LOAD_ON" => "Y",
-                    "LAZY_LOAD_START" => "0",
-                    "ACTION_VARIABLE" => "",
-                    "ADD_PICT_PROP" => "MORE_PHOTO",
-                    "ADD_PROPERTIES_TO_BASKET" => "N",
-                    "ADD_SECTIONS_CHAIN" => "N",
-                    "CACHE_FILTER" => "Y",
-                    "CACHE_GROUPS" => "Y",
-                    "CACHE_TIME" => "36000000",
-                    "CACHE_TYPE" => "A",
-                    "COMPATIBLE_MODE" => "N",
-                    "CONVERT_CURRENCY" => "Y",
-                    "CURRENCY_ID" => "RUB",
-                    "CUSTOM_FILTER" => "",
-                    "DATA_LAYER_NAME" => "dataLayer",
-                    "DETAIL_URL" => "",
-                    "DISABLE_INIT_JS_IN_COMPONENT" => "N",
-                    "DISPLAY_BOTTOM_PAGER" => "Y",
-                    "DISPLAY_TOP_PAGER" => "N",
-                    "ELEMENT_SORT_FIELD" => "active_from",
-                    "ELEMENT_SORT_FIELD2" => "id",
-                    "ELEMENT_SORT_ORDER" => "ASC",
-                    "ELEMENT_SORT_ORDER2" => "DESC",
-                    "ENLARGE_PRODUCT" => "PROP",
-                    "ENLARGE_PROP" => "NEWPRODUCT",
-                    "FILTER_NAME" => "arrFilter",
-                    "HIDE_NOT_AVAILABLE" => "N",
-                    "HIDE_NOT_AVAILABLE_OFFERS" => "N",
-                    "IBLOCK_ID" => ADS_IBLOCK_ID,
-                    "IBLOCK_TYPE" => "products",
-                    "PAGER_BASE_LINK_ENABLE" => "N",
-                    "PAGER_DESC_NUMBERING" => "N",
-                    "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-                    "PAGER_SHOW_ALL" => "N",
-                    "PAGER_SHOW_ALWAYS" => "N",
-                    "PAGER_TEMPLATE" => "ads",
-                    "PAGER_TITLE" => "Все объявления",
-                    "PAGE_ELEMENT_COUNT" => "4",
-                    "RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
-                    "RCM_TYPE" => "personal",
-                    "SEF_MODE" => "N",
-                    "SET_BROWSER_TITLE" => "N",
-                    "SET_LAST_MODIFIED" => "N",
-                    "SET_META_DESCRIPTION" => "N",
-                    "SET_META_KEYWORDS" => "N",
-                    "SET_STATUS_404" => "N",
-                    "SET_TITLE" => "N",
-                    "SHOW_404" => "N",
-                    "SHOW_ALL_WO_SECTION" => "N",
-                    "SHOW_CLOSE_POPUP" => "N",
-                    "SHOW_DISCOUNT_PERCENT" => "Y",
-                    "SHOW_FROM_SECTION" => "N",
-                    "SHOW_MAX_QUANTITY" => "N",
-                    "SHOW_OLD_PRICE" => "N",
-                    "SHOW_PRICE_COUNT" => "1",
-                    "SHOW_SLIDER" => "Y",
-                    "SLIDER_INTERVAL" => "3000",
-                    "SLIDER_PROGRESS" => "N",
-                    "TEMPLATE_THEME" => "blue",
-                    "USE_ENHANCED_ECOMMERCE" => "Y",
-                    "USE_MAIN_ELEMENT_SECTION" => "N",
-                    "USE_PRICE_COUNT" => "N",
-                    "USE_PRODUCT_QUANTITY" => "N",
-                    "COMPONENT_TEMPLATE" => "ads-list",
-                    "DISPLAY_COMPARE" => "N",
-                    "SECTION_ID" => $_REQUEST["SECTION_ID"],
-                    "SECTION_CODE" => "",
-                    "SECTION_USER_FIELDS" => array(
-                        0 => "",
-                        1 => "",
+                $APPLICATION->IncludeComponent(
+                    "bitrix:catalog.section",
+                    $typeOfView,
+                    array(
+                        "LAZY_LOAD_ON" => "Y",
+                        "LAZY_LOAD_START" => "0",
+                        "ACTION_VARIABLE" => "",
+                        "ADD_PICT_PROP" => "MORE_PHOTO",
+                        "ADD_PROPERTIES_TO_BASKET" => "N",
+                        "ADD_SECTIONS_CHAIN" => "N",
+                        "CACHE_FILTER" => "Y",
+                        "CACHE_GROUPS" => "Y",
+                        "CACHE_TIME" => "36000000",
+                        "CACHE_TYPE" => "A",
+                        "COMPATIBLE_MODE" => "N",
+                        "CONVERT_CURRENCY" => "Y",
+                        "CURRENCY_ID" => "RUB",
+                        "CUSTOM_FILTER" => "",
+                        "DATA_LAYER_NAME" => "dataLayer",
+                        "DETAIL_URL" => "",
+                        "DISABLE_INIT_JS_IN_COMPONENT" => "N",
+                        "DISPLAY_BOTTOM_PAGER" => "Y",
+                        "DISPLAY_TOP_PAGER" => "N",
+                        "ELEMENT_SORT_FIELD" => "active_from",
+                        "ELEMENT_SORT_FIELD2" => "id",
+                        "ELEMENT_SORT_ORDER" => "ASC",
+                        "ELEMENT_SORT_ORDER2" => "DESC",
+                        "ENLARGE_PRODUCT" => "PROP",
+                        "ENLARGE_PROP" => "NEWPRODUCT",
+                        "FILTER_NAME" => "arrFilter",
+                        "HIDE_NOT_AVAILABLE" => "N",
+                        "HIDE_NOT_AVAILABLE_OFFERS" => "N",
+                        "IBLOCK_ID" => ADS_IBLOCK_ID,
+                        "IBLOCK_TYPE" => "products",
+                        "PAGER_BASE_LINK_ENABLE" => "N",
+                        "PAGER_DESC_NUMBERING" => "N",
+                        "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
+                        "PAGER_SHOW_ALL" => "N",
+                        "PAGER_SHOW_ALWAYS" => "N",
+                        "PAGER_TEMPLATE" => "ads",
+                        "PAGER_TITLE" => "Все объявления",
+                        "PAGE_ELEMENT_COUNT" => "4",
+                        "RCM_PROD_ID" => $_REQUEST["PRODUCT_ID"],
+                        "RCM_TYPE" => "personal",
+                        "SEF_MODE" => "N",
+                        "SET_BROWSER_TITLE" => "N",
+                        "SET_LAST_MODIFIED" => "N",
+                        "SET_META_DESCRIPTION" => "N",
+                        "SET_META_KEYWORDS" => "N",
+                        "SET_STATUS_404" => "N",
+                        "SET_TITLE" => "N",
+                        "SHOW_404" => "N",
+                        "SHOW_ALL_WO_SECTION" => "N",
+                        "SHOW_CLOSE_POPUP" => "N",
+                        "SHOW_DISCOUNT_PERCENT" => "Y",
+                        "SHOW_FROM_SECTION" => "N",
+                        "SHOW_MAX_QUANTITY" => "N",
+                        "SHOW_OLD_PRICE" => "N",
+                        "SHOW_PRICE_COUNT" => "1",
+                        "SHOW_SLIDER" => "Y",
+                        "SLIDER_INTERVAL" => "3000",
+                        "SLIDER_PROGRESS" => "N",
+                        "TEMPLATE_THEME" => "blue",
+                        "USE_ENHANCED_ECOMMERCE" => "Y",
+                        "USE_MAIN_ELEMENT_SECTION" => "N",
+                        "USE_PRICE_COUNT" => "N",
+                        "USE_PRODUCT_QUANTITY" => "N",
+                        "COMPONENT_TEMPLATE" => "ads-list",
+                        "DISPLAY_COMPARE" => "N",
+                        "SECTION_ID" => $_REQUEST["SECTION_ID"],
+                        "SECTION_CODE" => "",
+                        "SECTION_USER_FIELDS" => array(
+                            0 => "",
+                            1 => "",
+                        ),
+                        "INCLUDE_SUBSECTIONS" => "Y",
+                        "LINE_ELEMENT_COUNT" => "3",
+                        "BACKGROUND_IMAGE" => "-",
+                        "SECTION_URL" => "",
+                        "SECTION_ID_VARIABLE" => "SECTION_ID",
+                        "AJAX_MODE" => "N",
+                        "AJAX_OPTION_JUMP" => "N",
+                        "AJAX_OPTION_STYLE" => "Y",
+                        "AJAX_OPTION_HISTORY" => "N",
+                        "AJAX_OPTION_ADDITIONAL" => "",
+                        "BROWSER_TITLE" => "-",
+                        "META_KEYWORDS" => "-",
+                        "META_DESCRIPTION" => "-",
+                        "PRODUCT_ID_VARIABLE" => "id",
+                        "PRICE_CODE" => array(
+                        ),
+                        "PRICE_VAT_INCLUDE" => "Y",
+                        "BASKET_URL" => "/personal/basket.php",
+                        "PRODUCT_QUANTITY_VARIABLE" => "quantity",
+                        "PRODUCT_PROPS_VARIABLE" => "prop",
+                        "PARTIAL_PRODUCT_PROPERTIES" => "N",
+                        "MESSAGE_404" => ""
                     ),
-                    "INCLUDE_SUBSECTIONS" => "Y",
-                    "LINE_ELEMENT_COUNT" => "3",
-                    "BACKGROUND_IMAGE" => "-",
-                    "SECTION_URL" => "",
-                    "SECTION_ID_VARIABLE" => "SECTION_ID",
-                    "AJAX_MODE" => "N",
-                    "AJAX_OPTION_JUMP" => "N",
-                    "AJAX_OPTION_STYLE" => "Y",
-                    "AJAX_OPTION_HISTORY" => "N",
-                    "AJAX_OPTION_ADDITIONAL" => "",
-                    "BROWSER_TITLE" => "-",
-                    "META_KEYWORDS" => "-",
-                    "META_DESCRIPTION" => "-",
-                    "PRODUCT_ID_VARIABLE" => "id",
-                    "PRICE_CODE" => array(
-                    ),
-                    "PRICE_VAT_INCLUDE" => "Y",
-                    "BASKET_URL" => "/personal/basket.php",
-                    "PRODUCT_QUANTITY_VARIABLE" => "quantity",
-                    "PRODUCT_PROPS_VARIABLE" => "prop",
-                    "PARTIAL_PRODUCT_PROPERTIES" => "N",
-                    "MESSAGE_404" => ""
-                ),
-                false
-            ); ?>
-            <?php if ($isAjax) die(); ?>
-        </div>
+                    false
+                ); ?>
+                <?php if ($isAjax) die(); ?>
+            </div>
+        <?php endif;?>
     </div>
 </div>
 

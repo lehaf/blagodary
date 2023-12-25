@@ -364,3 +364,31 @@ function getCitiesByXml(array $propXml) : array
     }
     return $propCityVal;
 }
+
+function getUserWithSubscribe() : array
+{
+    $usersWithSubscribe = \Bitrix\Main\UserTable::getList(array(
+        'select' => ['ID'],
+        'filter' => [
+                [
+                    'LOGIC' => 'OR',
+                    '>UF_SUBSCRIPTION_DATE' => new \Bitrix\Main\Type\DateTime(),
+                    '>UF_SUBSCRIPTION_FREE_DATE' => new \Bitrix\Main\Type\DateTime()
+                ]
+        ],
+        'cache' => [
+            'ttl' => 360000,
+            'cache_joins' => true
+        ]
+    ))->fetchAll();
+
+    $usersId = [];
+    if (!empty($usersWithSubscribe)) {
+        foreach ($usersWithSubscribe as $userData) {
+            $usersId[] = $userData['ID'];
+        }
+    }
+
+    return $usersId;
+}
+

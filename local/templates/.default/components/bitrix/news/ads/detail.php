@@ -17,9 +17,11 @@ use WebCompany\YouWatchBefore;
 
 global $BLOCKED;
 $curUserId = $USER->GetId();
+$userWithSubscribe = getUserWithSubscribe();
 $this->setFrameMode(true);
-?>
-<?php $ElementID = $APPLICATION->IncludeComponent(
+
+
+$ElementID = $APPLICATION->IncludeComponent(
 "bitrix:news.detail",
 "ads",
 [
@@ -130,6 +132,7 @@ if (!empty($GLOBALS['SECTION_ID'])) {
     $arAdsFilter = [
         'IBLOCK_SECTION_ID' => $GLOBALS['SECTION_ID'],
         '!=PROPERTY_OWNER' => $BLOCKED,
+        '=PROPERTY_OWNER' => $userWithSubscribe,
         '!=ID' => $ElementID,
     ];
 
@@ -210,7 +213,7 @@ $obViewedGoods = new YouWatchBefore();
 $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
 if (!empty($arViewedGoodsId)) {
     global $arViewedGoodsFilter;
-    $arViewedGoodsFilter = ['ID' => $arViewedGoodsId,'!ID' => $ElementID, '!=PROPERTY_OWNER' => $BLOCKED,];
+    $arViewedGoodsFilter = ['ID' => $arViewedGoodsId,'!ID' => $ElementID, '!=PROPERTY_OWNER' => $BLOCKED, '=PROPERTY_OWNER' => $userWithSubscribe];
     $this->SetViewTarget('viewed-detail');
     $APPLICATION->IncludeComponent(
         "bitrix:catalog.section",

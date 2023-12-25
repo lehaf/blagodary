@@ -48,7 +48,7 @@ class AddElementForm extends \CBitrixComponent
     private function checkUser() : bool
     {
         $arUserInfo = UserTable::getList(array(
-            'select' => ['BLOCKED','ADMIN_NOTES','UF_SUBSCRIPTION'],
+            'select' => ['BLOCKED','ADMIN_NOTES','UF_SUBSCRIPTION_DATE', "UF_SUBSCRIPTION_FREE_DATE"],
             'filter' => ['ID' => $this->curUserId],
             'limit' => 1
         ))->fetch();
@@ -59,7 +59,8 @@ class AddElementForm extends \CBitrixComponent
             return false;
         }
 
-        if ($arUserInfo['UF_SUBSCRIPTION'] == true) $this->arResult['ACTIVE_SUBSCRIPTION'] = 'Y';
+        if (strtotime($arUserInfo['UF_SUBSCRIPTION_FREE_DATE']) > time() || strtotime($arUserInfo['UF_SUBSCRIPTION_DATE']) > time())
+            $this->arResult['ACTIVE_SUBSCRIPTION'] = 'Y';
 
         return true;
     }

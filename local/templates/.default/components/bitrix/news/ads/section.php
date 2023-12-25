@@ -28,6 +28,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
     $rootSectionId = $arSectionTree[0]['ID'] ?? $arSectionTree['ID']; // Получаем id корневого раздела
     $arRootSection = getSectionData($rootSectionId,ADS_IBLOCK_ID); // Получаем данные по корневому разделу
 }
+$userWithSubscribe = getUserWithSubscribe();
 ?>
 
 <div class="page-container">
@@ -81,7 +82,11 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
                 )
             );?>
         </div>
-        <?php $APPLICATION->IncludeComponent(
+        <?php
+        global $smartPreFilter;
+        $smartPreFilter['=PROPERTY_OWNER'] = $userWithSubscribe;
+
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
@@ -129,6 +134,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
             global $arFilterAds, $arrFilter;
             $arFilterAds = [
                 'INCLUDE_SUBSECTIONS' => 'Y',
+                '=PROPERTY_OWNER' => $userWithSubscribe,
                 '!=PROPERTY_OWNER' => $BLOCKED,
                 ...$arrFilter
             ];
@@ -202,7 +208,7 @@ if (!empty($arResult["VARIABLES"]['SECTION_ID']) && defined('ADS_IBLOCK_ID')) {
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
             global $arViewedGoodsFilter;
-            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId, '!=PROPERTY_OWNER' => $BLOCKED];
+            $arViewedGoodsFilter = ['ID' => $arViewedGoodsId, '!=PROPERTY_OWNER' => $BLOCKED, '=PROPERTY_OWNER' => $userWithSubscribe];
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section",
                 "you-watch-before",

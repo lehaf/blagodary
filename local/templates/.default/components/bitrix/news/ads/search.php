@@ -1,4 +1,4 @@
-<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 use WebCompany\YouWatchBefore;
 
@@ -20,8 +20,10 @@ global $BLOCKED;
 $this->setFrameMode(false);
 $APPLICATION->SetTitle("Найденные объявления");
 $APPLICATION->AddChainItem('Поиск', '/ads/search/');
-?>
-<? $arFinedElementsId = $APPLICATION->IncludeComponent(
+
+$userWithSubscribe = getUserWithSubscribe();
+
+$arFinedElementsId = $APPLICATION->IncludeComponent(
 	"bitrix:search.page",
 	"search-page",
 	array(
@@ -87,7 +89,10 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                 )
             );?>
         </div>
-        <?$APPLICATION->IncludeComponent(
+        <?php
+        global $smartPreFilter;
+        $smartPreFilter['=PROPERTY_OWNER'] = $userWithSubscribe;
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.smart.filter",
             "filter",
             array(
@@ -128,7 +133,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
         <div class="announcements">
             <div class="announcements-header">
                 <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-                <?
+                <?php
                 if (!empty($arFinedElementsId)) include_once $_SERVER['DOCUMENT_ROOT'].'/'.SITE_TEMPLATE_PATH.'/include/switcher.php';
                 /** @var string $typeOfView */
                 ?>
@@ -136,6 +141,7 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
             <?php if (!empty($arFinedElementsId)) {
                 global $arFilterAds, $arrFilter;
                 $arFilterAds = [
+                    '=PROPERTY_OWNER' => $userWithSubscribe,
                     '!=PROPERTY_OWNER' => $BLOCKED,
                     '=ID' => $arFinedElementsId,
                     ...$arrFilter
@@ -199,9 +205,9 @@ $APPLICATION->AddChainItem('Поиск', '/ads/search/');
                 );
             } else {?>
                 <span class="empty-result">По данному запросу объявлений не найдено</span>
-            <?}?>
+            <?php }?>
         </div>
-        <?
+        <?php
         $obViewedGoods = new YouWatchBefore();
         $arViewedGoodsId = $obViewedGoods->getGoodsFromCookie();
         if (!empty($arViewedGoodsId)) {
