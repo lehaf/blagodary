@@ -133,11 +133,11 @@ class Subscription extends \CBitrixComponent
 
             $filter = ["USER_ID" => $this->userId];
             $userSubscription = WUserSubscriptionTable::getList([
+                'order' => ['DATE_FROM' => 'DESC'],
                 'select' => ['*'],
                 'filter' => $filter,
                 'offset' => $this->nav->getOffset(),
                 'limit' => $this->nav->getLimit(),
-                'count_total' => true,
                 'cache' => [
                     'ttl' => 360000,
                     'cache_joins' => true
@@ -145,24 +145,6 @@ class Subscription extends \CBitrixComponent
             ]);
             $this->nav->setRecordCount(WUserSubscriptionTable::getCount($filter));
             $this->arResult['NAVIGATION_OBJECT'] = $this->nav;
-
-//            $userOrders = \Bitrix\Sale\Order::getList([
-//                'order' => ['ID' => 'DESC'],
-//                'select' => ['ID','DATE_PAYED'],
-//                'filter' => [
-//                    "USER_ID" => $this->userId, //по пользователю
-////                    "STATUS_ID" =>$statusId, //по статусу
-//                    "PAYED" => "Y", //оплаченные
-//                    "CANCELED" =>"N", //не отмененные
-//                ],
-//                'limit' => $ordersLimit,
-//                'offset' => $ordersOffset,
-//                'count_total' => true,
-//                'cache' => [
-//                    'ttl' => 360000,
-//                    'cache_joins' => true
-//                ]
-//            ]);
 
             $subscriptionHistory = $userSubscription->fetchAll();
             if (!empty($subscriptionHistory)) {
