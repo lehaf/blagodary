@@ -243,6 +243,8 @@ if (!empty($_GET['user_id'])) {
                 "bitrix:catalog.section",
                 "you-watch-before",
                 array(
+                    "LAZY_LOAD_ON" => "Y",
+                    "LAZY_LOAD_START" => "0",
                     "ACTION_VARIABLE" => "",
                     "ADD_PICT_PROP" => "MORE_PHOTO",
                     "ADD_PROPERTIES_TO_BASKET" => "N",
