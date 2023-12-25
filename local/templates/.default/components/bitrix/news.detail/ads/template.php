@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -14,23 +14,23 @@ $isUserAuthorized = $USER->IsAuthorized();
 $curUserId = $USER->GetId();
 $this->setFrameMode(true);
 ?>
-<?if (!empty($arResult)):?>
+<?php if (!empty($arResult)):?>
     <div class="page-card" id="<?=$this->GetEditAreaID($arResult['ID'])?>">
         <div class="page-card__item page-card__item--slider">
             <div class="card-slider">
                 <span data-item="<?=$arResult['ID']?>" class="favorite-card"></span>
-                <?if (!empty($arResult['IMAGES'])):?>
+                <?php if (!empty($arResult['IMAGES'])):?>
                     <div class="card-slider-main">
-                        <?foreach ($arResult['IMAGES']['BIG_SLIDER'] as $arImg):?>
+                        <?php foreach ($arResult['IMAGES']['BIG_SLIDER'] as $arImg):?>
                             <div class="card-slider__item">
                                 <img src="<?=$arImg['src']?>"
                                      alt="<?=$arResult['NAME']?>"
                                      title="<?=$arResult['NAME']?>"
                                 >
                             </div>
-                        <?endforeach;?>
+                        <?php endforeach;?>
                     </div>
-                    <?if (!empty($arResult['IMAGES']['BIG_SLIDER']) && count($arResult['IMAGES']['BIG_SLIDER']) > 1):?>
+                    <?php if (!empty($arResult['IMAGES']['BIG_SLIDER']) && count($arResult['IMAGES']['BIG_SLIDER']) > 1):?>
                         <div class="card-slider-arrows slider-arrows-container">
                             <div class="card-slider-prev slider-arrow-prev">
                                 <svg>
@@ -44,20 +44,20 @@ $this->setFrameMode(true);
                                 </svg>
                             </div>
                         </div>
-                    <?endif;?>
-                    <?if (!empty($arResult['IMAGES']['LITTLE_SLIDER']) && count($arResult['IMAGES']['LITTLE_SLIDER']) > 1):?>
+                    <?php endif;?>
+                    <?php if (!empty($arResult['IMAGES']['LITTLE_SLIDER']) && count($arResult['IMAGES']['LITTLE_SLIDER']) > 1):?>
                         <div class="card-slider-main-nav">
-                            <?foreach ($arResult['IMAGES']['LITTLE_SLIDER'] as $arImg):?>
+                            <?php foreach ($arResult['IMAGES']['LITTLE_SLIDER'] as $arImg):?>
                                 <div class="card-slider-main-nav__item">
                                     <img src="<?=$arImg['src']?>"
                                          alt="<?=$arResult['NAME']?>"
                                          title="<?=$arResult['NAME']?>"
                                     >
                                 </div>
-                            <?endforeach;?>
+                            <?php endforeach;?>
                         </div>
-                    <?endif;?>
-                <?endif;?>
+                    <?php endif;?>
+                <?php endif;?>
             </div>
         </div>
         <div class="page-card__item page-card__item--content">
@@ -66,7 +66,7 @@ $this->setFrameMode(true);
                     <h2 class="title-section"><?=$arResult['NAME']?></h2>
                     <span data-item="<?=$arResult['ID']?>" class="favorite-card favorite-card--page"></span>
                 </div>
-                <?if ($curUserId === $arResult['OWNER']['ID']):?>
+                <?php if ($curUserId === $arResult['OWNER']['ID']):?>
                     <a href="/personal/my-ads/add-ads/?item=<?=$arResult['ID']?>" class="edit-card">
                         <svg>
                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#edit-card">
@@ -74,9 +74,9 @@ $this->setFrameMode(true);
                         </svg>
                         Редактировать объявление
                     </a>
-                <?endif;?>
+                <?php endif;?>
                 <div class="card-info">
-                    <?if (!empty($arResult['OWNER']['ID']) && !empty($arResult['PROPERTIES']['OWNER_NAME']['VALUE'])):?>
+                    <?php if (!empty($arResult['OWNER']['ID']) && !empty($arResult['PROPERTIES']['OWNER_NAME']['VALUE'])):?>
                         <div class="card-info__item card-info__item--contact">
                             <div class="card-info__item-container">
                                 <h4 class="card-info-title">Контактная информация</h4>
@@ -97,20 +97,20 @@ $this->setFrameMode(true);
                                             <span class="<?=$arResult['RATING']['TOTAL'] >= 5 ? 'active' : ''?>"></span>
                                         </div>
                                     </div>
-                                    <?if (!empty($arResult['RATING']['REVIEWS_COUNT'])):?>
+                                    <?php if (!empty($arResult['RATING']['REVIEWS_COUNT'])):?>
                                         <div class="total-rating">
                                             <span class="total-rating__text">Оценок:</span>
                                             <span class="total-rating__num"><?=$arResult['RATING']['REVIEWS_COUNT']?></span>
                                         </div>
-                                    <?endif;?>
-                                    <?if (!empty($arResult['OWNER']['ADS_COUNT'])):?>
+                                    <?php endif;?>
+                                    <?php if (!empty($arResult['OWNER']['ADS_COUNT'])):?>
                                         <a href="/ads/user/?user_id=<?=$arResult['OWNER']['ID']?>" class="card-info-announcements">
                                             <span class="card-info-announcements__text">Объявлений:</span>
                                             <span class="card-info-announcements__num"><?=$arResult['OWNER']['ADS_COUNT']?></span>
                                         </a>
-                                    <?endif;?>
+                                    <?php endif;?>
                                 </div>
-                                <?if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']) && $curUserId !== $arResult['OWNER']['ID']):?>
+                                <?php if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']) && $curUserId !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
                                         <button data-ads-id="<?=$arResult['ID']?>"
                                                 class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>"
@@ -121,24 +121,24 @@ $this->setFrameMode(true);
                                             </svg>
                                             Хочу забрать
                                         </button>
-                                        <?if ($isUserAuthorized):?>
+                                        <?php if ($isUserAuthorized):?>
                                             <ul class="phone-list">
-                                                <?foreach ($arResult['PROPERTIES']['OWNER_PHONE']['VALUE'] as $phone):?>
+                                                <?php foreach ($arResult['PROPERTIES']['OWNER_PHONE']['VALUE'] as $phone):?>
                                                     <li class="phone-list__item">
                                                         <svg>
                                                             <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
                                                         </svg>
                                                         <a href="tel:<?=$phone?>"><?=$phone?></a>
                                                     </li>
-                                                <?endforeach;?>
+                                                <?php endforeach;?>
                                             </ul>
-                                        <?endif;?>
+                                        <?php endif;?>
                                     </div>
-                                <?endif;?>
+                                <?php endif;?>
                             </div>
                         </div>
-                    <?endif;?>
-                    <?if (!empty($arResult['PROPERTIES']['REGION']['VALUE']) && !empty($arResult['PROPERTIES']['CITY']['VALUE'])):?>
+                    <?php endif;?>
+                    <?php if (!empty($arResult['PROPERTIES']['REGION']['VALUE']) && !empty($arResult['PROPERTIES']['CITY']['VALUE'])):?>
                         <div class="card-info__item card-info__item-location">
                             <div class="card-info__item-container">
                                 <h4 class="card-info-title">Местоположение</h4>
@@ -152,50 +152,52 @@ $this->setFrameMode(true);
                                 </div>
                             </div>
                         </div>
-                    <?endif;?>
+                    <?php endif;?>
                 </div>
                 <div class="complain <?=!empty($curUserId) ? 'complaint-modal' : 'sign-in-modal'?>">
-                    <?if ($curUserId != $arResult['OWNER']['ID']):?>
+                    <?php if ($curUserId != $arResult['OWNER']['ID']):?>
                         <span class="complain-warning"></span>
                         <span class="complain__text">Пожаловаться на пользователя</span>
-                    <?endif;?>
-                </div>
-                <div class="card-description">
-                    <?php if (!empty($arResult['FEATURES'])):?>
-                        <h4 class="card-description__title">Характеристики</h4>
-                        <ul class="card-description-list">
-                            <?php foreach ($arResult['FEATURES'] as $feature):?>
-                                <li class="card-description-list__item">
-                                    <div class="card-description-list__item-name"><?=$feature['NAME']?></div>
-                                    <div class="fake-line"></div>
-                                    <div class="card-description-list__item-result">
-                                        <?=is_array($feature['VALUE']) ? implode(' / ',$feature['VALUE']) : $feature['VALUE']?>
-                                    </div>
-                                </li>
-                            <?php endforeach;?>
-                        </ul>
                     <?php endif;?>
-                    <?if (!empty($arResult['DETAIL_TEXT'])):?>
-                        <h4 class="card-description__title">Описание</h4>
-                        <div class="card-description-text">
-                            <p>
-                            <?=$arResult['DETAIL_TEXT']?>
-                            </p>
-                        </div>
-                        <div class="card-description-text-btn" >
-                            Развернуть описание
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-down"></use>
-                            </svg>
-                        </div>
-                    <?endif;?>
                 </div>
+                <?php if (!empty($arResult['DETAIL_TEXT']) || !empty($arResult['FEATURES'])):?>
+                    <div class="card-description">
+                        <?php if (!empty($arResult['FEATURES'])):?>
+                            <h4 class="card-description__title">Характеристики</h4>
+                            <ul class="card-description-list">
+                                <?php foreach ($arResult['FEATURES'] as $feature):?>
+                                    <li class="card-description-list__item">
+                                        <div class="card-description-list__item-name"><?=$feature['NAME']?></div>
+                                        <div class="fake-line"></div>
+                                        <div class="card-description-list__item-result">
+                                            <?=is_array($feature['VALUE']) ? implode(' / ',$feature['VALUE']) : $feature['VALUE']?>
+                                        </div>
+                                    </li>
+                                <?php endforeach;?>
+                            </ul>
+                        <?php endif;?>
+                        <?php if (!empty($arResult['DETAIL_TEXT'])):?>
+                            <h4 class="card-description__title">Описание</h4>
+                            <div class="card-description-text">
+                                <p>
+                                <?=$arResult['DETAIL_TEXT']?>
+                                </p>
+                            </div>
+                            <div class="card-description-text-btn" >
+                                Развернуть описание
+                                <svg>
+                                    <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-down"></use>
+                                </svg>
+                            </div>
+                        <?php endif;?>
+                    </div>
+                <?php endif;?>
             </div>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>
 
-<?if (!empty($arResult['RATING'])):?>
+<?php if (!empty($arResult['RATING'])):?>
     <div class="popUp popUp-grade">
         <h5 class="popUp__title">Оценки пользователей</h5>
         <span class="modal-cross">
@@ -230,10 +232,10 @@ $this->setFrameMode(true);
                     </div>
                 </div>
             </div>
-            <?if (!empty($arResult['RATING']['LIST'])):?>
+            <?php if (!empty($arResult['RATING']['LIST'])):?>
                 <div class="grade-list-container">
                     <ul class="grade-list">
-                        <?foreach ($arResult['RATING']['LIST'] as $arUser):?>
+                        <?php foreach ($arResult['RATING']['LIST'] as $arUser):?>
                             <li class="grade-list__item">
                                 <div class="card-info-rating">
                                     <div class="rating-name-user"><?=$arUser['NAME']?></div>
@@ -247,10 +249,10 @@ $this->setFrameMode(true);
                                 </div>
                                 <div class="rating-data"><?=$arUser['DATE']?></div>
                             </li>
-                        <?endforeach;?>
+                        <?php endforeach;?>
                     </ul>
                 </div>
-            <?endif;?>
+            <?php endif;?>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>

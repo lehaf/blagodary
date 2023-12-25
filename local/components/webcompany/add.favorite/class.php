@@ -181,7 +181,9 @@ class AddFavorite extends \CBitrixComponent
             foreach ($obCollection as $obItem) {
                 $arDPU = ['ID' => $obItem->getId(), 'CODE' => $obItem->getCode()];
                 $detailPageUrl = \CIBlock::ReplaceDetailUrl($obItem->getIblock()->getDetailPageUrl(), $arDPU, false, 'E');
-                $firstImgId = !empty($obItem->getImages()->getAll()[0]->getValue()) ? $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
+                $firstImgId = !empty($obItem->getImages()->getAll()[0]) && !empty(!empty($obItem->getImages()->getAll()[0]->getValue())) ?
+                    $obItem->getImages()->getAll()[0]->getValue() : NO_PHOTO_IMG_ID;
+
                 $arResizeFirstImg = \CFile::ResizeImageGet(
                     $firstImgId,
                     array("width" => 262, "height" => 200),
