@@ -14,6 +14,7 @@ use Bitrix\Main\Type\DateTime;
 class Subscription extends \CBitrixComponent
 {
     private string $moduleName = 'webcompany.referal.system';
+    private object $nav;
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';
@@ -124,22 +125,26 @@ class Subscription extends \CBitrixComponent
         }
     }
 
-    private function getUserSubscriptionHistory(int $ordersLimit, int $ordersOffset = 0, $curPage = 1) : void
+    private function getUserSubscriptionHistory() : void
     {
         if (!empty($this->userId)) {
+            $this->nav = new \Bitrix\Main\UI\PageNavigation("history");
+            $this->nav->setPageSize($this->arParams['NAVIGATION_PAGE_COUNT'])->initFromUri();
+
+            $filter = ["USER_ID" => $this->userId];
             $userSubscription = WUserSubscriptionTable::getList([
                 'select' => ['*'],
-                'filter' => [
-                    "USER_ID" => $this->userId
-                ],
-                'limit' => $ordersLimit,
-                'offset' => $ordersOffset,
+                'filter' => $filter,
+                'offset' => $this->nav->getOffset(),
+                'limit' => $this->nav->getLimit(),
                 'count_total' => true,
                 'cache' => [
                     'ttl' => 360000,
                     'cache_joins' => true
                 ]
             ]);
+            $this->nav->setRecordCount(WUserSubscriptionTable::getCount($filter));
+            $this->arResult['NAVIGATION_OBJECT'] = $this->nav;
 
 //            $userOrders = \Bitrix\Sale\Order::getList([
 //                'order' => ['ID' => 'DESC'],
@@ -171,48 +176,10 @@ class Subscription extends \CBitrixComponent
                         'FREE' => $order['FREE']
                     ];
                 }
-                $this->setPaginationParams($userSubscription->getCount(), $ordersLimit, $curPage);
             }
         }
     }
 
-    private function setPaginationParams(int $ordersCount, int $ordersLimit, int $curPage) : void
-    {
-        $countPages = ceil($ordersCount/$ordersLimit);
-        if ($countPages > 1) {
-            $maxPageLinks = 5;
-            $pageOffset = floor($maxPageLinks/2);
-
-            $this->arResult['ORDER_PAGINATION'] = [
-                'CUR_PAGE' => $curPage
-            ];
-
-            if ($curPage > 1) $this->arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage-1;
-            if ($curPage < $countPages) $this->arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'] = '?'.$this->paginationParam.'='.$curPage+1;
-
-            if ($curPage > 1  &&  $curPage > 1 + $maxPageLinks && $curPage-1 != 2) {
-                $this->arResult['ORDER_PAGINATION']['PAGES'][1] = '?'.$this->paginationParam.'='.'1';
-                $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.floor($curPage/2);
-            }
-
-            $pageStart = ($curPage - $pageOffset) < 1 || ($curPage - $pageOffset) >= ($countPages - $maxPageLinks) ? 1 : $curPage - $pageOffset;
-            if ($curPage == $countPages) {
-                $pageEnd = $countPages;
-            } else {
-                $pageEnd = $curPage + $pageOffset;
-            }
-            if ($pageEnd === $countPages) $pageStart = ($countPages - $maxPageLinks) <= 0 ? 1 : $countPages - $maxPageLinks;
-            if ($pageStart === 1 && $maxPageLinks >= $countPages) $pageEnd = $maxPageLinks;
-            for ($i = $pageStart; $i <= $pageEnd && $i <= $countPages; $i++) {
-                $this->arResult['ORDER_PAGINATION']['PAGES'][$i] = '?'.$this->paginationParam.'='.$i;
-            }
-
-            if ($curPage < $countPages - $maxPageLinks  &&  $curPage < $countPages && $curPage+1 != $countPages-1) {
-                $this->arResult['ORDER_PAGINATION']['PAGES']['...'] = '?'.$this->paginationParam.'='.round($countPages+$curPage/2);
-                $this->arResult['ORDER_PAGINATION']['PAGES'][$countPages] = '?'.$this->paginationParam.'='.$countPages;
-            }
-        }
-    }
     private function createOrder() : void
     {
         $basket = \Bitrix\Sale\Basket::create(SITE_ID);
@@ -403,9 +370,7 @@ class Subscription extends \CBitrixComponent
         $WC = new ReferralSystem;
         $this->arResult['NO_SUBSCRIPTION_TEXT'] = $WC->getSettingValue('noSubscriptionText');
         $this->arResult['SUBSCRIPTION_PRICE'] = $WC->getSettingValue('subscriptionPrice');
-        $curOrdersPage = !empty($_GET[$this->paginationParam]) ? $_GET[$this->paginationParam] : 1;
-        $ordersOffset = $curOrdersPage !== 0 ? $this->arParams['PAGE_RECORDS_COUNT'] * $curOrdersPage - $this->arParams['PAGE_RECORDS_COUNT'] : 0;
-        $this->getUserSubscriptionHistory($this->arParams['PAGE_RECORDS_COUNT'], $ordersOffset, $curOrdersPage);
+        $this->getUserSubscriptionHistory();
     }
 
     public function executeComponent() : void

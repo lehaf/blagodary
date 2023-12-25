@@ -19,38 +19,38 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
 
 ?>
 <div class="page-container">
-        <aside class="aside aside-cabinet">
-            <div class="profile-menu">
-                <div class="menu-authorized">
-                    <?$APPLICATION->IncludeComponent(
-                        "bitrix:menu",
-                        "personal",
-                        Array(
-                            "ROOT_MENU_TYPE" => "personal",
-                            "MAX_LEVEL" => "1",
-                            "CHILD_MENU_TYPE" => "",
-                            "USE_EXT" => "N",
-                            "DELAY" => "N",
-                            "ALLOW_MULTI_SELECT" => "Y",
-                            "MENU_CACHE_TYPE" => "A",
-                            "MENU_CACHE_TIME" => "360000",
-                            "MENU_CACHE_USE_GROUPS" => "Y",
-                            "MENU_CACHE_GET_VARS" => ""
-                        )
-                    );?>
-                </div>
+    <aside class="aside aside-cabinet">
+        <div class="profile-menu">
+            <div class="menu-authorized">
+                <?php $APPLICATION->IncludeComponent(
+                    "bitrix:menu",
+                    "personal",
+                    Array(
+                        "ROOT_MENU_TYPE" => "personal",
+                        "MAX_LEVEL" => "1",
+                        "CHILD_MENU_TYPE" => "",
+                        "USE_EXT" => "N",
+                        "DELAY" => "N",
+                        "ALLOW_MULTI_SELECT" => "Y",
+                        "MENU_CACHE_TYPE" => "A",
+                        "MENU_CACHE_TIME" => "360000",
+                        "MENU_CACHE_USE_GROUPS" => "Y",
+                        "MENU_CACHE_GET_VARS" => ""
+                    )
+                );?>
             </div>
-        </aside>
-        <div class="page-content page-content--profile">
-            <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-            <?$APPLICATION->IncludeComponent(
-                "webcompany:subscription",
-                "",
-                array(
-                    "COMPONENT_TEMPLATE" => ".default",
-                    "PAGE_RECORDS_COUNT" => "5",
-                )
-            );?>
         </div>
+    </aside>
+    <div class="page-content page-content--profile">
+        <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
+        <?php $APPLICATION->IncludeComponent(
+            "webcompany:subscription",
+            "",
+            array(
+                "COMPONENT_TEMPLATE" => ".default",
+                "NAVIGATION_PAGE_COUNT" => "12",
+            )
+        );?>
     </div>
+</div>
 <?php require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -12,47 +12,48 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-cart";
+$this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
 ?>
 <div class="subscription-switch">
     <button class="btn subscription-switch__btn subscription__btn--current active">Активная</button>
-    <?if (!empty($arResult['ORDER_HISTORY'])):?>
+    <?php if (!empty($arResult['ORDER_HISTORY'])):?>
         <button class="btn subscription-switch__btn subscription__btn--history">История</button>
-    <?endif;?>
+    <?php endif;?>
 </div>
 <div class="subscription-content">
     <div class="profile-current-subscription active">
-        <?if (!empty($arResult['WARNINGS']) || !empty($arResult['ERRORS'])):?>
-            <?$messages = !empty($arResult['WARNINGS']) ? $arResult['WARNINGS'] : $arResult['ERRORS']?>
+        <?php if (!empty($arResult['WARNINGS']) || !empty($arResult['ERRORS'])):?>
+            <?php $messages = !empty($arResult['WARNINGS']) ? $arResult['WARNINGS'] : $arResult['ERRORS']?>
             <div class="<?=!empty($arResult['WARNINGS']) ? 'subscription-warning' : 'subscription-errors'?>">
                 <ul>
-                    <?foreach ($messages as $message):?>
+                    <?php foreach ($messages as $message):?>
                         <li><?=$message?></li>
-                    <?endforeach;?>
+                    <?php endforeach;?>
                 </ul>
             </div>
-        <?endif;?>
-        <?if ($arResult['SUBSCRIPTION']['ACTIVE'] === true):?>
-            <?if ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] === true):?>
+        <?php endif;?>
+        <?php if ($arResult['SUBSCRIPTION']['ACTIVE'] === true):?>
+            <?php if ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] === true):?>
                 <div class="current-subscription">
                     <div class="profile-error__message">
                         <h4 class="title-block">
                             Текущая Подписка Бесплатная (по реферальной программе) до <?=$arResult['SUBSCRIPTION']['FREE_DATE']?>
                         </h4>
                     </div>
-                    <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                    <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
                         <h4 class="title-block">Платная подписка будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?></h4>
-                    <?endif;?>
+                    <?php endif;?>
                     <button id="subscriptionAction"
                             data-action="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'unsubscribe' : 'subscribe'?>"
                             class="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'btn btn-red' : 'btn-bg'?>"
                     >
-                        <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                        <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
                             <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
-                        <?endif;?>
+                        <?php endif;?>
                         <?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'Отменить подписку' : 'Оформить автопродление подписки'?>
                     </button>
                 </div>
-            <?elseif ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] !== true):?>
+            <?php elseif ($arResult['SUBSCRIPTION']['FREE'] === true && $arResult['SUBSCRIPTION']['PAID'] !== true):?>
                 <div class="subscription-content-active">
                     <div class="no-subscription">
                         <div class="profile-error__message">
@@ -64,26 +65,26 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
                         <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                     </div>
                 </div>
-            <?else:?>
+            <?php else:?>
                 <div class="current-subscription p-30">
                     <h4 class="title-block">
                         Текущая подписка действительна до <?=$arResult['SUBSCRIPTION']['DATE']?>
-                        <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                        <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
                              и будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?>
-                        <?endif;?>
+                        <?php endif;?>
                     </h4>
                     <button id="subscriptionAction"
                             data-action="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'unsubscribe' : 'subscribe'?>"
                             class="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'btn btn-red' : 'btn-bg'?>"
                     >
-                        <?if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                        <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
                             <svg><use xlink:href="<?=$crossSprite?>"></use></svg>
-                        <?endif;?>
+                        <?php endif;?>
                         <?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'Отменить подписку' : 'Оформить автопродление подписки'?>
                     </button>
                 </div>
-            <?endif?>
-        <?else:?>
+            <?php endif?>
+        <?php else:?>
             <div class="subscription-content-active">
                 <div class="no-subscription">
                     <div class="profile-error__message">
@@ -95,49 +96,37 @@ $crossSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#cross-car
                     <button id="subscriptionAction" data-action="subscribe" class="btn-bg">Оформить подписку</button>
                 </div>
             </div>
-        <?endif;?>
+        <?php endif;?>
     </div>
-    <?if (!empty($arResult['ORDER_HISTORY'])):?>
-        <div class="history-subscription">
+    <?php if (!empty($arResult['ORDER_HISTORY'])):?>
+        <div class="history-subscription" id="target">
+            <div class="loader"></div>
             <ul class="history-subscription-list">
-                <?foreach ($arResult['ORDER_HISTORY'] as $orderData):?>
+                <?php foreach ($arResult['ORDER_HISTORY'] as $orderData):?>
                     <li class="history-subscription-list__item">
                         <div class="history-subscription-data"><?=$orderData['DATE_PAYED']?></div>
                         <div class="history-subscription-description">
-                            <?if ($orderData['FREE'] === 'Y'):?>
+                            <?php if ($orderData['FREE'] === 'Y'):?>
                                 <span class="strong">БЕСПЛАТНАЯ ПОДПИСКА</span>, за счет реферальной системы на период c <?=$orderData['DATE_SUBSCRIPTION_FROM']?> по <?=$orderData['DATE_SUBSCRIPTION_TO']?>
-                            <?else:?>
+                            <?php else:?>
                                 Приобретена подписка на период с <?=$orderData['DATE_SUBSCRIPTION_FROM']?> по <?=$orderData['DATE_SUBSCRIPTION_TO']?>
-                            <?endif;?>
+                            <?php endif;?>
                         </div>
                     </li>
-                <?endforeach;?>
+                <?php endforeach;?>
             </ul>
-            <?if (!empty($arResult['ORDER_PAGINATION'])):?>
-                <div class="pagination">
-                    <?if (!empty($arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK'])):?>
-                        <a href="<?=$arResult['ORDER_PAGINATION']['LEFT_ARROW_LINK']?>" class="pagination-arrow-left">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-prev"></use>
-                            </svg>
-                        </a>
-                    <?endif;?>
-                    <ul class="pagination-list">
-                        <?foreach ($arResult['ORDER_PAGINATION']['PAGES'] as $pageNumber => $pageLink):?>
-                            <li class="pagination-list__item <?=$arResult['ORDER_PAGINATION']['CUR_PAGE'] === $pageNumber ? 'active' : ''?>">
-                                <a href="<?=$pageLink?>"><?=$pageNumber?></a>
-                            </li>
-                        <?endforeach;?>
-                    </ul>
-                    <?if (!empty($arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK'])):?>
-                        <a href="<?=$arResult['ORDER_PAGINATION']['RIGHT_ARROW_LINK']?>" class="pagination-arrow-right">
-                            <svg>
-                                <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#arrow-next"></use>
-                            </svg>
-                        </a>
-                    <?endif;?>
-                </div>
-            <?endif;?>
+            <?php
+            global $APPLICATION;
+            $APPLICATION->IncludeComponent(
+                "bitrix:main.pagenavigation",
+                "subscription-history",
+                array(
+                    "NAV_OBJECT" => $arResult['NAVIGATION_OBJECT'],
+                    "SEF_MODE" => "N",
+                ),
+                false
+            );
+            ?>
         </div>
-    <?endif;?>
+    <?php endif;?>
 </div>

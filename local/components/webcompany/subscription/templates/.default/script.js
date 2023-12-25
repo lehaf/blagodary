@@ -3,19 +3,45 @@ const Subscription = function () {
         'subscriptionBtnId':'#subscriptionAction',
         'subscriptionBtnAttr':'data-action',
         'paginationLinksSelector':'div.pagination a',
-        'elementsContainerSelector':'div.history-subscription'
+        'elementsContainerSelector':'#target',
+        'loaderClassName':'lds-heart',
+        'loaderContainerClass':'.loader',
+        'blurContainerClass':'.history-subscription-list',
+        'blurClass':'blur',
     }
 
     this.componentName = 'webcompany:subscription';
-
     this.$subscriptionBtn = document.querySelector(this.settings.subscriptionBtnId);
-
+    this.$loaderContainer = document.querySelector(this.settings.loaderContainerClass);
     this.init();
 }
 
 Subscription.prototype.init = function () {
     this.setSubscriptionEvent();
     this.setPaginationEvent();
+    this.createLoader();
+}
+
+Subscription.prototype.createLoader = function () {
+    const loader = document.createElement('div');
+    loader.classList.add(this.settings.loaderClassName);
+    const innerDiv = document.createElement('div');
+    loader.prepend(innerDiv);
+    this.$loader = loader;
+}
+
+Subscription.prototype.setLoader = function () {
+    this.$blurContainer = document.querySelector(this.settings.blurContainerClass);
+    if (this.$loader && this.$loaderContainer && this.$blurContainer) {
+        this.$blurContainer.classList.add(this.settings.blurClass);
+        this.$loaderContainer.prepend(this.$loader);
+    }
+}
+
+Subscription.prototype.deleteLoader = function () {
+    this.$blurContainer.classList.remove(this.settings.blurClass);
+    if (document.querySelector('.'+this.settings.loaderClassName))
+        document.querySelector('.'+this.settings.loaderClassName).remove();
 }
 
 Subscription.prototype.setSubscriptionEvent = function () {
@@ -33,6 +59,7 @@ Subscription.prototype.setSubscriptionEvent = function () {
     }
 }
 
+
 Subscription.prototype.setPaginationEvent = function () {
     const _this = this;
     this.$paginationLinks = document.querySelectorAll(this.settings.paginationLinksSelector);
@@ -41,6 +68,7 @@ Subscription.prototype.setPaginationEvent = function () {
             pageLink.onclick = (e) => {
                 e.preventDefault();
                 let pageHref = pageLink.getAttribute('href');
+                _this.setLoader();
                 _this.sendPaginationPage(pageHref);
             }
         });
@@ -93,6 +121,7 @@ Subscription.prototype.sendPaginationPage = function (link) {
         curContainer.innerHTML = nextElementsContainer.innerHTML;
         _this.setPaginationEvent();
         window.history.replaceState(null, null, link);
+        _this.deleteLoader();
     }).catch(error => {
         console.log(error);
     });
