@@ -67,12 +67,17 @@ $this->addExternalCss(SITE_TEMPLATE_PATH.'/html/css/loader.css');
                 </div>
             <?php else:?>
                 <div class="current-subscription p-30">
-                    <h4 class="title-block">
-                        Текущая подписка действительна до <?=$arResult['SUBSCRIPTION']['DATE']?>
-                        <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
-                             и будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?>
-                        <?php endif;?>
-                    </h4>
+                    <div class="profile-error__message">
+                        <h4 class="title-block">
+                            Текущая подписка действительна до <?=$arResult['SUBSCRIPTION']['DATE']?>
+                            <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true):?>
+                                 и будет продлена автоматически <?=$arResult['SUBSCRIPTION']['DATE']?>
+                            <?php endif;?>
+                        </h4>
+                    </div>
+                    <?php if ($arResult['SUBSCRIPTION']['PAID_CONFIRM'] !== true):?>
+                        <h4 class="title-block">Оформить подписку всего за <?=$arResult['SUBSCRIPTION_PRICE']?> рублей в неделю.</h4>
+                    <?php endif;?>
                     <button id="subscriptionAction"
                             data-action="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'unsubscribe' : 'subscribe'?>"
                             class="<?=$arResult['SUBSCRIPTION']['PAID_CONFIRM'] === true ? 'btn btn-red' : 'btn-bg'?>"
