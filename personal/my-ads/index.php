@@ -22,7 +22,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         <aside class="aside aside-cabinet">
             <div class="profile-menu">
                 <div class="menu-authorized">
-                    <?$APPLICATION->IncludeComponent(
+                    <?php $APPLICATION->IncludeComponent(
                         "bitrix:menu",
                         "personal",
                         Array(
@@ -43,10 +43,11 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
         </aside>
         <div class="page-content page-content--profile">
             <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-            <? $APPLICATION->IncludeComponent(
-	"webcompany:my.ads.list",
-	"",
+            <?php $APPLICATION->IncludeComponent(
+                "webcompany:my.ads.list",
+                "",
                 [
+                    'NAVIGATION_PAGE_COUNT' => 12,
                     'BLOCK_TITLE' => 'Отзывы о вас'
                 ]
             ); ?>

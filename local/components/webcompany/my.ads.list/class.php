@@ -7,6 +7,7 @@ use Bitrix\Main\Type\DateTime;
 
 class AddElementForm extends \CBitrixComponent
 {
+    private object $nav;
     private string $erAdUserWantListTitle = 'Ошибка добавления пользователя в свойство!';
     private string $erAdUserWantListDesc = "В компоненте webcompany:my.ads.list при добавлении в свойство WHO_WANT_TAKE
      нового пользователя возникли следующие ошибки:";
@@ -359,22 +360,37 @@ class AddElementForm extends \CBitrixComponent
     private function prepareUserAdsList() : void
     {
         if (\Bitrix\Main\Loader::includeModule('iblock')) {
+
+            $this->nav = new \Bitrix\Main\UI\PageNavigation("ads");
+            $this->nav->setPageSize($this->arParams['NAVIGATION_PAGE_COUNT'])->initFromUri();
             $className = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID)->getEntityDataClass();
+            $filter = array('=ACTIVE' => 'Y', 'OWNER.VALUE' => $this->curUserId);
             $obCollection = $className::getList(array(
-                'order' => array('DATE_CREATE' => 'DESC','ID' => 'ASC'),
-                'select' => array('ID', 'CODE', 'NAME', 'DATE_CREATE', 'IMAGES', 'IBLOCK'),
-                'filter' => array('=ACTIVE' => 'Y', 'OWNER.VALUE' => $this->curUserId),
-                'cache' => array(
-                    'ttl' => 360000,
-                    'cache_joins' => true
-                )
+                'offset' => $this->nav->getOffset(),
+                'limit' => $this->nav->getLimit(),
+                'data_doubling' => false,
+                'order' => array(
+                    'DATE_CREATE' => 'DESC',
+                    'ID' => 'ASC'
+                ),
+                'select' => array('ID', 'CODE', 'NAME', 'DATE_CREATE', 'IBLOCK'),
+                'filter' => $filter,
             ))->fetchCollection();
+            $this->nav->setRecordCount($className::getCount($filter));
 
             foreach ($obCollection as $obItem) {
                 $arButtons = $this->getHermitageButtons($obItem->getId(),$obItem->getIblock()->getId());
                 $arDPU = ['ID' => $obItem->getId(), 'CODE' => $obItem->getCode()];
                 $detailPageUrl = \CIBlock::ReplaceDetailUrl($obItem->getIblock()->getDetailPageUrl(), $arDPU, false, 'E');
-                $allImages = $obItem->getImages()->getAll();
+                // костыль для правильной работы пагинации
+                $allImages = $className::getList([
+                    'select' => ['ID','IMAGES'],
+                    'filter' => ['ID' => $obItem->getId()],
+                    'cache' => array(
+                        'ttl' => 3600,
+                        'cache_joins' => true
+                    ),
+                    ])->fetchObject()->getImages()->getAll();
                 $picId = 0;
                 if (!empty($allImages)) {
                     foreach ($allImages as $imgId) {
@@ -423,8 +439,19 @@ class AddElementForm extends \CBitrixComponent
         } else {
             $this->includeComponentTemplate('blocked');
         }
+
         $this->prepareResult();
         $this->includeComponentTemplate();
+        global $APPLICATION;
+        $APPLICATION->IncludeComponent(
+            "bitrix:main.pagenavigation",
+            "ads",
+            array(
+                "NAV_OBJECT" => $this->nav,
+                "SEF_MODE" => "N",
+            ),
+            false
+        );
     }
 
 }

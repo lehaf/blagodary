@@ -1,0 +1,4 @@
+li.pagination-list__item.active {
+    color: #059ea3;
+    font-weight: 700;
+}
