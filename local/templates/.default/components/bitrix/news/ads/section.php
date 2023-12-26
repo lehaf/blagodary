@@ -55,12 +55,11 @@ $userWithSubscribe = getUserWithSubscribe();
         </div>
         <div class="aside__item aside__item-category ">
             <?php
-            $arSectFilter = array(
-                "!UF_MAIN_CATEGORY" => false,
-                "PROPERTY" => [
-                    'OWNER' => $userWithSubscribe
-                ]
-            );
+
+            global $additionalCountFilter;
+            $additionalCountFilter = [
+                '=PROPERTY_OWNER' => $userWithSubscribe
+            ];
 
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
@@ -73,6 +72,8 @@ $userWithSubscribe = getUserWithSubscribe();
                     "SECTION_URL" => "",
                     "SECTION_ID" => $rootSectionId,
                     "COUNT_ELEMENTS" => "Y",
+                    "COUNT_ELEMENTS_FILTER" => "CNT_ACTIVE",
+                    "ADDITIONAL_COUNT_ELEMENTS_FILTER" => "additionalCountFilter",
                     "TOP_DEPTH" => "3",
                     "SECTION_FIELDS" => "",
                     "SECTION_USER_FIELDS" => "",

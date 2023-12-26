@@ -1,4 +1,5 @@
 <?php
+
 if (!empty($arResult['SECTIONS']) && !empty($arParams['ROOT_SECTION']) && !empty($arParams['ACTIVE_SECTION_ID'])) {
     array_unshift($arResult['SECTIONS'],$arParams['ROOT_SECTION']);
     $rootSectionId = null;

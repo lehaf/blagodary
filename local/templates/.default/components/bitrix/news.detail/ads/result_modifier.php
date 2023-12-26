@@ -13,7 +13,7 @@ if (!empty($arResult)) {
             if (count($arResult['PROPERTIES']['IMAGES']['VALUE']) > 1) {
                 $arResult['IMAGES']['LITTLE_SLIDER'][] = CFile::ResizeImageGet(
                     $imgId,
-                    array("width" => 92, "height" => 96),
+                    array("width" => 110, "height" => 125),
                     BX_RESIZE_IMAGE_PROPORTIONAL,
                 );
             }
@@ -77,6 +77,7 @@ if (!empty($arResult)) {
         array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
     );
 
+    $arResult['USERS_WITH_SUBSCRIPTION'] = getUserWithSubscribe();
 
     $this->getComponent()->setResultCacheKeys(['OWNER']);
 }

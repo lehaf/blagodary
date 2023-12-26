@@ -12,6 +12,7 @@
 /** @var CBitrixComponent $component */
 $isUserAuthorized = $USER->IsAuthorized();
 $curUserId = $USER->GetId();
+//$userHaveSubscribe = in_array($curUserId,$arResult['USERS_WITH_SUBSCRIPTION']);
 $this->setFrameMode(true);
 ?>
 <?php if (!empty($arResult)):?>
