@@ -47,7 +47,13 @@ $APPLICATION->SetTitle("Благодарю - прими или отдай");
         <div class="aside__item aside__item-category">
             <?php
             global $arSectFilter;
-            $arSectFilter = array("!UF_MAIN_CATEGORY" => false);
+            $arSectFilter = array(
+                "!UF_MAIN_CATEGORY" => false,
+                "PROPERTY" => [
+                    'OWNER' => $userWithSubscribe
+                ]
+            );
+
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
                 "main-category",

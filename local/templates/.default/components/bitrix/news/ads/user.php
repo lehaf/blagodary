@@ -18,6 +18,7 @@ use WebCompany\YouWatchBefore;
 global $BLOCKED;
 $isAjax = $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 $APPLICATION->AddChainItem('Объявления пользователя','/ads/user/');
+$userWithSubscribe = getUserWithSubscribe();
 
 if (!empty($_GET['user_id'])) {
     $userId = (int)$_GET['user_id'];
@@ -91,7 +92,13 @@ if (!empty($_GET['user_id'])) {
         </div>
         <div class="aside__item aside__item-category">
             <?php global $arSectFilter;
-            $arSectFilter = Array("!UF_MAIN_CATEGORY" => false);
+            $arSectFilter = array(
+                "!UF_MAIN_CATEGORY" => false,
+                "PROPERTY" => [
+                    'OWNER' => $userWithSubscribe
+                ]
+            );
+
             $APPLICATION->IncludeComponent(
             "bitrix:catalog.section.list",
             "main-category",
