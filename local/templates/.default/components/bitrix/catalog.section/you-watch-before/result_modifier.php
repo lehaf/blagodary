@@ -1,25 +1,46 @@
 <?php
 
 if (!empty($arResult['ITEMS'])) {
-    foreach ($arResult['ITEMS'] as &$arItem) {
+    foreach ($arResult['ITEMS'] as &$item) {
         // Приводим время в нужный формат
-        $unixTime = strtotime($arItem['DATE_CREATE']);
-        $arItem['DATE_CREATE'] = date('d.m.Y в H:i',$unixTime);
+        $unixTime = strtotime($item['DATE_CREATE']);
+        $item['DATE_CREATE'] = date('d.m.Y в H:i',$unixTime);
 
-        // Ресайзим картинки если их нет - тавим заглушку
-        if (!empty($arItem['PROPERTIES']['IMAGES']['VALUE'][0])) {
-            $arItem['IMG'] = CFile::ResizeImageGet(
-                $arItem['PROPERTIES']['IMAGES']['VALUE'][0],
-                array("width" => 510, "height" => 340),
-                BX_RESIZE_IMAGE_PROPORTIONAL,
-            );
+        // Генерируем webp картинку и ресайзим картинки если их нет - тавим заглушку
+        if (\Bitrix\Main\Loader::includeModule("webp.img")) {
+            if (!empty($item['PROPERTIES']['IMAGES']['VALUE'][0])) {
+                $item['IMG']['src'] = \WebCompany\WebpImg::getResizeWebpSrc(
+                    $item['PROPERTIES']['IMAGES']['VALUE'][0],
+                    510,
+                    340,
+                    true,
+                    90
+                );
+            } else {
+                $item['IMG']['src'] = \WebCompany\WebpImg::getResizeWebpSrc(
+                    NO_PHOTO_IMG_ID,
+                    330,
+                    240,
+                    true,
+                    90
+                );
+            }
         } else {
-            $arItem['IMG'] = CFile::ResizeImageGet(
-                NO_PHOTO_IMG_ID,
-                array("width" => 330, "height" => 240),
-                BX_RESIZE_IMAGE_PROPORTIONAL,
-            );
+            // Ресайзим картинки если их нет - тавим заглушку
+            if (!empty($item['PROPERTIES']['IMAGES']['VALUE'][0])) {
+                $item['IMG'] = CFile::ResizeImageGet(
+                    $item['PROPERTIES']['IMAGES']['VALUE'][0],
+                    array("width" => 510, "height" => 340),
+                    BX_RESIZE_IMAGE_PROPORTIONAL,
+                );
+            } else {
+                $item['IMG'] = CFile::ResizeImageGet(
+                    NO_PHOTO_IMG_ID,
+                    array("width" => 330, "height" => 240),
+                    BX_RESIZE_IMAGE_PROPORTIONAL,
+                );
+            }
         }
     }
-    unset($arItem);
+    unset($item);
 }
