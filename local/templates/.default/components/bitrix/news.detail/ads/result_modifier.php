@@ -110,7 +110,8 @@ if (!empty($arResult)) {
         array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
     );
 
-    $arResult['USERS_WITH_SUBSCRIPTION'] = getUserWithSubscribe();
+    if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']))
+        $arResult['OWNER_PHONES'] = $arResult['PROPERTIES']['OWNER_PHONE']['VALUE'];
 
-    $this->getComponent()->setResultCacheKeys(['OWNER']);
+    $this->getComponent()->setResultCacheKeys(['OWNER', 'OWNER_PHONES']);
 }

@@ -1,4 +1,5 @@
 <?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -10,9 +11,8 @@
 /** @var string $templateFolder */
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
-$isUserAuthorized = $USER->IsAuthorized();
+
 $curUserId = $USER->GetId();
-//$userHaveSubscribe = in_array($curUserId,$arResult['USERS_WITH_SUBSCRIPTION']);
 $this->setFrameMode(true);
 ?>
 <?php if (!empty($arResult)):?>
@@ -113,27 +113,13 @@ $this->setFrameMode(true);
                                 </div>
                                 <?php if (!empty($arResult['PROPERTIES']['OWNER_PHONE']['VALUE']) && $curUserId !== $arResult['OWNER']['ID']):?>
                                     <div class="card-info__phone">
-                                        <button data-ads-id="<?=$arResult['ID']?>"
-                                                class="btn btn-pick-up <?=!$isUserAuthorized ? 'sign-in-modal' : ''?>"
-                                        >
+                                        <button data-ads-id="<?=$arResult['ID']?>" class="btn btn-pick-up">
                                             <svg>
                                                 <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#pick-up">
                                                 </use>
                                             </svg>
                                             Хочу забрать
                                         </button>
-                                        <?php if ($isUserAuthorized):?>
-                                            <ul class="phone-list">
-                                                <?php foreach ($arResult['PROPERTIES']['OWNER_PHONE']['VALUE'] as $phone):?>
-                                                    <li class="phone-list__item">
-                                                        <svg>
-                                                            <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#phone-list"></use>
-                                                        </svg>
-                                                        <a href="tel:<?=$phone?>"><?=$phone?></a>
-                                                    </li>
-                                                <?php endforeach;?>
-                                            </ul>
-                                        <?php endif;?>
                                     </div>
                                 <?php endif;?>
                             </div>
@@ -257,3 +243,11 @@ $this->setFrameMode(true);
         </div>
     </div>
 <?php endif;?>
+
+<div class="popUp popUp-check-user">
+    <h5 class="popUp__title" style="color: #ee1d52;"></h5>
+    <div class="popUp__description"></div>
+    <span class="modal-cross">
+        <svg><use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#cross-popup"></use></svg>
+    </span>
+</div>
