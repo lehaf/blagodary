@@ -1,30 +1,63 @@
 <?php
 
 if (!empty($arResult)) {
-    // Ресайзим картинки если их нет - тавим заглушку
-    if (!empty($arResult['PROPERTIES']['IMAGES']['VALUE'])) {
-        foreach ($arResult['PROPERTIES']['IMAGES']['VALUE'] as $imgId) {
+
+    // Генерируем webp картинку и ресайзим картинки если их нет - тавим заглушку
+    if (\Bitrix\Main\Loader::includeModule("webp.img")) {
+        if (!empty($arResult['PROPERTIES']['IMAGES']['VALUE'])) {
+            foreach ($arResult['PROPERTIES']['IMAGES']['VALUE'] as $key => $imgId) {
+                $arResult['IMAGES']['BIG_SLIDER'][$key]['src'] = \WebCompany\WebpImg::getResizeWebpSrc(
+                    $imgId,
+                    756,
+                    505,
+                    true,
+                    90
+                );
+
+                if (count($arResult['PROPERTIES']['IMAGES']['VALUE']) > 1) {
+                    $arResult['IMAGES']['LITTLE_SLIDER'][$key]['src'] = \WebCompany\WebpImg::getResizeWebpSrc(
+                        $imgId,
+                        110,
+                        125,
+                        true,
+                        90
+                    );
+                }
+            }
+        } else {
+            $arResult['IMAGES']['BIG_SLIDER'][]['src'] = \WebCompany\WebpImg::getResizeWebpSrc(
+                NO_PHOTO_IMG_ID,
+                756,
+                505,
+            );
+        }
+    } else {
+        // Ресайзим картинки если их нет - тавим заглушку
+        if (!empty($arResult['PROPERTIES']['IMAGES']['VALUE'])) {
+            foreach ($arResult['PROPERTIES']['IMAGES']['VALUE'] as $imgId) {
+                $arResult['IMAGES']['BIG_SLIDER'][] = CFile::ResizeImageGet(
+                    $imgId,
+                    array("width" => 756, "height" => 505),
+                    BX_RESIZE_IMAGE_PROPORTIONAL,
+                );
+
+                if (count($arResult['PROPERTIES']['IMAGES']['VALUE']) > 1) {
+                    $arResult['IMAGES']['LITTLE_SLIDER'][] = CFile::ResizeImageGet(
+                        $imgId,
+                        array("width" => 110, "height" => 125),
+                        BX_RESIZE_IMAGE_PROPORTIONAL,
+                    );
+                }
+            }
+        } else {
             $arResult['IMAGES']['BIG_SLIDER'][] = CFile::ResizeImageGet(
-                $imgId,
+                NO_PHOTO_IMG_ID,
                 array("width" => 756, "height" => 505),
                 BX_RESIZE_IMAGE_PROPORTIONAL,
             );
-
-            if (count($arResult['PROPERTIES']['IMAGES']['VALUE']) > 1) {
-                $arResult['IMAGES']['LITTLE_SLIDER'][] = CFile::ResizeImageGet(
-                    $imgId,
-                    array("width" => 110, "height" => 125),
-                    BX_RESIZE_IMAGE_PROPORTIONAL,
-                );
-            }
         }
-    } else {
-        $arResult['IMAGES']['BIG_SLIDER'][] = CFile::ResizeImageGet(
-            NO_PHOTO_IMG_ID,
-            array("width" => 756, "height" => 505),
-            BX_RESIZE_IMAGE_PROPORTIONAL,
-        );
     }
+
     // Получаем данные владельца объявления а так же отзывы и рейтинг
     if ($arResult['PROPERTIES']['OWNER']['VALUE']) {
         $arResult['OWNER'] = getUserData($arResult['PROPERTIES']['OWNER']['VALUE']);
