@@ -14,10 +14,25 @@ if (!empty($arResult['ITEMS'][0])) {
     $reversCounter = strrev($arItem['PROPERTIES']['COUNTER']['VALUE']);
     $arReversCounter = implode(' ',str_split($reversCounter, 3));
     $arItem['PROPERTIES']['COUNTER']['VALUE'] = strrev($arReversCounter);
-    // Ресайзим картинку
-//    $arItem['DETAIL_PICTURE'] = CFile::ResizeImageGet(
-//        $arItem['DETAIL_PICTURE']['ID'],
-//        array("width" => 1200, "height" => 200),
-//        BX_RESIZE_IMAGE_PROPORTIONAL,
-//    );
+
+    // Генерируем webp картинку
+    if (\Bitrix\Main\Loader::includeModule("webp.img")) {
+        // Декстоп
+        $arItem['DETAIL_PICTURE']['SRC'] = \WebCompany\WebpImg::getResizeWebpSrc(
+            $arItem['DETAIL_PICTURE'],
+            $arItem['DETAIL_PICTURE']['WIDTH'],
+            $arItem['DETAIL_PICTURE']['HEIGHT'],
+            true,
+            90
+        );
+
+        // мобилка
+        $arItem['PREVIEW_PICTURE']['SRC'] = \WebCompany\WebpImg::getResizeWebpSrc(
+            $arItem['PREVIEW_PICTURE'],
+            $arItem['PREVIEW_PICTURE']['WIDTH'],
+            $arItem['PREVIEW_PICTURE']['HEIGHT'],
+            true,
+            90
+        );
+    }
 }
