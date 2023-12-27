@@ -2,12 +2,16 @@
 
 if (!empty($arResult['ITEMS'][0])) {
     // Всегда обрабатываем только первый элемент
-    $arItem = $arResult['ITEMS'][0];
-    // Ресайзим картинку
-//    $arItem['DETAIL_PICTURE'] = CFile::ResizeImageGet(
-//        $arItem['DETAIL_PICTURE']['ID'],
-//        array("width" => 1250, "height" => 400),
-//        BX_RESIZE_IMAGE_PROPORTIONAL,
-//    );
-    $arResult['ITEM'] = $arItem;
+    $item = $arResult['ITEMS'][0];
+    // Генерируем webp картинку
+    if (\Bitrix\Main\Loader::includeModule("webp.img")) {
+        $item['DETAIL_PICTURE']['SRC'] = \WebCompany\WebpImg::getResizeWebpSrc(
+            $item['DETAIL_PICTURE'],
+            $item['DETAIL_PICTURE']['WIDTH'],
+            $item['DETAIL_PICTURE']['HEIGHT'],
+            true,
+            90
+        );
+    }
+    $arResult['ITEM'] = $item;
 }
