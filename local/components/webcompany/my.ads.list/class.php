@@ -230,7 +230,7 @@ class AddElementForm extends \CBitrixComponent
                     }
                     $arUsersInfo = UserTable::getList(array(
                         'select' => ['ID', 'NAME','UF_PHONES'],
-                        'filter' => ['ID' => $arUsersId],
+                        'filter' => ['ID' => $arUsersId, '!NAME' => false],
                     ))->fetchAll();
 
                     echo json_encode(!empty($arUsersInfo) ? $arUsersInfo : []);
