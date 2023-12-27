@@ -109,16 +109,25 @@ global $USER, $APPLICATION;
 
 <div class="category-pop-up">
     <div class="wrapper">
-        <?php $APPLICATION->IncludeComponent(
+        <?php
+        $userWithSubscribe = getUserWithSubscribe();
+        global $additionalCountFilter;
+        $additionalCountFilter = [
+            '=PROPERTY_OWNER' => $userWithSubscribe
+        ];
+
+        $APPLICATION->IncludeComponent(
             "bitrix:catalog.section.list",
             "all-menu",
-            Array(
+            array(
                 "VIEW_MODE" => "TEXT",
                 "SHOW_PARENT_NAME" => "Y",
                 "IBLOCK_TYPE" => "products",
                 "IBLOCK_ID" => ADS_IBLOCK_ID,
                 "SECTION_URL" => "",
                 "COUNT_ELEMENTS" => "Y",
+                "COUNT_ELEMENTS_FILTER" => "CNT_ACTIVE",
+                "ADDITIONAL_COUNT_ELEMENTS_FILTER" => "additionalCountFilter",
                 "TOP_DEPTH" => "3",
                 "SECTION_FIELDS" => "",
                 "SECTION_USER_FIELDS" => "",
@@ -129,7 +138,8 @@ global $USER, $APPLICATION;
                 "CACHE_GROUPS" => "Y",
                 "CACHE_FILTER" => "Y",
                 "ALL_CATEGORIES_LINK" => "/",
-                "CUSTOM_SECTION_SORT" => ["UF_MENU_SORT" => "ASC"]
+                "CUSTOM_SECTION_SORT" => ["UF_MENU_SORT" => "ASC"],
+
             )
         );?>
     </div>
@@ -166,6 +176,8 @@ global $USER, $APPLICATION;
                 "IBLOCK_ID" => ADS_IBLOCK_ID,
                 "SECTION_URL" => "",
                 "COUNT_ELEMENTS" => "Y",
+                "COUNT_ELEMENTS_FILTER" => "CNT_ACTIVE",
+                "ADDITIONAL_COUNT_ELEMENTS_FILTER" => "additionalCountFilter",
                 "TOP_DEPTH" => "3",
                 "SECTION_FIELDS" => "",
                 "SECTION_USER_FIELDS" => "",

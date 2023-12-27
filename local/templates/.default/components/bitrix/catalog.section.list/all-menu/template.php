@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -14,7 +14,7 @@ $this->setFrameMode(true);
 $standardSpriteImgPath = SITE_TEMPLATE_PATH.'/html/assets/img/sprites/category.svg#item-17';
 $curPage = $APPLICATION->GetCurPage();
 ?>
-<?if (!empty($arResult['SECTIONS']) && !empty($arResult['CATEGORIES'])):?>
+<?php if (!empty($arResult['SECTIONS']) && !empty($arResult['CATEGORIES'])):?>
 <?php $firstSectionKey = array_key_first($arResult['SECTIONS'])?>
     <div class="page-container">
         <aside class="aside">
@@ -33,54 +33,54 @@ $curPage = $APPLICATION->GetCurPage();
                         Все категории
                     </span>
                 </li>
-                <?foreach ($arResult['CATEGORIES'] as $key => $arCategory):?>
+                <?php foreach ($arResult['CATEGORIES'] as $key => $arCategory):?>
                     <li class="category-list__item category-list__item--pop-up <?=$key === 0 ? 'is-active' : ''?>"
                         id="<?=$this->GetEditAreaID($arCategory['ID'])?>"
                         data-category="<?=$arCategory['NAME']?>"
                     >
                         <a href="<?=$arCategory['LINK']?>">
-                            <?if (!empty($arCategory['PICTURE']['SRC'])):?>
+                            <?php if (!empty($arCategory['PICTURE']['SRC'])):?>
                                 <img src="<?=$arCategory['PICTURE']['SRC']?>"
                                      height="16"
                                      width="16"
                                      title="<?=$arCategory['NAME']?>"
                                      alt="<?=$arCategory['NAME']?>"
                                 >
-                            <?else:?>
+                            <?php else:?>
                                 <svg>
                                     <use xlink:href="<?=$standardSpriteImgPath?>"></use>
                                 </svg>
-                            <?endif?>
+                            <?php endif?>
                             <?=$arCategory['NAME']?>
                         </a>
                     </li>
-                <?endforeach;?>
+                <?php endforeach;?>
             </ul>
         </aside>
         <div class="page-content">
-            <?foreach ($arResult['SECTIONS'] as $key => $arSection):?>
+            <?php foreach ($arResult['SECTIONS'] as $key => $arSection):?>
                 <div class="category-content <?=$firstSectionKey === $key ? 'is-active' : ''?>" data-category="<?=$arSection['NAME']?>">
                     <h3 class="title-section"><?=$arSection['NAME']?></h3>
-                    <?if (!empty($arSection['ITEMS'])):?>
+                    <?php if (!empty($arSection['ITEMS'])):?>
                         <div class="category-content-wrapper">
-                            <?foreach ($arSection['ITEMS'] as $arSectionLvl2):?>
+                            <?php foreach ($arSection['ITEMS'] as $arSectionLvl2):?>
                                 <ul class="subcategory">
                                     <li class="subcategory__item" id="<?=$this->GetEditAreaID($arSectionLvl2['ID'])?>">
                                         <a href="<?=$arSectionLvl2['SECTION_PAGE_URL']?>"><?=$arSectionLvl2['NAME']?></a>
                                     </li>
-                                    <?if (!empty($arSectionLvl2['ITEMS'])):?>
-                                        <?foreach ($arSectionLvl2['ITEMS'] as $arSectionLvl3):?>
+                                    <?php if (!empty($arSectionLvl2['ITEMS'])):?>
+                                        <?php foreach ($arSectionLvl2['ITEMS'] as $arSectionLvl3):?>
                                             <li class="subcategory__item" id="<?=$this->GetEditAreaID($arSectionLvl3['ID'])?>">
                                                 <a href="<?=$arSectionLvl3['SECTION_PAGE_URL']?>"><?=$arSectionLvl3['NAME']?></a>
                                             </li>
-                                        <?endforeach;?>
-                                    <?endif;?>
+                                        <?php endforeach;?>
+                                    <?php endif;?>
                                 </ul>
-                            <?endforeach;?>
+                            <?php endforeach;?>
                         </div>
-                    <?endif;?>
+                    <?php endif;?>
                 </div>
-            <?endforeach;?>
+            <?php endforeach;?>
         </div>
     </div>
-<?endif;?>
+<?php endif;?>

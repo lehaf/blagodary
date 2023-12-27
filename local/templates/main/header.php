@@ -20,8 +20,8 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <?$APPLICATION->ShowHead();?>
-    <?
+    <?php $APPLICATION->ShowHead();?>
+    <?php
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/style.css");
     Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . "/html/css/linksstyle.css");
     Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/add-favorite-app.js");
@@ -29,12 +29,12 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
     <title><?php $APPLICATION->ShowTitle()?></title>
 </head>
 <body>
-<?$APPLICATION->ShowPanel()?>
+<?php $APPLICATION->ShowPanel()?>
 <div class="fake-header" style="height: 116px;"></div>
 <header class="header">
     <div class="header-top">
         <div class="wrapper">
-            <?$APPLICATION->IncludeComponent(
+            <?php $APPLICATION->IncludeComponent(
                 "bitrix:menu",
                 "top",
                     Array(
@@ -55,10 +55,10 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
     <div class="header-bottom">
         <div class="wrapper">
             <div class="header-bottom-content">
-                <?if (!$isMainPage):?><a href="/" class="header-logo"><?else:?><div class="header-logo"><?endif;?>
+                <?php if (!$isMainPage):?><a href="/" class="header-logo"><?php else:?><div class="header-logo"><?php endif;?>
                     <img src="<?=SITE_TEMPLATE_PATH?>/html/assets/img/header-logo.svg" alt="logo">
-                <?if (!$isMainPage):?></a><?else:?></div><?endif;?>
-                <?$APPLICATION->IncludeComponent(
+                <?php if (!$isMainPage):?></a><?php else:?></div><?php endif;?>
+                <?php $APPLICATION->IncludeComponent(
                     "bitrix:search.title",
                     "search-header",
                     array(
@@ -86,9 +86,9 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                     false
                 );?>
                 <div class="header-account">
-                    <?if (!$bUserIsBlocked):?>
-                        <?if ($USER->IsAuthorized()) :?>
-                            <?if (!$isAddAdsPage):?>
+                    <?php if (!$bUserIsBlocked):?>
+                        <?php if ($USER->IsAuthorized()) :?>
+                            <?php if (!$isAddAdsPage):?>
                                 <a href="/personal/my-ads/add-ads/" class="btn submit-an-ad">
                                     <svg>
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
@@ -100,7 +100,7 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                                     </svg>
                                 </a>
-                            <?else:?>
+                            <?php else:?>
                                 <button class="btn submit-an-ad sign-in">
                                     <svg>
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
@@ -112,8 +112,8 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                                     </svg>
                                 </button>
-                            <?endif;?>
-                        <?else:?>
+                            <?php endif;?>
+                        <?php else:?>
                             <button class="btn submit-an-ad sign-in sign-in-modal">
                                 <svg>
                                     <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
@@ -125,9 +125,9 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                     <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#plus"></use>
                                 </svg>
                             </button>
-                        <?endif;?>
-                    <?endif;?>
-                    <?if ($USER->IsAuthorized()) :?>
+                        <?php endif;?>
+                    <?php endif;?>
+                    <?php if ($USER->IsAuthorized()) :?>
                         <div class="header-account-menu">
                         <button class="btn-white sign-in user-authorized is-active">Личный кабинет
                             <svg>
@@ -149,7 +149,7 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                      </svg>
                                 </span>
                             </div>
-                            <?$APPLICATION->IncludeComponent(
+                            <?php $APPLICATION->IncludeComponent(
                                 "bitrix:menu",
                                 "personal",
                                 Array(
@@ -167,7 +167,7 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                             );?>
                         </div>
                     </div>
-                    <?else:?>
+                    <?php else:?>
                         <button class="btn-white sign-in sign-in-modal">Войти</button>
                         <button class="btn-white sign-in sign-in-modal sign-in--mobile">
                             <svg>
@@ -175,14 +175,14 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
                                 </use>
                             </svg>
                         </button>
-                    <?endif;?>
+                    <?php endif;?>
                 </div>
             </div>
         </div>
     </div>
 </header>
-<?if (!$isMainPage):?>
-    <? $APPLICATION->IncludeComponent(
+<?php if (!$isMainPage):?>
+    <?php $APPLICATION->IncludeComponent(
         "bitrix:breadcrumb",
         "",
             Array(
@@ -191,6 +191,6 @@ $bUserIsBlocked = in_array($USER->GetId(),$BLOCKED);
             "SITE_ID" => "s1"
         )
     );?>
-<?endif;?>
+<?php endif;?>
 <div class="page <?=!empty($pageSpecialClass) ? $pageSpecialClass : ''?>">
     <div class="wrapper">
