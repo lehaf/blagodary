@@ -7,7 +7,7 @@ global $USER, $APPLICATION;
 <footer class="footer">
     <div class="footer-top">
         <div class="wrapper">
-            <?$APPLICATION->IncludeComponent(
+            <?php $APPLICATION->IncludeComponent(
                 "bitrix:menu",
                 "bottom",
                 Array(
@@ -58,7 +58,10 @@ global $USER, $APPLICATION;
                         1 => "DETAIL_PICTURE",
                         2 => "DETAIL_TEXT",
                     ),
-                    "PROPERTY_CODE" => array(),
+                    "PROPERTY_CODE" => array(
+                        'LINK',
+                        'IMG'
+                    ),
                     "CHECK_DATES" => "Y",	// Показывать только активные на данный момент элементы
                     "DETAIL_URL" => "",	// URL страницы детального просмотра (по умолчанию - из настроек инфоблока)
                     "PREVIEW_TRUNCATE_LEN" => "",	// Максимальная длина анонса для вывода (только для типа текст)
@@ -193,11 +196,11 @@ global $USER, $APPLICATION;
             <button class="login-btn-list__item registration-btn">Регистрация</button>
         </div>
         <div class="login-services">
-            <?$APPLICATION->ShowViewContent('auth_socials');?>
+            <?php $APPLICATION->ShowViewContent('auth_socials');?>
         </div>
         <div class="popUp-login-content">
             <div class="login-content active">
-                <?$APPLICATION->IncludeComponent(
+                <?php $APPLICATION->IncludeComponent(
                     "bitrix:main.auth.form",
                     "auth",
                     Array(
@@ -209,7 +212,7 @@ global $USER, $APPLICATION;
                 ); ?>
             </div>
             <div class="registration-content">
-                <?$APPLICATION->IncludeComponent(
+                <?php $APPLICATION->IncludeComponent(
 	"bitrix:main.register",
 	"register",
                 array(
@@ -236,6 +239,6 @@ global $USER, $APPLICATION;
             </svg>
         </span>
     </div>
-<?endif?>
+<?php endif?>
 </body>
 </html>
