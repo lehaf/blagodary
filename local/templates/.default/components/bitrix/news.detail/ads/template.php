@@ -12,7 +12,7 @@
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 
-$curUserId = $USER->GetId();
+$curUserId = \Bitrix\Main\Engine\CurrentUser::get()->getId();
 $this->setFrameMode(true);
 ?>
 <?php if (!empty($arResult)):?>

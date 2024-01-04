@@ -23,10 +23,12 @@ $arItem = $arResult['ITEMS'][0];
         }
         /* Мобилка */
         @media (max-width: 700px) {
-            background: url(<?=$arItem['PREVIEW_PICTURE']['SRC']?>) no-repeat center/cover;
+            .banner-mini {
+                background: url(<?=$arItem['PREVIEW_PICTURE']['SRC']?>) no-repeat center/cover;
+            }
         }
     </style>
-    <?
+    <?php
     // Добавляем эрмитаж
     $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], $arItem["EDIT_LINK_TEXT"]);
     $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $arItem["DELETE_LINK_TEXT"],
