@@ -1,0 +1,59 @@
+.container {
+    padding-top: 10vh;
+    text-align: center;
+    min-height: calc(100vh - 374px);
+}
+
+.heart {
+    color: #059ea3;
+    font-size: 340px;
+    vertical-align: middle;
+}
+
+.error-code {
+    color: #059ea3;
+    font-size: 340px;
+}
+
+.error-text {
+    font-size: 30px;
+}
+
+.back-to-main {
+    margin-top: 30px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 150px;
+}
+
+@media (max-width: 730px) {
+    .heart {
+        font-size: 240px;
+    }
+
+    .error-code {
+        font-size: 240px;
+    }
+
+    .error-text {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 530px) {
+    .container {
+        padding-top: 5vh;
+    }
+
+    .heart {
+        font-size: 140px;
+    }
+
+    .error-code {
+        font-size: 140px;
+    }
+
+    .error-text {
+        font-size: 20px;
+    }
+}
