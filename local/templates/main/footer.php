@@ -225,8 +225,8 @@ global $USER, $APPLICATION;
             </div>
             <div class="registration-content">
                 <?php $APPLICATION->IncludeComponent(
-	"bitrix:main.register",
-	"register",
+                "bitrix:main.register",
+                "register",
                 array(
                     "AUTH" => "Y",
                     "REQUIRED_FIELDS" => array(

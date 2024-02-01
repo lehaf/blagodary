@@ -11,7 +11,6 @@ $APPLICATION->SetTitle("Контактная информация");
 use Bitrix\Main\Page\Asset;
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery-2.2.4.min.js");
-//Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.formstyler.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.selectbox.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/air-datepicker.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/jquery.maskedinput.min.js");
@@ -23,7 +22,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
     <aside class="aside aside-cabinet">
         <div class="profile-menu">
             <div class="menu-authorized">
-                <?$APPLICATION->IncludeComponent(
+                <?php $APPLICATION->IncludeComponent(
                     "bitrix:menu",
                     "personal",
                     Array(
@@ -44,20 +43,20 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/html/js/main.js");
     </aside>
     <div class="page-content page-content--profile">
         <h2 class="title-section"><?=$APPLICATION->ShowTitle()?></h2>
-        <?$APPLICATION->IncludeComponent(
-	"bitrix:main.profile", 
-	"contacts", 
-	array(
-		"CHECK_RIGHTS" => "N",
-		"SEND_INFO" => "N",
-		"SET_TITLE" => "Y",
-		"USER_PROPERTY" => array(
-		),
-		"USER_PROPERTY_NAME" => "UF_PHONES",
-		"COMPONENT_TEMPLATE" => "contacts"
-	),
-	false
-);?>
+        <?php $APPLICATION->IncludeComponent(
+            "bitrix:main.profile",
+            "contacts",
+            array(
+                "CHECK_RIGHTS" => "N",
+                "SEND_INFO" => "N",
+                "SET_TITLE" => "Y",
+                "USER_PROPERTY" => array(
+                ),
+                "USER_PROPERTY_NAME" => "UF_PHONES",
+                "COMPONENT_TEMPLATE" => "contacts"
+            ),
+            false
+        );?>
 
     </div>
 </div>
