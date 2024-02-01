@@ -287,6 +287,7 @@ class AddElementForm extends \CBitrixComponent
         $string = str_replace($code_match, '', $string);
         $arString = explode(' ',$string);
         $string = implode('-',$arString);
+
         $converter = array(
             'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
             'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
@@ -305,7 +306,21 @@ class AddElementForm extends \CBitrixComponent
             'Э' => 'E',    'Ю' => 'Yu',   'Я' => 'Ya',
         );
 
-        return strtr($string, $converter);
+        $code = strtr($string, $converter);
+
+        if (\Bitrix\Main\Loader::includeModule('iblock')) {
+            $iblock = \Bitrix\Iblock\Iblock::wakeUp(ADS_IBLOCK_ID);
+            $adsClass = $iblock->getEntityDataClass();
+            $countSimilarAds = $adsClass::getList(array(
+                'select' => array('ID', 'NAME'),
+                'filter' => ['%CODE' => $code],
+                'count_total' => 1,
+            ))->getCount();
+
+            if ($countSimilarAds > 0) $code = $code.$countSimilarAds;
+        }
+
+        return $code;
     }
 
     private function processErrors(array $arErrorsMessages) : void

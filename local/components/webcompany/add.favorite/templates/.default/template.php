@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -14,9 +14,9 @@ $this->setFrameMode(true);
 $this->addExternalCss(SITE_TEMPLATE_PATH . "/html/css/loader.css");
 ?>
 <div class="favorites-container">
-    <?if (!empty($arResult['ITEMS'])):?>
+    <?php if (!empty($arResult['ITEMS'])):?>
         <div class="favorites-list">
-            <?foreach ($arResult['ITEMS'] as $arItem):?>
+            <?php foreach ($arResult['ITEMS'] as $arItem):?>
                 <a href="<?=$arItem['DETAIL_PAGE_URL']?>" class="announcements-list__item">
                     <div class="announcements-img">
                         <img src="<?=$arItem['IMG']['src']?>"
@@ -31,20 +31,20 @@ $this->addExternalCss(SITE_TEMPLATE_PATH . "/html/css/loader.css");
                         </div>
                         <div class="announcements-description__location">
                             <div class="location">
-                                <?if (!empty($arItem['REGION']) && !empty($arItem['CITY'])):?>
+                                <?php if (!empty($arItem['REGION']) && !empty($arItem['CITY'])):?>
                                     <svg>
                                         <use xlink:href="<?=SITE_TEMPLATE_PATH?>/html/assets/img/sprites/sprite.svg#location"></use>
                                     </svg>
                                     <?=$arItem['REGION'].', '.$arItem['CITY']?>
-                                <?endif;?>
+                                <?php endif;?>
                             </div>
                             <div class="announcements-data"><?=$arItem['DATE_CREATE']?></div>
                         </div>
                     </div>
                 </a>
-            <?endforeach;?>
+            <?php endforeach;?>
         </div>
-    <?else:?>
+    <?php else:?>
         <div class="favorites-list">У вас нет избранных товаров</div>
-    <?endif;?>
-<div class="favorites-list">
+    <?php endif;?>
+</div>

@@ -1,4 +1,4 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -13,7 +13,7 @@
 $this->setFrameMode(true);
 $linkSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#referral-link";
 ?>
-<?if (!empty($arResult['REFERRAL_LINK'])):?>
+<?php if (!empty($arResult['REFERRAL_LINK'])):?>
     <div class="referral-program">
         <div class="referral-program__description">Ваша реферальная сылка</div>
         <input type="text"
@@ -26,7 +26,7 @@ $linkSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#referral-l
             <svg><use xlink:href="<?=$linkSprite?>"></use></svg>
         </button>
     </div>
-<?endif;?>
+<?php endif;?>
 <div class="description-referral-program">
     <h3 class="title-block referral-program--title"><?=$arResult['REFERRAL_SYSTEM_TITLE']?></h3>
     <?=$arResult['REFERRAL_SYSTEM_DESCRIPTION']?>
@@ -53,19 +53,19 @@ $linkSprite = SITE_TEMPLATE_PATH."/html/assets/img/sprites/sprite.svg#referral-l
         <div class="btn-bg referral-calendar-btn">Показать</div>
     </div>
     <div class="referral-result">
-        <?if (!empty($arResult['REFERRAL_LIST'])):?>
+        <?php if (!empty($arResult['REFERRAL_LIST'])):?>
             <ul class="referral-result-list">
-                <?foreach ($arResult['REFERRAL_LIST'] as $referral):?>
+                <?php foreach ($arResult['REFERRAL_LIST'] as $referral):?>
                     <li class="referral-result-item">
                         <div class="referral-result-item__data"><?=$referral['DATE']?></div>
                         <div class="referral-result-item__user"><?=$referral['NAME']?></div>
                     </li>
-                <?endforeach;?>
+                <?php endforeach;?>
             </ul>
-        <?else:?>
+        <?php else:?>
             <div class="referral-result-not">
                 В заданный период, не было оплат от рефералов.
             </div>
-        <?endif;?>
+        <?php endif;?>
     </div>
 </div>
