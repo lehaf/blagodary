@@ -13,7 +13,7 @@ use Bitrix\Main\Type\DateTime;
 
 class Subscription extends \CBitrixComponent
 {
-    private string $moduleName = 'webcompany.referal.system';
+    private string $moduleName = 'webco.settings';
     private object $nav;
     private int $productId;
     private int $userId;
