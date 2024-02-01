@@ -11,7 +11,7 @@ use Bitrix\Main\Type\DateTime;
 
 class Subscription extends \CBitrixComponent
 {
-    private string $moduleName = 'webcompany.referal.system';
+    private string $moduleName = 'webco.settings';
     private int $productId;
     private int $userId;
     private string $currency = 'BYN';

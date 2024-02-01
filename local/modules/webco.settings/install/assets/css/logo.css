@@ -1,0 +1,5 @@
+span#global_menu_webco\.settings div.adm-main-menu-item-icon {
+    background: url(/bitrix/images/webco.settings/logo.svg) no-repeat;
+    background-size: 40px;
+    background-position: center;
+}

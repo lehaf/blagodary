@@ -11,7 +11,7 @@ use Bitrix\Main\Type\DateTime;
 
 class ReferralProgram extends \CBitrixComponent
 {
-    private string $moduleName = 'webcompany.referal.system';
+    private string $moduleName = 'webco.settings';
     private int $userId;
     private int $randomStringLength = 5;
     private string $subscriptionPagePath = '/personal/subscription/';
@@ -22,7 +22,7 @@ class ReferralProgram extends \CBitrixComponent
     {
         global $USER;
         $this->userId = $USER->GetID();
-        Loader::includeModule("webcompany.referal.system");
+        Loader::includeModule($this->moduleName);
         parent::__construct($component);
     }
 
