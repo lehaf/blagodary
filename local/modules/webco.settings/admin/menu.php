@@ -24,6 +24,13 @@ function OnBuildGlobalMenuHandler(&$aGlobalMenu, &$aModuleMenu) : array
                     'icon' => 'sys_menu_icon',
                     "url" => "/bitrix/admin/webco_site_settings.php",
                     'items_id' => 'cp',
+                ),
+                array(
+                    "text" => 'Статистика',
+                    "title" => 'Статистика',
+                    'icon' => 'seo_adv_menu_icon',
+                    "url" => "/bitrix/admin/webco_statistics.php",
+                    'items_id' => 'st',
                 )
             )
         )

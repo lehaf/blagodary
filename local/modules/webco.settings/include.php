@@ -6,5 +6,6 @@ Bitrix\Main\Loader::registerAutoloadClasses(
         'WebCompany\WReferralsTable' => 'lib/WReferralsTable.php',
         'WebCompany\WUserSubscriptionTable' => 'lib/WUserSubscriptionTable.php',
         'WebCompany\ReferralSystem' => 'classes/mysql/ReferralSystem.php',
+        'WebCompany\ReferralStatistics' => 'classes/general/ReferralStatistics.php',
     )
 );
