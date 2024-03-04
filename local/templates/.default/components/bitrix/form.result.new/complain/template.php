@@ -1,6 +1,7 @@
 <?php if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
+
 ?>
 <div class="popUp popUp-complain">
     <h5 class="popUp__title"><?=!empty($arParams['FORM_TITLE']) ? $arParams['FORM_TITLE'] : ''?></h5>
@@ -12,14 +13,14 @@
     <?=$arResult["FORM_HEADER"]?>
         <div class="form-group">
             <input type="hidden"
-                   name="form_<?=$arResult["QUESTIONS"]['USER_ID']['STRUCTURE'][0]['FIELD_TYPE'].'_'.$arResult["QUESTIONS"]['USER_ID']['STRUCTURE'][0]['ID']?>"
+                   name="form_<?=$arResult["QUESTIONS"]['USER_COMPLAIN_ID']['STRUCTURE'][0]['FIELD_TYPE'].'_'.$arResult["QUESTIONS"]['USER_COMPLAIN_ID']['STRUCTURE'][0]['ID']?>"
                    value="<?=$arParams['COMPLAIN_USER_ID']?>"
             >
             <label class="complain-form-label">Причина жалобы:</label>
-            <?if (!empty($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'])):?>
-                <?$firstKey = array_key_first($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'])?>
+            <?php if (!empty($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'])):?>
+                <?php $firstKey = array_key_first($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'])?>
                 <div class="form-group-wrapper">
-                    <?foreach ($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'] as $key => $arField):?>
+                    <?php foreach ($arResult["QUESTIONS"]['COMPLAINS']['STRUCTURE'] as $key => $arField):?>
                         <div class="form-group__item radio-btn" style="width: 100%">
                             <label for="<?=$key?>"><?=$arField['MESSAGE']?></label>
                             <input type="radio"
@@ -29,14 +30,17 @@
                                     value="<?=$arField['ID']?>"
                             >
                         </div>
-                    <?endforeach;?>
+                    <?php endforeach;?>
                 </div>
-            <?endif;?>
+            <?php endif;?>
         </div>
         <div class="form-group">
             <label class="complain-form-label">Сообщение:</label>
             <label>
-                <textarea placeholder="Введите сообщение" required></textarea>
+                <textarea placeholder="Введите сообщение"
+                          name="form_<?=$arResult["QUESTIONS"]['COMMENT']['STRUCTURE'][0]['FIELD_TYPE'].'_'.$arResult["QUESTIONS"]['COMMENT']['STRUCTURE'][0]['ID']?>"
+                          required
+                ></textarea>
             </label>
         </div>
         <div class="form-group">
