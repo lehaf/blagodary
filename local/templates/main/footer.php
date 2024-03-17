@@ -35,6 +35,22 @@ global $USER, $APPLICATION;
                     "MODE"      => "text",
                     "NAME"      => "Описание сервиса",
                 ));?>
+                <div class="payments">
+                    <ul class="payments-list">
+                        <li class="visa"></li>
+                        <li class="visa-secure"></li>
+                        <li class="mastercard"></li>
+                        <li class="mastercard-id"></li>
+                        <li class="belcard"></li>
+                        <li class="belcard-pass"></li>
+                        <li class="mir"></li>
+                        <li class="mir-accept"></li>
+                        <li class="bepaid"></li>
+                        <li class="sumsung"></li>
+                        <li class="yandex"></li>
+                        <li class="google"></li>
+                    </ul>
+                </div>
             </div>
             <?php $APPLICATION->IncludeComponent(
                 "bitrix:news.list",
