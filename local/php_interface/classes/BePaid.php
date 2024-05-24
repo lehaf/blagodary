@@ -4,12 +4,12 @@ namespace WebCompany;
 
 class BePaid
 {
-    private const STORE_ID = 4226; // Тестовый Shop ID
-    private const SHOP_KEY = '250e70fb83bb0bb6b2db90360f24ae228b3b8ce2e42b754a346adf22fac7d22e'; // Тестовый Shop Key
+    private const STORE_ID = 28037;
+    private const SHOP_KEY = '8ef0fa78d5d2887b1a4b43f78deec9e46787bb2875baa44b463a2a3fa05e69d9';
     private static string $tokenizationUrl = 'https://checkout.bepaid.by/ctp/api/checkouts';
     private static string $paymentUrl = 'https://gateway.bepaid.by/transactions/payments';
     private static string $notifyUrl = '/local/web/token.php';
-    private static bool $testMode = true;
+    private static bool $testMode = false;
 
 
     public static function makeCardTokenPayment(string $token, int $sum, int $orderId, string $userName = '', string $currency = 'BYN'): bool
