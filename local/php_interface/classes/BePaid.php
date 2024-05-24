@@ -45,7 +45,7 @@ class BePaid
                 'transaction_type' => 'payment',
                 'settings' => [
                     'success_url' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/personal/subscription/',
-                    'cancel_url' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/',
+                    'cancel_url' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].'/personal/subscription/',
                     'notification_url' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['SERVER_NAME'].self::$notifyUrl,
                     'language' => 'en',
                     'customer_fields' => [
