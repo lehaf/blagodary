@@ -210,11 +210,7 @@ function getUserBlockedList() : array
 {
     $arUsersBlocked = \Bitrix\Main\UserTable::getList(array(
         'select' => ['ID'],
-        'filter' => ['BLOCKED' => 'Y'],
-        'cache' => [
-            'ttl' => 360000,
-            'cache_joins' => true
-        ]
+        'filter' => ['BLOCKED' => 'Y']
     ))->fetch();
 
     return !empty($arUsersBlocked) ? $arUsersBlocked : [];
@@ -377,7 +373,7 @@ function getUserWithSubscribe() : array
                 ]
         ],
         'cache' => [
-            'ttl' => 360000,
+            'ttl' => 3600,
             'cache_joins' => true
         ]
     ))->fetchAll();

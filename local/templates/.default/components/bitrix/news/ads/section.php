@@ -56,9 +56,16 @@ $userWithSubscribe = getUserWithSubscribe();
         <div class="aside__item aside__item-category ">
             <?php
 
-            global $additionalCountFilter;
+            global $additionalCountFilter, $arSectFilter;
             $additionalCountFilter = [
                 '=PROPERTY_OWNER' => $userWithSubscribe
+            ];
+
+            $arSectFilter = [
+                "!UF_MAIN_CATEGORY" => false,
+                "PROPERTY" => [
+                    'OWNER' => $userWithSubscribe
+                ]
             ];
 
             $APPLICATION->IncludeComponent(
