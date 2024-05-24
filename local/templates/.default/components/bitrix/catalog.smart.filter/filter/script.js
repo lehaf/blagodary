@@ -388,6 +388,7 @@ AjaxFilter.prototype.sendData = function (link = '') {
 			_this.deleteLoader();
 			if (newElements) {
 				curContainer.innerHTML = newElements.innerHTML;
+				if (window.ImageDefer) window.ImageDefer.init(); // Реинитим lazyload
 				_this.setPaginationEvent();
 				_this.scrollToElement(curContainer);
 			} else {
