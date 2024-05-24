@@ -10,3 +10,7 @@ div.popUp-check-user .popUp__description a:hover {
     cursor: pointer;
     color: #027b7f;
 }
+
+div.page.page--secondary {
+    min-height: 750px;
+}
