@@ -32,7 +32,7 @@ global $USER, $APPLICATION;
                 '/include/footer-descr.php',
                     Array(),
                     Array(
-                    "MODE"      => "text",
+                    "MODE"      => "html",
                     "NAME"      => "Описание сервиса",
                 ));?>
                 <div class="payments">
