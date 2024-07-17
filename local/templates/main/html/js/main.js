@@ -327,7 +327,9 @@ if (btnCategoryOpen) {
     btnCategoryOpen.addEventListener("click", () => {
         categoryPopUp.classList.add("active");
     })
+}
 
+if (btnCategoryClose) {
     btnCategoryClose.addEventListener("click", () => {
         categoryPopUp.classList.remove("active");
     })
@@ -770,4 +772,3 @@ $(".data-user-btn").on("click", function () {
     $(".popUp-success").addClass("active");
     $('.substrate').addClass("active");
 })
-
