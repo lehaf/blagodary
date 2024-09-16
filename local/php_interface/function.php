@@ -1,6 +1,8 @@
 <?php
 
 use \Bitrix\Main\Data\Cache;
+use Bitrix\Main\Application;
+use Bitrix\Main\UserTable;
 
 /** @global object $APPLICATION */
 
@@ -388,3 +390,76 @@ function getUserWithSubscribe() : array
     return $usersId;
 }
 
+/**
+ * Проверяет состояние авторизации пользователя и устанавливает или использует cookies для автоматической авторизации.
+ *
+ * Функция выполняет следующие действия:
+ * - Если пользователь уже авторизован, но cookies ("AL" и "BUID") не установлены, функция устанавливает их на 30 дней.
+ * - Если пользователь не авторизован, но имеются cookies ("AL" и "BUID"), функция проверяет их соответствие с данными в базе данных.
+ * - Если в базе данных найден пользователь с соответствующими данными, функция выполняет автоматическую авторизацию пользователя.
+ *
+ * @return void
+ */
+function checkUserAuthorize() : void
+{
+    // Получаем экземпляр приложения и контекст запроса
+    $app = Application::getInstance();
+    $context = $app->getContext();
+    $request = $context->getRequest();
+    $response = $context->getResponse();
+
+    $cookieLogin = $request->getCookie("AL");
+    $cookieUserId = $request->getCookie("BUID");
+
+    global $USER;
+    if ($USER->IsAuthorized()) {
+        // Пользователь авторизован, проверяем наличие куки
+        $userId = $USER->GetID();
+
+        // Получаем данные пользователя из таблицы
+        $userData = UserTable::getList([
+            'filter' => ['ID' => $userId],
+            'select' => ['ID', 'LOGIN', 'BX_USER_ID']
+        ])->fetch();
+
+        $period = time() + 2592000; // 30 дней в секундах
+
+        if (!$cookieLogin && !$cookieUserId) {
+            // Устанавливаем куки, если они еще не установлены
+            global $APPLICATION;
+
+            // Устанавливаем куки для логина и идентификатора пользователя
+            $APPLICATION->set_cookie('AL', $userData['LOGIN'], $period, '/');
+            $APPLICATION->set_cookie('BUID', $userData['BX_USER_ID'], $period, '/');
+        }
+    } else {
+        // Пользователь не авторизован, проверяем наличие куки
+        if ($cookieLogin && $cookieUserId) {
+            // Получаем данные пользователя по логину и хэшу
+            $userData = UserTable::getList([
+                'filter' => ['=LOGIN' => $cookieLogin, '=BX_USER_ID' => $cookieUserId],
+                'select' => ['ID', 'LOGIN', 'BX_USER_ID']
+            ])->fetch();
+
+            // Если пользователь найден, выполняем авторизацию
+            if (!empty($userData)) {
+                $USER->Authorize($userData['ID']);
+            }
+        }
+    }
+}
+
+
+/**
+ * Удаляет куки пользователя при разлогинивании.
+ *
+ * @return void
+ */
+function deleteUserCookiesOnLogout(): void
+{
+    if (!empty($GLOBALS['APPLICATION'])) {
+        // Удаляем куки, устанавливая время жизни в прошлом
+        $GLOBALS['APPLICATION']->set_cookie('AL', '', time() - 3600, '/');
+        $GLOBALS['APPLICATION']->set_cookie('BUID', '', time() - 3600, '/');
+    }
+}

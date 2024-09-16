@@ -13,3 +13,10 @@ if (file_exists(__DIR__.'/function.php')) {
 if (file_exists(__DIR__.'/bitrix_autoload.php')) {
     require __DIR__.'/bitrix_autoload.php';
 }
+
+// Подключаем события
+if (file_exists(__DIR__.'/events.php')) {
+    require __DIR__.'/events.php';
+}
+
+

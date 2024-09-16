@@ -37,6 +37,7 @@ AuthAjax.prototype.setupListener = function () {
             e.preventDefault();
             let formData = new FormData(this.$form);
             formData.set('AUTH_ACTION', 'Y');
+            formData.set('USER_REMEMBER', 'Y');
             formData.set('forgot_pass', 'N');
             if (_this.checkFormFields()) {
                 _this.sendData(formData);
